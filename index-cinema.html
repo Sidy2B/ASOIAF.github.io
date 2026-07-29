@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le Trône de Fer — Guide d'écoute</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --nuit:#05070c;
+    --neige:#eef1f5;
+    --acier:#96a2b3;
+    --sang:#9e1b1b;
+    --bougie:#d4a94e;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{height:100%}
+  body{
+    min-height:100dvh;
+    font-family:'EB Garamond',serif;
+    background:var(--nuit);
+    color:var(--neige);
+  }
+  #atmo{position:fixed;inset:0;z-index:0;transition:background 1.4s ease}
+  #fond{
+    position:fixed;inset:-40px;z-index:0;
+    background-size:cover;background-position:center;
+    filter:blur(22px) brightness(.34) saturate(1.05);
+    transition:opacity 1.2s ease;opacity:0;
+  }
+  #fond.ok{opacity:1}
+  #atmo::after{
+    content:"";position:absolute;inset:0;
+    background:radial-gradient(ellipse at 50% 118%, transparent 30%, rgba(0,0,0,.72));
+  }
+  canvas#particles{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.55}
+
+  .app{
+    position:relative;z-index:2;
+    min-height:100dvh;display:flex;flex-direction:column;
+    max-width:680px;margin:0 auto;padding:0 20px;
+  }
+  header{padding:16px 0 8px;text-align:center;position:relative}
+  header .book{
+    font-family:'IM Fell English',serif;
+    font-size:.92rem;letter-spacing:.3em;text-transform:uppercase;
+    color:var(--acier);
+  }
+  header .book b{color:var(--bougie);font-weight:normal}
+
+  #btnPleinEcran,#btnMusique{
+    position:absolute;top:10px;
+    width:38px;height:38px;border-radius:50%;
+    border:1px solid rgba(238,241,245,.22);
+    background:rgba(5,7,12,.4);color:var(--acier);
+    font-size:1rem;cursor:pointer;transition:all .25s;
+    backdrop-filter:blur(8px);
+  }
+  #btnPleinEcran{left:0}
+  #btnMusique{right:0;font-size:1.05rem}
+  #btnPleinEcran.actif,#btnMusique.joue{border-color:var(--bougie);color:var(--bougie)}
+  #btnPleinEcran:focus-visible,#btnMusique:focus-visible{outline:2px solid var(--bougie);outline-offset:2px}
+
+  #panneauMusique{
+    display:none;position:absolute;right:0;top:56px;z-index:10;
+    width:min(290px,82vw);padding:16px;border-radius:16px;
+    background:rgba(5,7,12,.9);backdrop-filter:blur(16px);
+    border:1px solid rgba(238,241,245,.14);
+    box-shadow:0 20px 50px rgba(0,0,0,.7);
+    text-align:left;
+  }
+  #panneauMusique.ouvert{display:block}
+  #panneauMusique label{
+    display:block;font-size:.78rem;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--acier);margin-bottom:6px;
+  }
+  #panneauMusique .vide{font-size:.95rem;line-height:1.5;color:var(--acier);font-style:italic}
+  #choixTheme{
+    width:100%;padding:9px 10px;border-radius:10px;
+    font-family:'EB Garamond',serif;font-size:1rem;
+    background:var(--nuit);color:var(--neige);
+    border:1px solid rgba(238,241,245,.22);
+    margin-bottom:12px;cursor:pointer;
+  }
+  .ligneAuto{
+    display:flex;align-items:center;gap:9px;margin-bottom:14px;
+    font-size:.98rem;cursor:pointer;color:var(--neige);
+  }
+  .ligneAuto input{accent-color:var(--bougie);width:17px;height:17px;cursor:pointer}
+  #volume{width:100%;accent-color:var(--bougie);margin-bottom:12px;cursor:pointer}
+  #progression{width:100%;accent-color:var(--sang);margin-bottom:4px;cursor:pointer}
+  #temps{
+    display:flex;justify-content:space-between;
+    font-size:.85rem;color:var(--acier);margin-bottom:14px;
+    font-variant-numeric:tabular-nums;
+  }
+  #lecture{
+    width:100%;padding:10px 0;border-radius:10px;cursor:pointer;
+    font-family:'EB Garamond',serif;font-size:1rem;
+    background:transparent;color:var(--neige);
+    border:1px solid var(--sang);transition:background .25s;
+  }
+  #lecture:hover{background:var(--sang)}
+  #choixTheme:focus-visible,#volume:focus-visible,#progression:focus-visible,#lecture:focus-visible{
+    outline:2px solid var(--bougie);outline-offset:2px;
+  }
+
+  .rail{
+    display:flex;gap:7px;justify-content:center;align-items:center;
+    padding:12px 0 2px;flex-wrap:wrap;max-height:60px;overflow-y:auto;
+  }
+  .rail button{
+    width:10px;height:10px;border-radius:50%;padding:0;
+    border:1px solid rgba(238,241,245,.35);
+    background:transparent;color:transparent;
+    font-size:0;cursor:pointer;transition:all .3s;
+  }
+  .rail button.done{background:rgba(238,241,245,.5);border-color:transparent}
+  .rail button.active{
+    background:var(--bougie);border-color:var(--bougie);
+    width:26px;border-radius:6px;
+  }
+  .rail button.locked{opacity:.3}
+  .rail button:focus-visible{outline:2px solid var(--bougie);outline-offset:2px}
+
+  .scene{
+    flex:1;display:flex;flex-direction:column;justify-content:center;
+    text-align:center;gap:14px;min-height:0;padding:8px 0 6px;
+    animation:fadeIn 1s ease;
+  }
+  @keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+  .chapitre{
+    display:flex;align-items:center;justify-content:center;gap:12px;
+    font-size:.8rem;letter-spacing:.34em;text-transform:uppercase;
+    color:var(--bougie);
+  }
+  .chapitre svg{width:34px;height:34px;flex:none;filter:drop-shadow(0 3px 8px rgba(0,0,0,.6))}
+  h1{
+    font-family:'IM Fell English',serif;font-weight:normal;
+    font-size:clamp(2rem,8.5vw,3.2rem);line-height:1.08;
+    text-shadow:0 4px 24px rgba(0,0,0,.8);
+  }
+  .visuel{
+    display:none;
+    max-height:36dvh;width:100%;object-fit:cover;
+    border-radius:18px;border:1px solid rgba(238,241,245,.2);
+    box-shadow:0 24px 60px rgba(0,0,0,.75);
+  }
+  .visuel.ok{display:block}
+  .voile .visuel{filter:blur(16px)}
+  .desc{
+    font-size:1.08rem;line-height:1.65;color:#d6dce4;
+    background:rgba(5,7,12,.55);backdrop-filter:blur(14px);
+    padding:16px 20px;border-radius:16px;
+    border:1px solid rgba(238,241,245,.1);
+    text-shadow:0 1px 6px rgba(0,0,0,.5);
+  }
+  .motscles{
+    font-style:italic;color:var(--acier);font-size:.92rem;
+    letter-spacing:.06em;
+  }
+  .motscles::before{content:"— ";color:var(--sang);font-style:normal}
+
+  details{
+    background:rgba(5,7,12,.55);backdrop-filter:blur(14px);
+    border:1px solid rgba(238,241,245,.1);
+    border-radius:16px;text-align:left;
+  }
+  details summary{
+    padding:11px 18px;cursor:pointer;list-style:none;
+    font-size:.82rem;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--acier);display:flex;align-items:center;gap:8px;
+  }
+  details summary::before{content:"›";color:var(--bougie);transition:transform .25s;font-size:1.1rem}
+  details[open] summary::before{transform:rotate(90deg)}
+  details summary:focus-visible{outline:2px solid var(--bougie);outline-offset:-2px}
+  details .contenu{padding:2px 16px 16px}
+  .carteWrap{position:relative;width:fit-content;max-width:100%;margin:0 auto}
+  #carteImg{
+    display:block;max-height:52dvh;max-width:100%;
+    border-radius:12px;border:1px solid rgba(238,241,245,.18);
+    box-shadow:0 14px 40px rgba(0,0,0,.6);
+  }
+  .pointCarte{position:absolute;transform:translate(-50%,-50%);width:0;height:0;pointer-events:none}
+  .pointCarte .coeur{
+    position:absolute;left:-5px;top:-5px;width:10px;height:10px;
+    border-radius:50%;background:#c1121f;border:2px solid #fff;
+    box-shadow:0 0 8px rgba(193,18,31,.9);
+  }
+  .pointCarte .halo{
+    position:absolute;left:-12px;top:-12px;width:24px;height:24px;
+    border-radius:50%;background:rgba(193,18,31,.35);
+    animation:pulse 2.2s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{transform:scale(.7);opacity:.9}50%{transform:scale(1.3);opacity:.3}}
+  .carteMsg{
+    position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+    text-align:center;padding:20px;border-radius:12px;
+    background:rgba(5,7,12,.85);color:var(--acier);
+    font-style:italic;font-size:.98rem;line-height:1.5;
+  }
+  .carteMsg.visible{display:flex}
+  .lieuNom{text-align:center;font-style:italic;color:var(--bougie);font-size:.95rem;margin-top:6px}
+  #zoneNotes textarea{
+    width:100%;min-height:84px;resize:vertical;
+    font-family:'EB Garamond',serif;font-size:1rem;line-height:1.5;
+    background:rgba(5,7,12,.6);color:var(--neige);
+    border:1px solid rgba(238,241,245,.16);border-radius:12px;
+    padding:10px 12px;
+  }
+  #zoneNotes label{
+    display:block;font-size:.78rem;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--acier);margin:12px 0 6px;
+  }
+  #marquePage{
+    width:100%;padding:9px 12px;border-radius:12px;
+    font-family:'EB Garamond',serif;font-size:1rem;
+    background:rgba(5,7,12,.6);color:var(--neige);
+    border:1px solid rgba(238,241,245,.16);
+  }
+  #zoneNotes textarea:focus-visible,#marquePage:focus-visible{outline:2px solid var(--bougie);outline-offset:1px}
+
+  .voile .desc,.voile h1,.voile .motscles{filter:blur(10px);user-select:none}
+  .voile{position:relative}
+  .voile .avert{
+    position:absolute;inset:0;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:10px;z-index:3;
+  }
+  .avert p{font-style:italic;color:var(--acier)}
+  .avert button{
+    font-family:'EB Garamond',serif;font-size:1rem;
+    padding:10px 24px;border-radius:999px;cursor:pointer;
+    background:rgba(5,7,12,.8);color:var(--neige);
+    border:1px solid var(--sang);transition:background .25s;
+  }
+  .avert button:hover{background:var(--sang)}
+
+  nav{display:flex;gap:12px;padding:14px 0 26px}
+  nav button{
+    flex:1;padding:14px 0;border-radius:14px;cursor:pointer;
+    font-family:'EB Garamond',serif;font-size:1.05rem;letter-spacing:.04em;
+    border:1px solid rgba(238,241,245,.18);
+    background:rgba(5,7,12,.55);color:var(--neige);
+    backdrop-filter:blur(14px);transition:all .25s;
+  }
+  nav button:disabled{opacity:.3;cursor:default}
+  nav button.next{border-color:var(--sang)}
+  nav button.next:not(:disabled):hover{background:var(--sang)}
+  nav button:focus-visible{outline:2px solid var(--bougie);outline-offset:2px}
+
+  @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="atmo"></div>
+<canvas id="particles"></canvas>
+
+<div class="app">
+  <header>
+    <button id="btnPleinEcran" aria-label="Passer en plein écran" title="Plein écran">⛶</button>
+    <div class="book"><b>Le Trône de Fer</b> · Tome 1 · Guide d'écoute</div>
+    <button id="btnMusique" aria-label="Ouvrir le panneau musique" title="Musique de fond">♪</button>
+    <div id="panneauMusique">
+      <label for="choixTheme">Thème musical</label>
+      <select id="choixTheme"></select>
+      <label class="ligneAuto"><input type="checkbox" id="autoMusique"> Choisir selon le chapitre</label>
+      <label for="volume">Volume</label>
+      <input type="range" id="volume" min="0" max="100" value="20">
+      <label for="progression">Position dans le morceau</label>
+      <input type="range" id="progression" min="0" max="1000" value="0">
+      <div id="temps"><span id="tempsActuel">0:00</span><span id="tempsTotal">0:00</span></div>
+      <button id="lecture">Lancer la musique</button>
+    </div>
+  </header>
+  <div class="rail" id="rail"></div>
+  <main class="scene" id="scene"></main>
+  <details id="zoneCarte">
+    <summary>Carte — <span id="lieuTitre"></span></summary>
+    <div class="contenu">
+      <div class="carteWrap" id="carteWrap">
+        <img id="carteImg" src="cartes/westeros.png" alt="Carte de Westeros">
+        <div class="pointCarte" id="pointCarte"><span class="halo"></span><span class="coeur"></span></div>
+        <div class="carteMsg" id="carteMsg"></div>
+      </div>
+      <div class="lieuNom" id="lieuNom"></div>
+    </div>
+  </details>
+  <div style="height:10px"></div>
+  <details id="zoneNotes">
+    <summary>Mes notes & marque-page</summary>
+    <div class="contenu">
+      <label for="notesChapitre">Notes sur ce chapitre</label>
+      <textarea id="notesChapitre" placeholder="Impressions, théories, personnages à retenir…"></textarea>
+      <label for="marquePage">Marque-page audio (où j'en suis dans Audible)</label>
+      <input type="text" id="marquePage" placeholder="Ex : 4 h 32 min — chapitre 12">
+    </div>
+  </details>
+  <nav>
+    <button id="prev">← Précédent</button>
+    <button id="next" class="next">Suivant →</button>
+  </nav>
+</div>
+
+<script>
+/* =====================================================
+   DONNÉES — 36 chapitres du livre audio
+   maison : blason affiché (stark, targaryen, lannister, garde)
+   lieu   : position sur la carte {nom, x, y}
+   themes : thèmes musicaux préférés, par ordre de priorité
+===================================================== */
+const LIEUX = {
+  audela:   {nom:"Au-delà du Mur — la forêt hantée", carte:"westeros", x:59.0, y:5.8},
+  mur:      {nom:"Châteaunoir · le Mur", carte:"westeros", x:58.5, y:9.0},
+  versmur:  {nom:"La route royale, vers le Mur", carte:"westeros", x:49.0, y:16.0},
+  winterfell:{nom:"Winterfell", carte:"westeros", x:44.0, y:23.6},
+  routeroy: {nom:"La route royale, vers le sud", carte:"westeros", x:42.5, y:38.0},
+  trident:  {nom:"Le Trident", carte:"westeros", x:55.0, y:56.8},
+  darry:    {nom:"Château de Darry", carte:"westeros", x:62.0, y:58.0},
+  auberge:  {nom:"L'auberge du carrefour", carte:"westeros", x:54.0, y:56.0},
+  eyrie:    {nom:"Les Eyrié · le Val d'Arryn", carte:"westeros", x:66.5, y:49.6},
+  hauteroute:{nom:"La haute route · montagnes de la Lune", carte:"westeros", x:63.0, y:52.3},
+  portreal: {nom:"Port-Réal", carte:"westeros", x:68.0, y:69.2},
+  pentos:   {nom:"Pentos — en Essos", carte:"essos", x:10.5, y:47.0},
+  merdothrak:{nom:"La mer Dothrak — en Essos", carte:"essos", x:55.5, y:58.5},
+  khalasar: {nom:"Avec le khalasar, vers l'est — en Essos", carte:"essos", x:33.0, y:50.0}
+};
+
+const TH_NORD   = ["Stark","Main theme"];
+const TH_GARDE  = ["Garde de Nuit","Stark","Main theme"];
+const TH_SUD    = ["Baratheon","Lannister","Main theme"];
+const TH_TARG   = ["Targaryen","Dothraki","Main theme"];
+const TH_LANN   = ["Lannister","Main theme"];
+const TH_TULLY  = ["Tully","Stark","Main theme"];
+const TH_ARRYN  = ["Arryn","Tully","Main theme"];
+
+const SCENES = [
+  {chap:"Chapitre 1 · Prologue",titre:"Au-delà du Mur",desc:"Trois patrouilleurs de la Garde de Nuit s'enfoncent dans la forêt hantée, sur la piste de sauvageons. Le froid tombe, trop vite, trop fort — et quelque chose les observe entre les arbres.",mots:"forêt hantée · givre · ombres pâles",atmo:"linear-gradient(180deg,#0a0f16 0%,#14202e 55%,#233648 100%)",part:"neige",maison:"garde",lieu:"audela",themes:TH_GARDE},
+  {chap:"Chapitre 2 · Bran",titre:"L'exécution du déserteur",desc:"Ned Stark décapite lui-même un déserteur devant ses fils. « Celui qui prononce la sentence doit tenir l'épée. » Sur le chemin du retour : une louve géante morte, et ses petits encore vivants.",mots:"billot · Glace · six louveteaux et un blanc",atmo:"linear-gradient(180deg,#1a2230 0%,#2c3a4d 55%,#46586e 100%)",part:"neige",maison:"stark",lieu:"winterfell",themes:TH_NORD},
+  {chap:"Chapitre 3 · Catelyn",titre:"Le bois sacré",desc:"Catelyn rejoint Ned sous le barral, arbre blanc aux feuilles rouge sang. Elle apporte deux nouvelles : Jon Arryn, la Main du Roi, est mort — et le roi Robert chevauche vers Winterfell.",mots:"barral · étangs noirs · une lettre du sud",atmo:"linear-gradient(180deg,#111820 0%,#1e2a28 50%,#31261f 100%)",part:"feuilles",maison:"stark",lieu:"winterfell",themes:TH_NORD},
+  {chap:"Chapitre 4 · Daenerys",titre:"La promise de Pentos",desc:"De l'autre côté du détroit, Daenerys Targaryen est offerte par son frère Viserys à Khal Drogo, seigneur de cheval dothraki. Soies, épices — et la peur d'une enfant vendue contre une armée.",mots:"villa d'Illyrio · soie violette · la mer étroite",atmo:"linear-gradient(180deg,#2a1a2e 0%,#57263a 50%,#8f5a3a 100%)",part:"braises",maison:"targaryen",lieu:"pentos",themes:TH_TARG},
+  {chap:"Chapitre 5 · Eddard",titre:"L'arrivée du roi",desc:"Robert Baratheon franchit les portes de Winterfell avec toute sa cour. Dans les cryptes, devant la tombe de Lyanna, il demande à Ned de devenir sa nouvelle Main.",mots:"bannières · cryptes · la statue de Lyanna",atmo:"linear-gradient(180deg,#202836 0%,#3d4657 45%,#6b6353 100%)",part:"neige",maison:"stark",lieu:"winterfell",themes:TH_NORD},
+  {chap:"Chapitre 6 · Jon",titre:"Le festin",desc:"La grande salle rugit de musique et de vin. Relégué loin de l'estrade, Jon y gagne la liberté de boire — et une leçon de Tyrion Lannister : « N'oublie jamais ce que tu es… fais-t'en une armure. »",mots:"torches · le nain et le bâtard · vin épicé",atmo:"linear-gradient(180deg,#1c130c 0%,#3d2412 50%,#6e451c 100%)",part:"braises",maison:"stark",lieu:"winterfell",themes:TH_NORD},
+  {chap:"Chapitre 7 · Catelyn",titre:"La lettre de Lysa",desc:"En pleine nuit, un message chiffré arrive du Val d'Arryn. Ce que Lysa y affirme change tout : Ned ne peut plus refuser le sud, et Winterfell ne dormira plus tranquille.",mots:"chandelle · message chiffré · décision",atmo:"linear-gradient(180deg,#131a24 0%,#232f40 55%,#38495e 100%)",part:"neige",maison:"stark",lieu:"winterfell",themes:TH_NORD},
+  {chap:"Chapitre 8 · Arya",titre:"L'aiguille d'Arya",desc:"Pendant que Sansa brille aux travaux d'aiguille, Arya rêve d'épées et file rejoindre les garçons dans la cour. Sa louve s'appelle Nymeria, comme une reine guerrière.",mots:"couture abandonnée · cour d'entraînement · Nymeria",atmo:"linear-gradient(180deg,#1a2230 0%,#2e3c50 55%,#4a5c72 100%)",part:"neige",maison:"stark",lieu:"winterfell",themes:TH_NORD},
+  {chap:"Chapitre 9 · Bran",titre:"Le petit grimpeur",desc:"Bran grimpe les murs de Winterfell comme il l'a toujours fait, sûr de ses mains, malgré les interdictions de sa mère. Ce jour-là, la vieille tour abandonnée n'est pas vide.",mots:"pierres descellées · gargouilles · la fenêtre",atmo:"linear-gradient(180deg,#151d28 0%,#28354a 55%,#41536e 100%)",part:"neige",maison:"stark",lieu:"winterfell",themes:TH_NORD},
+  {chap:"Chapitre 10 · Tyrion",titre:"Le lion au petit matin",desc:"Tyrion lit avant l'aube, déjeune copieusement, et distribue quelques vérités bien senties — dont une leçon mémorable à son royal neveu Joffrey.",mots:"livres · saucisses et bière · gifles princières",atmo:"linear-gradient(180deg,#1c1610 0%,#332618 50%,#584023 100%)",part:"braises",maison:"lannister",lieu:"winterfell",themes:TH_LANN},
+  {chap:"Chapitre 11 · Jon",titre:"Les adieux",desc:"Winterfell se vide. Jon fait ses adieux à Bran endormi, à Robb, à Arya — à qui il offre un cadeau très particulier. Ned lui promet qu'à leur prochaine rencontre, ils parleront de sa mère.",mots:"malles · un cadeau effilé · promesse",atmo:"linear-gradient(180deg,#18202c 0%,#2b3646 50%,#465666 100%)",part:"neige",maison:"stark",lieu:"winterfell",themes:TH_NORD},
+  {chap:"Chapitre 12 · Daenerys",titre:"Le mariage dothraki",desc:"Sous le ciel ouvert, un mariage dothraki sans au moins trois morts passe pour une fête morne. Au terme des festivités, Daenerys reçoit trois œufs de dragon pétrifiés — beaux, anciens, impossibles.",mots:"tambours · duels · trois œufs d'écailles",atmo:"linear-gradient(180deg,#20161f 0%,#4a2a2a 50%,#7d5030 100%)",part:"braises",maison:"targaryen",lieu:"pentos",themes:TH_TARG},
+  {chap:"Chapitre 13 · Eddard",titre:"La route royale",desc:"Sur la longue route du sud, Robert partage avec Ned des nouvelles inquiétantes venues de l'autre rive du détroit. Entre les deux vieux amis, un désaccord profond s'installe.",mots:"colonne interminable · aube grise · vieux fantômes",atmo:"linear-gradient(180deg,#18202c 0%,#2b3646 50%,#4a5a6e 100%)",part:"neige",maison:"stark",lieu:"routeroy",themes:TH_NORD},
+  {chap:"Chapitre 14 · Tyrion",titre:"Vers le Mur",desc:"Tyrion chevauche vers le nord avec Jon et la Garde de Nuit. Autour des feux de camp, le nain et le bâtard apprennent à se connaître — et le Nord devient plus sauvage à chaque lieue.",mots:"feux de camp · forêts noires · le froid qui monte",atmo:"linear-gradient(180deg,#101720 0%,#1e2b3a 55%,#324556 100%)",part:"neige",maison:"lannister",lieu:"versmur",themes:TH_GARDE},
+  {chap:"Chapitre 15 · Catelyn",titre:"La nuit du poignard",desc:"Winterfell croyait avoir touché le fond. Une nuit de feu et de lame prouve le contraire — et les loups montrent pour la première fois ce qu'ils valent vraiment.",mots:"flammes · une lame en argent · crocs",atmo:"linear-gradient(180deg,#160f0e 0%,#331912 50%,#4a2418 100%)",part:"braises",maison:"stark",lieu:"winterfell",themes:TH_NORD},
+  {chap:"Chapitre 16 · Sansa",titre:"Au bord du Trident",desc:"Sur la route du sud, Sansa savoure son conte de fées : un prince, une future couronne. Mais une après-midi au bord de la rivière suffit à fissurer le rêve.",mots:"rives du Trident · un prince · le rêve qui craque",atmo:"linear-gradient(180deg,#1c2430 0%,#35455a 50%,#5d6f7e 100%)",part:"neige",maison:"stark",lieu:"trident",themes:TH_NORD},
+  {chap:"Chapitre 17 · Eddard",titre:"Justice à Darry",desc:"Au château de Darry, rois, reines et enfants s'affrontent sur ce qui s'est passé au bord de la rivière. La sentence qui tombe est cruelle — et Ned insiste pour l'exécuter lui-même.",mots:"salle de jugement · colère royale · un prix injuste",atmo:"linear-gradient(180deg,#1a1a22 0%,#302c38 55%,#4c4450 100%)",part:"neige",maison:"stark",lieu:"darry",themes:TH_NORD},
+  {chap:"Chapitre 18 · Bran",titre:"La corneille à trois yeux",desc:"Bran tombe, tombe, tombe dans un rêve sans fin. Une corneille à trois yeux vole à ses côtés et lui montre tout le royaume — et ce qui attend au nord du Nord.",mots:"chute infinie · trois yeux · voler ou mourir",atmo:"linear-gradient(180deg,#0c1220 0%,#1c2640 55%,#334366 100%)",part:"neige",maison:"stark",lieu:"winterfell",themes:TH_NORD},
+  {chap:"Chapitre 19 · Catelyn",titre:"Port-Réal",desc:"Catelyn arrive en secret dans la capitale — mais son secret ne tient pas une journée. Dans une maison qu'elle n'aurait jamais choisie, un vieil ami d'enfance a des révélations à faire sur un certain poignard.",mots:"la ville puante · vieil ami · un poignard",atmo:"linear-gradient(180deg,#231c14 0%,#3f2f1c 50%,#665033 100%)",part:"braises",maison:"stark",lieu:"portreal",themes:TH_TULLY},
+  {chap:"Chapitre 20 · Jon",titre:"Châteaunoir",desc:"Le Mur, enfin : deux cents mètres de glace vivante. Mais la Garde de Nuit n'a rien des chansons — vieillards, voleurs et gamins perdus. Jon y fait ses premières armes, et ses premières erreurs.",mots:"glace bleutée · cour d'armes · frères mal-nés",atmo:"linear-gradient(180deg,#0e141c 0%,#1c2b3d 50%,#37556e 100%)",part:"neige",maison:"garde",lieu:"mur",themes:TH_GARDE},
+  {chap:"Chapitre 21 · Eddard",titre:"La Main du Roi",desc:"Ned entre dans Port-Réal épuisé — et découvre l'état réel du royaume : un conseil restreint plein de sourires, et des dettes à faire pâlir un Lannister.",mots:"petit conseil · sourires de soie · couronne endettée",atmo:"linear-gradient(180deg,#231c14 0%,#3f2f1c 50%,#6b5535 100%)",part:"braises",maison:"stark",lieu:"portreal",themes:TH_SUD},
+  {chap:"Chapitre 22 · Tyrion",titre:"Le sommet du monde",desc:"Avant de repartir vers le sud, Tyrion réalise un caprice : monter au sommet du Mur et pisser du haut du monde. Là-haut, face au nord infini, même un Lannister se tait.",mots:"ascension · vent glacé · l'infini blanc",atmo:"linear-gradient(180deg,#0d141d 0%,#20344a 50%,#3f6284 100%)",part:"neige",maison:"lannister",lieu:"mur",themes:TH_GARDE},
+  {chap:"Chapitre 23 · Arya",titre:"La danse de l'eau",desc:"Ned offre à Arya un professeur très particulier : Syrio Forel, première épée de Braavos. Première leçon : attraper des chats. « Que dit-on au dieu de la mort ? — Pas aujourd'hui. »",mots:"épée de bois · Syrio · pas aujourd'hui",atmo:"linear-gradient(180deg,#1e1812 0%,#38291a 50%,#5d452a 100%)",part:"braises",maison:"stark",lieu:"portreal",themes:TH_SUD},
+  {chap:"Chapitre 24 · Daenerys",titre:"La mer d'herbe",desc:"Le khalasar traverse l'océan d'herbe vers Vaes Dothrak. Daenerys, qui n'était qu'une monnaie d'échange, commence à trouver sa place — au grand désespoir de son frère.",mots:"herbes à perte de vue · crinières · un dragon qui s'éveille",atmo:"linear-gradient(180deg,#1f1a12 0%,#3d3018 50%,#6e5526 100%)",part:"braises",maison:"targaryen",lieu:"merdothrak",themes:TH_TARG},
+  {chap:"Chapitre 25 · Bran",titre:"Le garçon brisé",desc:"Bran s'est réveillé, mais plus rien n'est pareil. Un visiteur de passage à Winterfell lui offre pourtant un espoir inattendu — dessiné sur un bout de papier.",mots:"chambre close · un plan de selle · Été",atmo:"linear-gradient(180deg,#161e2a 0%,#293648 55%,#42546a 100%)",part:"neige",maison:"stark",lieu:"winterfell",themes:TH_NORD},
+  {chap:"Chapitre 26 · Eddard",titre:"Sur les traces de la Main",desc:"Que faisait Jon Arryn dans ses derniers jours ? Ned remonte la piste de son prédécesseur, question après question — et chaque réponse en soulève trois autres.",mots:"vieux registres · dernières visites · une piste",atmo:"linear-gradient(180deg,#201a13 0%,#3a2d1c 50%,#5f4c2f 100%)",part:"braises",maison:"stark",lieu:"portreal",themes:TH_SUD},
+  {chap:"Chapitre 27 · Jon",titre:"Le couard courageux",desc:"Un nouveau venu arrive à Châteaunoir : Samwell Tarly, gros, maladroit, terrifié — et condamné d'avance dans la cour d'entraînement. Jon décide que non.",mots:"recrue tremblante · pacte discret · premiers amis",atmo:"linear-gradient(180deg,#0e141c 0%,#1c2b3d 50%,#345268 100%)",part:"neige",maison:"garde",lieu:"mur",themes:TH_GARDE},
+  {chap:"Chapitre 28 · Eddard",titre:"L'apprenti armurier",desc:"La piste de Jon Arryn mène Ned dans la rue de l'Acier, chez le meilleur armurier de la ville — et devant un apprenti au visage étrangement familier.",mots:"forges · un heaume de taureau · un regard connu",atmo:"linear-gradient(180deg,#1c130e 0%,#3a2114 50%,#6a3d1e 100%)",part:"braises",maison:"stark",lieu:"portreal",themes:TH_SUD},
+  {chap:"Chapitre 29 · Catelyn",titre:"L'auberge du carrefour",desc:"Sur la route du retour, Catelyn s'arrête dans une auberge pleine de voyageurs. Le mauvais soir, la mauvaise rencontre — et une décision prise en un éclair qui va embraser le royaume.",mots:"salle bondée · vieilles bannières · un cri de loyauté",atmo:"linear-gradient(180deg,#1a1410 0%,#332619 50%,#584327 100%)",part:"braises",maison:"stark",lieu:"auberge",themes:TH_TULLY},
+  {chap:"Chapitre 30 · Sansa",titre:"Le tournoi de la Main",desc:"Splendeur absolue : cent chevaliers, des armures comme des miroirs, la foule en délire. Sansa vit son conte de fées grandeur nature — jusqu'à ce que le tournoi montre son vrai visage.",mots:"lices · armures étincelantes · le chevalier aux fleurs",atmo:"linear-gradient(180deg,#221a10 0%,#43331a 50%,#7a5c2c 100%)",part:"braises",maison:"stark",lieu:"portreal",themes:TH_SUD},
+  {chap:"Chapitre 31 · Eddard",titre:"Après les lices",desc:"Pendant que la fête bat son plein, Ned pose des questions sur une mort trop opportune. Dans les couloirs du Donjon Rouge, des voix chuchotent des mises en garde.",mots:"couloirs sombres · chuchotements · trop de hasards",atmo:"linear-gradient(180deg,#1d1812 0%,#362a1b 50%,#59452c 100%)",part:"braises",maison:"stark",lieu:"portreal",themes:TH_SUD},
+  {chap:"Chapitre 32 · Tyrion",titre:"La haute route",desc:"Prisonnier, Tyrion chevauche vers l'est à travers les montagnes de la Lune — un territoire où les clans sauvages ne respectent ni titres, ni rançons. Sa langue reste sa seule arme.",mots:"défilés rocheux · clans des montagnes · parler ou mourir",atmo:"linear-gradient(180deg,#131820 0%,#28303e 55%,#48505e 100%)",part:"neige",maison:"lannister",lieu:"hauteroute",themes:TH_LANN},
+  {chap:"Chapitre 33 · Arya",titre:"Les souterrains",desc:"En chassant les chats du château comme le lui a demandé Syrio, Arya se perd dans les entrailles du Donjon Rouge — et surprend une conversation qu'elle n'aurait jamais dû entendre.",mots:"crânes de dragons · torches · voix dans l'ombre",atmo:"linear-gradient(180deg,#0f0d12 0%,#1f1a24 55%,#332b3a 100%)",part:"braises",maison:"stark",lieu:"portreal",themes:TH_SUD},
+  {chap:"Chapitre 34 · Eddard",titre:"La colère du roi",desc:"Des nouvelles de l'autre côté du détroit mettent le conseil en ébullition. Robert exige une réponse que Ned ne peut pas donner — et cette fois, l'amitié ne suffit plus.",mots:"conseil houleux · un ordre · une démission",atmo:"linear-gradient(180deg,#1e150f 0%,#3c2818 50%,#663f22 100%)",part:"braises",maison:"stark",lieu:"portreal",themes:TH_SUD},
+  {chap:"Chapitre 35 · Catelyn",titre:"Les Eyrié",desc:"Au bout d'une ascension vertigineuse, Catelyn atteint les Eyrié, forteresse perchée dans le ciel. Ce qu'elle y trouve — sa sœur, et la justice qu'on y rend — n'a rien de rassurant.",mots:"forteresse céleste · portes de la Lune · une sœur changée",atmo:"linear-gradient(180deg,#141c2a 0%,#2a3a54 50%,#4d648a 100%)",part:"neige",maison:"stark",lieu:"eyrie",themes:TH_ARRYN},
+  {chap:"Chapitre 36 · Eddard",titre:"L'acier dans la nuit",desc:"L'enquête de Ned le mène dans la ville basse, vers une découverte qui éclaire tout d'un jour nouveau. Mais dans Port-Réal, les secrets se paient — et certains créanciers ne patientent pas.",mots:"ville basse · une évidence · lances sous la pluie",atmo:"linear-gradient(180deg,#12141c 0%,#242834 55%,#3c414e 100%)",part:"braises",maison:"stark",lieu:"portreal",themes:TH_SUD}
+];
+
+/* ===== Blasons stylisés (SVG) ===== */
+const BLASONS = {
+  stark:`<svg viewBox="0 0 34 34" aria-label="Maison Stark"><circle cx="17" cy="17" r="15.5" fill="#3d454f" stroke="#8a97a8" stroke-width="1.4"/><path d="M10 8 L14 14 L8 15 Z" fill="#e8ecf1"/><path d="M24 8 L20 14 L26 15 Z" fill="#e8ecf1"/><path d="M9.5 14.5 L24.5 14.5 L21 24 L17 28 L13 24 Z" fill="#e8ecf1"/><circle cx="13.8" cy="18" r="1.2" fill="#3d454f"/><circle cx="20.2" cy="18" r="1.2" fill="#3d454f"/><path d="M15.6 22.6 L18.4 22.6 L17 25 Z" fill="#3d454f"/></svg>`,
+  targaryen:`<svg viewBox="0 0 34 34" aria-label="Maison Targaryen"><circle cx="17" cy="17" r="15.5" fill="#16090b" stroke="#a32c2c" stroke-width="1.4"/><path d="M17 27 C17 20 17 15 17 9" stroke="#a32c2c" stroke-width="2.3" fill="none" stroke-linecap="round"/><path d="M17 26 C15 20 10 19 9 12" stroke="#a32c2c" stroke-width="2.3" fill="none" stroke-linecap="round"/><path d="M17 26 C19 20 24 19 25 12" stroke="#a32c2c" stroke-width="2.3" fill="none" stroke-linecap="round"/><circle cx="17" cy="8" r="2" fill="#a32c2c"/><circle cx="8.6" cy="11" r="2" fill="#a32c2c"/><circle cx="25.4" cy="11" r="2" fill="#a32c2c"/></svg>`,
+  lannister:`<svg viewBox="0 0 34 34" aria-label="Maison Lannister"><circle cx="17" cy="17" r="15.5" fill="#6e1c20" stroke="#c9a45c" stroke-width="1.4"/><path d="M17 5 L19 10 L24 7 L23.5 12.5 L29 12 L25.5 16.5 L29 21 L23.5 20.5 L24 26 L19 23 L17 28 L15 23 L10 26 L10.5 20.5 L5 21 L8.5 16.5 L5 12 L10.5 12.5 L10 7 L15 10 Z" fill="#c9a45c"/><circle cx="17" cy="16.5" r="5.6" fill="#6e1c20"/><circle cx="15" cy="15.5" r="1" fill="#c9a45c"/><circle cx="19" cy="15.5" r="1" fill="#c9a45c"/><path d="M15.6 19 Q17 20.4 18.4 19" stroke="#c9a45c" stroke-width="1" fill="none"/></svg>`,
+  garde:`<svg viewBox="0 0 34 34" aria-label="La Garde de Nuit"><circle cx="17" cy="17" r="15.5" fill="#0a0c10" stroke="#4a5460" stroke-width="1.4"/><path d="M9 20 Q13 14 17 17.5 Q21 14 25 20 Q21 18 17 20.5 Q13 18 9 20 Z" fill="#5a6470"/></svg>`
+};
+
+/* ===== État & sauvegarde ===== */
+const CLE = 'asoiaf-tome1';
+let etat = {
+  idx: 0,
+  revealed: [0,1,2,3,4,5],
+  volume: 20,
+  theme: null,
+  auto: false,
+  notes: {},
+  marquePage: ''
+};
+
+function charger(){
+  try{
+    const brut = localStorage.getItem(CLE);
+    if(brut){ etat = Object.assign(etat, JSON.parse(brut)); }
+  }catch(e){ /* stockage indisponible : le site fonctionne sans sauvegarde */ }
+}
+function sauver(){
+  try{ localStorage.setItem(CLE, JSON.stringify(etat)); }catch(e){}
+}
+charger();
+
+let idx = Math.min(Math.max(etat.idx,0), SCENES.length-1);
+let revealed = new Set(etat.revealed);
+
+/* ===== Éléments ===== */
+const atmo   = document.getElementById('atmo');
+const sceneEl= document.getElementById('scene');
+const rail   = document.getElementById('rail');
+const prev   = document.getElementById('prev');
+const next   = document.getElementById('next');
+const lieuNom= document.getElementById('lieuNom');
+const lieuTitre = document.getElementById('lieuTitre');
+const carteImg  = document.getElementById('carteImg');
+const pointCarte= document.getElementById('pointCarte');
+const carteMsg  = document.getElementById('carteMsg');
+const notesTa   = document.getElementById('notesChapitre');
+const marquePage= document.getElementById('marquePage');
+
+/* ===== Rendu ===== */
+function renderRail(){
+  rail.innerHTML='';
+  SCENES.forEach((s,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    b.setAttribute('aria-label','Chapitre '+(i+1)+' : '+s.titre);
+    if(i===idx)b.classList.add('active');
+    else if(revealed.has(i))b.classList.add('done');
+    else b.classList.add('locked');
+    b.onclick=()=>{idx=i;render();};
+    rail.appendChild(b);
+  });
+}
+
+function render(){
+  const s=SCENES[idx];
+  atmo.style.background=s.atmo;
+  setParticles(s.part);
+  const locked=!revealed.has(idx);
+  sceneEl.className='scene'+(locked?' voile':'');
+  sceneEl.innerHTML=`
+    <div class="chapitre">${BLASONS[s.maison]||''}<span>${s.chap}</span></div>
+    <h1>${s.titre}</h1>
+    <img class="visuel" id="visuel" alt="Illustration : ${s.titre}">
+    <div class="desc">${s.desc}</div>
+    <div class="motscles">${s.mots}</div>
+    ${locked?`<div class="avert">
+      <p>Tu n'es peut-être pas encore arrivé ici…</p>
+      <button id="reveal">Révéler le chapitre</button>
+    </div>`:''}
+  `;
+  if(locked){
+    document.getElementById('reveal').onclick=()=>{
+      revealed.add(idx);
+      etat.revealed=[...revealed];sauver();
+      render();
+    };
+  }
+  chargerImage(idx);
+
+  /* Carte */
+  const l = LIEUX[s.lieu];
+  lieuNom.textContent = l.nom;
+  lieuTitre.textContent = l.nom;
+  carteImg.src = `cartes/${l.carte}.png`;
+  carteImg.alt = l.carte === "essos" ? "Carte d'Essos" : "Carte de Westeros";
+  carteImg.style.opacity = "1";
+  pointCarte.style.display = "block";
+  pointCarte.style.left = l.x + "%";
+  pointCarte.style.top  = l.y + "%";
+  carteMsg.classList.remove('visible');
+
+  /* Notes */
+  notesTa.value = etat.notes[idx] || '';
+
+  prev.disabled = idx===0;
+  next.disabled = idx===SCENES.length-1;
+  renderRail();
+
+  etat.idx = idx; sauver();
+  musiqueAuto();
+}
+
+prev.onclick=()=>{if(idx>0){idx--;render();}};
+next.onclick=()=>{if(idx<SCENES.length-1){idx++;render();}};
+
+notesTa.addEventListener('input', ()=>{
+  etat.notes[idx] = notesTa.value; sauver();
+});
+marquePage.value = etat.marquePage || '';
+marquePage.addEventListener('input', ()=>{
+  etat.marquePage = marquePage.value; sauver();
+});
+
+/* ===== Images (dossier "le trone de fer 1") ===== */
+const DOSSIER = "le trone de fer 1";
+const EXTS = ["jpg","jpeg","png","webp"];
+
+function chargerImage(i){
+  const img = document.getElementById('visuel');
+  if(!img) return;
+  const num = String(i+1).padStart(2,'0');
+  let e = 0;
+  function essayer(){
+    if(e >= EXTS.length){ img.classList.remove('ok'); return; }
+    img.onload = ()=>img.classList.add('ok');
+    img.onerror = ()=>{ e++; essayer(); };
+    img.src = `${DOSSIER}/scene-${num}.${EXTS[e]}`;
+  }
+  essayer();
+}
+
+/* =====================================================
+   MUSIQUE — thèmes par maison, fondu enchaîné, mode auto
+===================================================== */
+const MAISONS_MUSIQUE = [
+  "Stark","Targaryen","Lannister","Baratheon","Greyjoy",
+  "Tully","Arryn","Martell","Tyrell","Dothraki",
+  "Garde de Nuit","Main theme"
+];
+const EXT_AUDIO = ["mp3","ogg","m4a"];
+const VARIANTES = [""," 2"," 3"];
+
+const btnMus   = document.getElementById('btnMusique');
+const panneau  = document.getElementById('panneauMusique');
+const choix    = document.getElementById('choixTheme');
+const autoChk  = document.getElementById('autoMusique');
+const volume   = document.getElementById('volume');
+const progression = document.getElementById('progression');
+const tempsActuel = document.getElementById('tempsActuel');
+const tempsTotal  = document.getElementById('tempsTotal');
+const lecture  = document.getElementById('lecture');
+
+let actif = new Audio();        // piste en cours
+actif.loop = true;
+let volCible = (etat.volume ?? 20)/100;
+actif.volume = volCible;
+volume.value = etat.volume ?? 20;
+autoChk.checked = !!etat.auto;
+
+let fonduTimer = null;
+const themes = []; // {nom, base, src}
+
+function testerFichier(src){
+  return new Promise(res=>{
+    const t = new Audio();
+    t.oncanplaythrough = ()=>res(true);
+    t.onerror = ()=>res(false);
+    t.src = src;
+  });
+}
+
+(async function detecterThemes(){
+  for(const maison of MAISONS_MUSIQUE){
+    for(const v of VARIANTES){
+      let trouve = false;
+      for(const ext of EXT_AUDIO){
+        const nomFichier = `${maison} theme${v}.${ext}`;
+        if(await testerFichier(`musique/${encodeURIComponent(nomFichier)}`)){
+          themes.push({nom:`${maison}${v?` (${v.trim()})`:''}`, base:maison, src:`musique/${nomFichier}`});
+          trouve = true;
+          break;
+        }
+      }
+      if(v==="" && !trouve) break;
+    }
+  }
+  if(themes.length === 0){
+    choix.style.display='none';
+    volume.style.display='none';
+    lecture.style.display='none';
+    progression.style.display='none';
+    document.getElementById('temps').style.display='none';
+    panneau.querySelectorAll('label').forEach(l=>l.style.display='none');
+    const msg = document.createElement('p');
+    msg.className='vide';
+    msg.textContent = 'Aucune musique installée. Dépose tes fichiers dans le dossier « musique » (ex : Stark theme.mp3) — voir le LISEZ-MOI du dossier.';
+    panneau.appendChild(msg);
+    return;
+  }
+  for(const th of themes){
+    const opt = document.createElement('option');
+    opt.value = th.src;
+    opt.textContent = th.nom;
+    choix.appendChild(opt);
+  }
+  /* Restaurer le dernier thème choisi */
+  if(etat.theme && themes.some(t=>t.src===etat.theme)){
+    choix.value = etat.theme;
+  }
+  actif.src = choix.value;
+})();
+
+/* --- Fondu enchaîné --- */
+function jouerTheme(src, fondu){
+  if(actif.src.endsWith(encodeURI(src)) || actif.src===src){ return; }
+  etat.theme = src; sauver();
+  if(!fondu || actif.paused){
+    actif.pause();
+    actif = new Audio(src);
+    actif.loop = true;
+    actif.volume = volCible;
+    return;
+  }
+  const ancien = actif;
+  const nouveau = new Audio(src);
+  nouveau.loop = true;
+  nouveau.volume = 0;
+  nouveau.play().catch(()=>{});
+  actif = nouveau;
+  if(fonduTimer) clearInterval(fonduTimer);
+  const duree = 1600, pas = 40;
+  let t = 0;
+  fonduTimer = setInterval(()=>{
+    t += pas;
+    const r = Math.min(t/duree, 1);
+    nouveau.volume = volCible * r;
+    ancien.volume  = Math.max(volCible * (1-r), 0);
+    if(r >= 1){
+      clearInterval(fonduTimer); fonduTimer = null;
+      ancien.pause();
+    }
+  }, pas);
+}
+
+/* --- Mode auto : le thème suit le chapitre --- */
+function musiqueAuto(){
+  if(!autoChk.checked || themes.length===0) return;
+  const prefs = SCENES[idx].themes || [];
+  for(const p of prefs){
+    const th = themes.find(t=>t.base===p);
+    if(th){
+      choix.value = th.src;
+      jouerTheme(th.src, true);
+      return;
+    }
+  }
+}
+
+/* --- Contrôles --- */
+btnMus.onclick = ()=>{ panneau.classList.toggle('ouvert'); };
+
+choix.onchange = ()=>{ jouerTheme(choix.value, true); };
+
+autoChk.onchange = ()=>{
+  etat.auto = autoChk.checked; sauver();
+  if(autoChk.checked) musiqueAuto();
+};
+
+volume.oninput = ()=>{
+  volCible = volume.value/100;
+  if(!fonduTimer) actif.volume = volCible;
+  etat.volume = Number(volume.value); sauver();
+};
+
+lecture.onclick = ()=>{
+  if(actif.paused){
+    if(!actif.src && choix.value) { actif.src = choix.value; }
+    actif.play().catch(()=>{});
+    lecture.textContent = 'Couper la musique';
+    btnMus.classList.add('joue');
+    btnMus.textContent = '♫';
+  }else{
+    actif.pause();
+    lecture.textContent = 'Lancer la musique';
+    btnMus.classList.remove('joue');
+    btnMus.textContent = '♪';
+  }
+};
+
+/* --- Position dans le morceau --- */
+let glisse = false;
+function formatTemps(s){
+  if(!isFinite(s)) return '0:00';
+  const m = Math.floor(s/60), sec = Math.floor(s%60);
+  return `${m}:${String(sec).padStart(2,'0')}`;
+}
+setInterval(()=>{
+  if(glisse || !actif.duration) return;
+  progression.value = (actif.currentTime / actif.duration) * 1000;
+  tempsActuel.textContent = formatTemps(actif.currentTime);
+  tempsTotal.textContent  = formatTemps(actif.duration);
+}, 400);
+progression.addEventListener('input', ()=>{
+  glisse = true;
+  if(actif.duration) tempsActuel.textContent = formatTemps((progression.value/1000)*actif.duration);
+});
+progression.addEventListener('change', ()=>{
+  if(actif.duration) actif.currentTime = (progression.value/1000)*actif.duration;
+  glisse = false;
+});
+
+/* Fermer le panneau si on touche ailleurs */
+document.addEventListener('click', e=>{
+  if(!panneau.contains(e.target) && e.target !== btnMus){
+    panneau.classList.remove('ouvert');
+  }
+});
+
+/* ===== Plein écran ===== */
+const btnPE = document.getElementById('btnPleinEcran');
+function enPleinEcran(){
+  return document.fullscreenElement || document.webkitFullscreenElement;
+}
+btnPE.onclick = ()=>{
+  const racine = document.documentElement;
+  if(!enPleinEcran()){
+    if(racine.requestFullscreen) racine.requestFullscreen();
+    else if(racine.webkitRequestFullscreen) racine.webkitRequestFullscreen();
+  }else{
+    if(document.exitFullscreen) document.exitFullscreen();
+    else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
+  }
+};
+function majBoutonPE(){
+  if(enPleinEcran()){
+    btnPE.classList.add('actif');
+    btnPE.title='Quitter le plein écran';
+    btnPE.setAttribute('aria-label','Quitter le plein écran');
+  }else{
+    btnPE.classList.remove('actif');
+    btnPE.title='Plein écran';
+    btnPE.setAttribute('aria-label','Passer en plein écran');
+  }
+}
+document.addEventListener('fullscreenchange', majBoutonPE);
+document.addEventListener('webkitfullscreenchange', majBoutonPE);
+
+/* ===== Particules d'ambiance ===== */
+const cv=document.getElementById('particles');
+const ctx=cv.getContext('2d');
+let parts=[], mode='neige', raf;
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function resize(){cv.width=innerWidth;cv.height=innerHeight;}
+addEventListener('resize',resize);resize();
+
+function setParticles(m){
+  mode=m;parts=[];
+  const n = m==='feuilles'?26 : m==='braises'?36 : 60;
+  for(let i=0;i<n;i++){
+    parts.push({
+      x:Math.random()*cv.width,
+      y:Math.random()*cv.height,
+      r:Math.random()*(m==='feuilles'?5:2.4)+1,
+      v:Math.random()*.6+.25,
+      a:Math.random()*Math.PI*2
+    });
+  }
+}
+
+function tick(){
+  ctx.clearRect(0,0,cv.width,cv.height);
+  for(const p of parts){
+    p.a+=.01;
+    if(mode==='braises'){
+      p.y-=p.v; p.x+=Math.sin(p.a)*.5;
+      ctx.fillStyle=`rgba(220,${120+Math.floor(Math.sin(p.a)*40+60)},40,.7)`;
+    }else if(mode==='feuilles'){
+      p.y+=p.v*.8; p.x+=Math.sin(p.a)*1.1;
+      ctx.fillStyle='rgba(163,44,44,.75)';
+    }else{
+      p.y+=p.v; p.x+=Math.sin(p.a)*.4;
+      ctx.fillStyle='rgba(232,236,241,.7)';
+    }
+    if(p.y>cv.height+10)p.y=-10;
+    if(p.y<-10)p.y=cv.height+10;
+    if(p.x>cv.width+10)p.x=-10;
+    if(p.x<-10)p.x=cv.width+10;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fill();
+  }
+  raf=requestAnimationFrame(tick);
+}
+if(!reduced){tick();}
+
+render();
+</script>
+
+<script>
+/* Mode cinéma : l'image du chapitre devient le fond de la page */
+const fond = document.createElement('div');
+fond.id = 'fond';
+document.body.insertBefore(fond, document.body.firstChild.nextSibling);
+setInterval(()=>{
+  const v = document.getElementById('visuel');
+  if(v && v.classList.contains('ok') && v.src){
+    if(fond.style.backgroundImage !== `url("${v.src}")`){
+      fond.style.backgroundImage = `url("${v.src}")`;
+    }
+    fond.classList.add('ok');
+  }else{
+    fond.classList.remove('ok');
+  }
+}, 500);
+</script>
+
+</body>
+</html>

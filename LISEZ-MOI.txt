@@ -1,0 +1,30 @@
+SITE — LE TRÔNE DE FER · GUIDE D'ÉCOUTE
+=========================================
+
+CONTENU DU DOSSIER
+------------------
+  index.html            → la page du site (double-clique pour l'ouvrir)
+  le trone de fer 1/    → tes images du tome 1 (voir LISEZ-MOI.txt dedans)
+
+DÉMARRAGE
+---------
+1. Ouvre index.html dans ton navigateur (Chrome, Edge, Firefox...).
+2. Dépose tes images dans "le trone de fer 1" en les nommant
+   scene-01.jpg ... scene-10.jpg (ou .png / .jpeg / .webp).
+3. Recharge la page : les images apparaissent dans chaque scène.
+
+NAVIGATION
+----------
+- Boutons Précédent / Suivant pour avancer au rythme de l'audio.
+- Les numéros en haut permettent de sauter à une scène.
+- Les scènes que tu n'as pas encore atteintes sont floutées
+  (anti-spoiler) : tape "Révéler la scène" quand tu y arrives.
+
+PLUS TARD
+---------
+- Tome 2 : on créera "le trone de fer 2" et j'ajouterai ses scènes
+  dans le site sur le même principe.
+- Garde tout le dossier ensemble : index.html doit rester à côté
+  des dossiers d'images pour que tout fonctionne.
+
+Bonne écoute !
