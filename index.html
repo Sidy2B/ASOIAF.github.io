@@ -78,6 +78,7 @@
     .colonne{display:flex;flex-direction:column;gap:16px}
   }
 
+  .colonnePrincipale{display:flex;flex-direction:column;gap:16px;min-width:0}
   .widget{
     background:var(--carte);backdrop-filter:blur(16px);
     border:1px solid var(--bord);border-radius:var(--rayon);
@@ -311,6 +312,41 @@
   }
   #wNotes textarea:focus-visible,#marquePage:focus-visible{outline:2px solid var(--bougie);outline-offset:1px}
 
+  /* ===== Widget personnages ===== */
+  #persoListe{max-height:340px;overflow-y:auto;padding-right:4px}
+  .perso{
+    display:flex;gap:11px;align-items:flex-start;
+    padding:9px 2px;border-bottom:1px solid var(--bord);
+  }
+  .perso:last-child{border-bottom:none}
+  .miniB{width:30px;height:30px;flex:none;border-radius:50%;object-fit:cover;
+    border:1px solid var(--bord);margin-top:2px}
+  .persoNom{font-size:1rem;color:var(--neige)}
+  .persoDesc{font-size:.88rem;color:var(--acier);line-height:1.45}
+  .persoCompte{margin-left:auto;font-size:.74rem;letter-spacing:.1em;color:var(--bougie)}
+
+  /* ===== Widget familles (arbre) ===== */
+  #wFamille .widget-corps{overflow-x:auto}
+  #arbre{min-width:680px;width:100%;display:block}
+  #arbre text{font-family:'EB Garamond',serif;fill:var(--neige);font-size:12.5px}
+  #arbre .boite{fill:rgba(7,10,16,.72);stroke:rgba(238,241,245,.28);rx:8}
+  #arbre .sect{fill:var(--bougie);font-size:10.5px;letter-spacing:.2em}
+  #arbre .mini{fill:var(--acier);font-size:9px;font-style:italic}
+  #arbre .mariage{stroke:var(--bougie);stroke-width:1.6}
+  #arbre .parente{stroke:#93a0b2;stroke-width:1.2;fill:none}
+  #arbre .batard{stroke:#93a0b2;stroke-width:1.2;fill:none;stroke-dasharray:5 4}
+
+  /* ===== Tracés de voyage sur les cartes ===== */
+  .trajets{
+    position:absolute;inset:0;width:100%;height:100%;
+    pointer-events:none;
+  }
+  .trajets polyline{
+    fill:none;stroke-width:2.2;stroke-dasharray:6 5;
+    stroke-linecap:round;opacity:.9;
+    vector-effect:non-scaling-stroke;
+  }
+
   @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -326,11 +362,66 @@
   </header>
 
   <div class="grille">
-    <!-- ===== Colonne principale : la scène ===== -->
+    <!-- ===== Colonne principale : scène + familles ===== -->
+    <div class="colonnePrincipale">
     <section class="widget" id="wScene">
       <div class="widget-titre"><span class="picto">◆</span> Chapitre en cours</div>
       <div class="widget-corps voile-zone" id="scene"></div>
     </section>
+
+    <section class="widget" id="wFamille">
+      <div class="widget-titre"><span class="picto">⚭</span> Familles & relations</div>
+      <div class="widget-corps">
+        <svg id="arbre" viewBox="0 0 680 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre des familles">
+          <!-- ===== Stark / Tully / Arryn ===== -->
+          <text class="sect" x="12" y="24" data-ch="2">MAISONS STARK · TULLY · ARRYN</text>
+          <line class="mariage" x1="148" y1="55" x2="182" y2="55" data-ch="3"/>
+          <line class="parente" x1="278" y1="55" x2="322" y2="55" data-ch="3"/>
+          <text class="mini" x="283" y="48" data-ch="3">sœurs</text>
+          <line class="mariage" x1="418" y1="55" x2="462" y2="55" data-ch="3"/>
+          <path class="parente" d="M165 68 V95 H45 M165 95 H425 M45 95 V122 M140 95 V122 M235 95 V122 M330 95 V122 M425 95 V122" data-ch="2"/>
+          <path class="parente" d="M440 68 V108 H555 V122" data-ch="35"/>
+          <path class="batard" d="M100 68 V108 H620 V122" data-ch="2"/>
+          <g data-ch="2"><rect class="boite" x="52" y="42" width="96" height="26" rx="8"/><text x="100" y="59" text-anchor="middle">Eddard Stark</text></g>
+          <g data-ch="3"><rect class="boite" x="182" y="42" width="96" height="26" rx="8"/><text x="230" y="59" text-anchor="middle">Catelyn Tully</text></g>
+          <g data-ch="3"><rect class="boite" x="322" y="42" width="96" height="26" rx="8"/><text x="370" y="59" text-anchor="middle">Lysa Tully</text></g>
+          <g data-ch="3"><rect class="boite" x="462" y="42" width="96" height="26" rx="8"/><text x="510" y="59" text-anchor="middle">Jon Arryn †</text></g>
+          <g data-ch="2"><rect class="boite" x="-3" y="122" width="96" height="26" rx="8"/><text x="45" y="139" text-anchor="middle">Robb</text></g>
+          <g data-ch="2"><rect class="boite" x="92" y="122" width="96" height="26" rx="8"/><text x="140" y="139" text-anchor="middle">Sansa</text></g>
+          <g data-ch="2"><rect class="boite" x="187" y="122" width="96" height="26" rx="8"/><text x="235" y="139" text-anchor="middle">Arya</text></g>
+          <g data-ch="2"><rect class="boite" x="282" y="122" width="96" height="26" rx="8"/><text x="330" y="139" text-anchor="middle">Bran</text></g>
+          <g data-ch="2"><rect class="boite" x="377" y="122" width="96" height="26" rx="8"/><text x="425" y="139" text-anchor="middle">Rickon</text></g>
+          <g data-ch="35"><rect class="boite" x="507" y="122" width="96" height="26" rx="8"/><text x="555" y="139" text-anchor="middle">Robin Arryn</text></g>
+          <g data-ch="2"><rect class="boite" x="572" y="122" width="102" height="26" rx="8"/><text x="623" y="139" text-anchor="middle">Jon Snow</text></g>
+          <!-- ===== Baratheon / Lannister ===== -->
+          <text class="sect" x="12" y="205" data-ch="5">MAISONS BARATHEON · LANNISTER</text>
+          <line class="mariage" x1="168" y1="240" x2="202" y2="240" data-ch="5"/>
+          <line class="parente" x1="298" y1="240" x2="332" y2="240" data-ch="5"/>
+          <line class="parente" x1="428" y1="240" x2="462" y2="240" data-ch="6"/>
+          <text class="mini" x="360" y="222" data-ch="5">enfants de lord Tywin</text>
+          <path class="parente" d="M185 253 V302" data-ch="5"/>
+          <g data-ch="5"><rect class="boite" x="72" y="227" width="96" height="26" rx="8"/><text x="120" y="244" text-anchor="middle">Robert</text></g>
+          <g data-ch="5"><rect class="boite" x="202" y="227" width="96" height="26" rx="8"/><text x="250" y="244" text-anchor="middle">Cersei</text></g>
+          <g data-ch="5"><rect class="boite" x="332" y="227" width="96" height="26" rx="8"/><text x="380" y="244" text-anchor="middle">Jaime</text></g>
+          <g data-ch="6"><rect class="boite" x="462" y="227" width="96" height="26" rx="8"/><text x="510" y="244" text-anchor="middle">Tyrion</text></g>
+          <g data-ch="5"><rect class="boite" x="137" y="302" width="96" height="26" rx="8"/><text x="185" y="319" text-anchor="middle">Joffrey</text></g>
+          <!-- ===== Targaryen ===== -->
+          <text class="sect" x="12" y="385" data-ch="4">MAISON TARGARYEN</text>
+          <text class="mini" x="200" y="385" data-ch="4">derniers enfants du roi Aerys II †</text>
+          <line class="parente" x1="198" y1="425" x2="252" y2="425" data-ch="4"/>
+          <text class="mini" x="200" y="417" data-ch="4">frère &amp; sœur</text>
+          <line class="mariage" x1="348" y1="425" x2="402" y2="425" data-ch="4"/>
+          <g data-ch="4"><rect class="boite" x="102" y="412" width="96" height="26" rx="8"/><text x="150" y="429" text-anchor="middle">Viserys</text></g>
+          <g data-ch="4"><rect class="boite" x="252" y="412" width="96" height="26" rx="8"/><text x="300" y="429" text-anchor="middle">Daenerys</text></g>
+          <g data-ch="4"><rect class="boite" x="402" y="412" width="96" height="26" rx="8"/><text x="450" y="429" text-anchor="middle">Khal Drogo</text></g>
+          <!-- ===== Légende ===== -->
+          <line class="mariage" x1="20" y1="478" x2="50" y2="478"/><text class="mini" x="56" y="482">mariage</text>
+          <line class="parente" x1="150" y1="478" x2="180" y2="478"/><text class="mini" x="186" y="482">parenté</text>
+          <line class="batard" x1="280" y1="478" x2="310" y2="478"/><text class="mini" x="316" y="482">fils illégitime</text>
+        </svg>
+      </div>
+    </section>
+    </div>
 
     <!-- ===== Colonne widgets ===== -->
     <div class="colonne">
@@ -360,11 +451,17 @@
         <div class="widget-corps">
           <div class="carteWrap">
             <img id="carteImg" src="cartes/westeros.png" alt="Carte de Westeros">
+            <svg class="trajets" id="trajets1" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
             <div class="pointCarte" id="pointCarte"><span class="halo"></span><span class="coeur"></span></div>
           </div>
           <div class="lieuNom" id="lieuNom"></div>
           <button id="btnAgrandir">Agrandir la carte ⤢</button>
         </div>
+      </section>
+
+      <section class="widget" id="wPersos">
+        <div class="widget-titre"><span class="picto">👤</span> Personnages <span class="persoCompte" id="persoCompte"></span></div>
+        <div class="widget-corps"><div id="persoListe"></div></div>
       </section>
 
       <section class="widget" id="wNotes">
@@ -393,6 +490,7 @@
   <div class="modale-zone">
     <div class="modale-carteWrap" id="modaleWrap">
       <img id="modaleImg" src="cartes/westeros.png" alt="Carte agrandie">
+      <svg class="trajets" id="trajets2" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
       <div class="pointCarte" id="modalePoint"><span class="halo"></span><span class="coeur"></span></div>
     </div>
   </div>
@@ -579,6 +677,7 @@ function render(){
 
   renderRail();
   etat.idx = idx; sauver();
+  majProgressif();
   musiqueAuto();
 }
 
@@ -607,6 +706,110 @@ modale.addEventListener('click', e=>{
 document.addEventListener('keydown', e=>{
   if(e.key === 'Escape') modale.classList.remove('ouverte');
 });
+
+/* =====================================================
+   PERSONNAGES — apparaissent au fil des chapitres révélés
+===================================================== */
+const PERSONNAGES = [
+  {nom:"Eddard « Ned » Stark", maison:"stark", ch:2, desc:"Seigneur de Winterfell, gardien du Nord. L'honneur fait homme — parfois à ses dépens."},
+  {nom:"Robb Stark", maison:"stark", ch:2, desc:"L'aîné des enfants Stark, élevé pour succéder à son père. Son loup : Vent Gris."},
+  {nom:"Jon Snow", maison:"stark", ch:2, desc:"Fils illégitime de Ned, élevé à Winterfell. Son loup blanc et silencieux : Fantôme."},
+  {nom:"Bran Stark", maison:"stark", ch:2, desc:"Sept ans, passionné d'escalade, rêve de chevalerie. Son loup : Été."},
+  {nom:"Rickon Stark", maison:"stark", ch:2, desc:"Le benjamin des Stark, trois ans. Son loup : Broussaille."},
+  {nom:"Theon Greyjoy", maison:"greyjoy", ch:2, desc:"Pupille (et otage) de Ned, héritier des îles de Fer. Sourire facile, arc toujours prêt."},
+  {nom:"Catelyn Stark", maison:"tully", ch:3, desc:"Née Tully de Vivesaigues, épouse de Ned. Mère avant tout — dans ses forces comme dans ses failles."},
+  {nom:"Mestre Luwin", maison:"autre", ch:3, desc:"Le mestre de Winterfell : médecin, précepteur et conseiller fidèle de la famille."},
+  {nom:"Daenerys Targaryen", maison:"targaryen", ch:4, desc:"Treize ans, dernière fille du roi déchu. Vendue en mariage par son frère — pour l'instant."},
+  {nom:"Viserys Targaryen", maison:"targaryen", ch:4, desc:"Se proclame roi légitime des Sept Couronnes. Le « dragon » s'éveille surtout quand on le contrarie."},
+  {nom:"Khal Drogo", maison:"autre", ch:4, desc:"Seigneur de guerre dothraki, jamais vaincu au combat. Sa tresse n'a jamais été coupée."},
+  {nom:"Illyrio Mopatis", maison:"autre", ch:4, desc:"Riche magistrat de Pentos, hôte des Targaryen. Généreux — trop, peut-être."},
+  {nom:"Robert Baratheon", maison:"baratheon", ch:5, desc:"Le roi des Sept Couronnes, vieux frère d'armes de Ned. Le guerrier est devenu bon vivant."},
+  {nom:"Cersei Lannister", maison:"lannister", ch:5, desc:"La reine, belle et glaciale. Ne pardonne rien, n'oublie rien."},
+  {nom:"Jaime Lannister", maison:"lannister", ch:5, desc:"Frère jumeau de la reine, dit le Régicide. L'épée la plus brillante du royaume, la langue aussi affûtée."},
+  {nom:"Joffrey Baratheon", maison:"baratheon", ch:5, desc:"Le prince héritier, douze ans. Beau visage — caractère à découvrir."},
+  {nom:"Sansa Stark", maison:"stark", ch:5, desc:"Onze ans, parfaite demoiselle éprise de chansons et de chevaliers. Sa louve : Lady."},
+  {nom:"Arya Stark", maison:"stark", ch:5, desc:"Neuf ans, aussi indomptée que sa sœur est sage. Sa louve : Nymeria."},
+  {nom:"Sandor Clegane", maison:"autre", ch:5, desc:"« Le Limier », garde du corps de Joffrey. Une moitié de visage brûlée, aucune illusion."},
+  {nom:"Tyrion Lannister", maison:"lannister", ch:6, desc:"Le nain de la famille Lannister. Compense sa taille par un esprit redoutable — et une soif solide."},
+  {nom:"Benjen Stark", maison:"garde", ch:6, desc:"Frère cadet de Ned, Premier Patrouilleur de la Garde de Nuit."},
+  {nom:"Jorah Mormont", maison:"autre", ch:12, desc:"Chevalier exilé de Westeros, rallié aux Targaryen. Connaît les deux mondes."},
+  {nom:"Petyr « Littlefinger » Baelish", maison:"autre", ch:19, desc:"Grand Argentier du royaume. Ami d'enfance de Catelyn — il n'a rien oublié."},
+  {nom:"Jeor Mormont", maison:"garde", ch:20, desc:"« Le Vieil Ours », lord Commandant de la Garde de Nuit."},
+  {nom:"Alliser Thorne", maison:"garde", ch:20, desc:"Maître d'armes de Châteaunoir. A fait de l'humiliation une méthode pédagogique."},
+  {nom:"Varys", maison:"autre", ch:21, desc:"« L'Araignée », maître des chuchoteurs. Ses petits oiseaux entendent tout."},
+  {nom:"Grand Mestre Pycelle", maison:"autre", ch:21, desc:"Doyen du conseil restreint, au service de la couronne depuis des décennies."},
+  {nom:"Renly Baratheon", maison:"baratheon", ch:21, desc:"Frère cadet du roi, maître des lois. Le charme des Baratheon sans les cicatrices."},
+  {nom:"Syrio Forel", maison:"autre", ch:23, desc:"Première épée de Braavos, professeur de « danse » d'Arya. « Pas aujourd'hui. »"},
+  {nom:"Samwell Tarly", maison:"garde", ch:27, desc:"Se dit couard, mange pour dix — mais voit plus juste que bien des braves."},
+  {nom:"Gendry", maison:"autre", ch:28, desc:"Apprenti forgeron de la rue de l'Acier, têtu et costaud. Ce regard rappelle quelqu'un…"},
+  {nom:"Bronn", maison:"autre", ch:29, desc:"Mercenaire croisé à l'auberge du carrefour. Son épée va au plus offrant."},
+  {nom:"Loras Tyrell", maison:"tyrell", ch:30, desc:"« Le chevalier aux Fleurs », prodige du tournoi, idole de Sansa."},
+  {nom:"Gregor Clegane", maison:"autre", ch:30, desc:"« La Montagne », frère aîné du Limier. Immense, brutal, redouté de tous."},
+  {nom:"Lysa Arryn", maison:"arryn", ch:35, desc:"Sœur de Catelyn, veuve de la Main du Roi. Le deuil ne lui a pas réussi."}
+];
+
+const BLASON_AUTRE = `<svg class="miniB" viewBox="0 0 34 34"><circle cx="17" cy="17" r="15.5" fill="#242b36" stroke="#4a5460" stroke-width="1.4"/><path d="M17 8 L17 25 M12 13 L22 13" stroke="#93a0b2" stroke-width="2" stroke-linecap="round"/></svg>`;
+const MAISONS_FICHIERS = ["stark","targaryen","lannister","baratheon","arryn","tully","greyjoy","tyrell","frey","bolton","garde"];
+
+function majPersonnages(maxCh){
+  const liste = document.getElementById('persoListe');
+  const compte = document.getElementById('persoCompte');
+  const visibles = PERSONNAGES.filter(p=>p.ch<=maxCh);
+  compte.textContent = visibles.length + ' rencontrés';
+  liste.innerHTML = visibles.map(p=>{
+    const b = MAISONS_FICHIERS.includes(p.maison)
+      ? `<img class="miniB" src="blasons/${p.maison}.png" data-maison="${p.maison}" alt="">`
+      : BLASON_AUTRE;
+    return `<div class="perso">${b}<div><div class="persoNom">${p.nom}</div><div class="persoDesc">${p.desc}</div></div></div>`;
+  }).join('');
+  liste.querySelectorAll('img.miniB').forEach(im=>{
+    im.onerror = ()=>{ im.outerHTML = BLASONS[im.dataset.maison] || BLASON_AUTRE; };
+  });
+}
+
+/* =====================================================
+   TRAJETS — les routes se tracent au fil des chapitres
+===================================================== */
+const TRAJETS = {
+  westeros: [
+    {pts:[[44,23.6],[42.5,38]], ch:13, c:"#d4a94e"},
+    {pts:[[42.5,38],[55,56.8]], ch:16, c:"#d4a94e"},
+    {pts:[[55,56.8],[62,58]],   ch:17, c:"#d4a94e"},
+    {pts:[[62,58],[68,69.2]],   ch:19, c:"#d4a94e"},
+    {pts:[[44,23.6],[49,16]],   ch:14, c:"#7fb3ff"},
+    {pts:[[49,16],[58.5,9]],    ch:20, c:"#7fb3ff"},
+    {pts:[[54,56],[63,52.3]],   ch:32, c:"#c8d2e0"},
+    {pts:[[63,52.3],[66.5,49.6]],ch:35, c:"#c8d2e0"}
+  ],
+  essos: [
+    {pts:[[10.5,47],[33,50]],   ch:13, c:"#c0392b"},
+    {pts:[[33,50],[55.5,58.5]], ch:24, c:"#c0392b"}
+  ]
+};
+
+function dessinerTrajets(svg, carte, maxCh){
+  if(!svg) return;
+  svg.innerHTML = '';
+  for(const t of (TRAJETS[carte]||[])){
+    if(t.ch > maxCh) continue;
+    const pl = document.createElementNS('http://www.w3.org/2000/svg','polyline');
+    pl.setAttribute('points', t.pts.map(p=>p.join(',')).join(' '));
+    pl.setAttribute('stroke', t.c);
+    svg.appendChild(pl);
+  }
+}
+
+/* ===== Mise à jour de tout ce qui est progressif ===== */
+function majProgressif(){
+  const maxCh = revealed.size ? Math.max(...revealed)+1 : 1;
+  majPersonnages(maxCh);
+  document.querySelectorAll('#arbre [data-ch]').forEach(el=>{
+    el.style.display = (Number(el.dataset.ch) <= maxCh) ? '' : 'none';
+  });
+  const l = LIEUX[SCENES[idx].lieu];
+  dessinerTrajets(document.getElementById('trajets1'), l.carte, maxCh);
+  dessinerTrajets(document.getElementById('trajets2'), l.carte, maxCh);
+}
 
 /* ===== Images (dossier "le trone de fer 1") ===== */
 const DOSSIER = "le trone de fer 1";
@@ -666,13 +869,23 @@ autoChk.checked = !!etat.auto;
 let fonduTimer = null;
 const themes = [];
 
-function testerFichier(src){
-  return new Promise(res=>{
-    const t = new Audio();
-    t.oncanplaythrough = ()=>res(true);
-    t.onerror = ()=>res(false);
-    t.src = src;
-  });
+async function testerFichier(src){
+  /* En ligne (GitHub Pages, etc.) : simple requête réseau, fiable partout y compris iPhone */
+  try{
+    const r = await fetch(src, {method:'HEAD'});
+    return r.ok;
+  }catch(e){
+    /* Usage local (fichier ouvert directement) : repli sur le préchargement audio, avec délai maxi */
+    return new Promise(res=>{
+      const t = new Audio();
+      const fin = setTimeout(()=>res(false), 3000);
+      t.onloadedmetadata = ()=>{ clearTimeout(fin); res(true); };
+      t.oncanplaythrough = ()=>{ clearTimeout(fin); res(true); };
+      t.onerror = ()=>{ clearTimeout(fin); res(false); };
+      t.preload = 'metadata';
+      t.src = src;
+    });
+  }
 }
 
 (async function detecterThemes(){
