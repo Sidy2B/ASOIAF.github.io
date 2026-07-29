@@ -326,7 +326,6 @@
   .persoCompte{margin-left:auto;font-size:.74rem;letter-spacing:.1em;color:var(--bougie)}
 
   /* ===== Widget familles (arbre) ===== */
-  #wFamille{grid-column:1/-1}
   #wFamille .widget-corps{overflow-x:auto}
   #arbre{min-width:680px;width:100%;display:block}
   #arbre text{font-family:'EB Garamond',serif;fill:var(--neige);font-size:12.5px}
@@ -368,6 +367,59 @@
     <section class="widget" id="wScene">
       <div class="widget-titre"><span class="picto">◆</span> Chapitre en cours</div>
       <div class="widget-corps voile-zone" id="scene"></div>
+    </section>
+
+    <section class="widget" id="wFamille">
+      <div class="widget-titre"><span class="picto">⚭</span> Familles & relations</div>
+      <div class="widget-corps">
+        <svg id="arbre" viewBox="0 0 680 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre des familles">
+          <!-- ===== Stark / Tully / Arryn ===== -->
+          <text class="sect" x="12" y="24" data-ch="2">MAISONS STARK · TULLY · ARRYN</text>
+          <line class="mariage" x1="148" y1="55" x2="182" y2="55" data-ch="3"/>
+          <line class="parente" x1="278" y1="55" x2="322" y2="55" data-ch="3"/>
+          <text class="mini" x="283" y="48" data-ch="3">sœurs</text>
+          <line class="mariage" x1="418" y1="55" x2="462" y2="55" data-ch="3"/>
+          <path class="parente" d="M165 68 V95 H45 M165 95 H425 M45 95 V122 M140 95 V122 M235 95 V122 M330 95 V122 M425 95 V122" data-ch="2"/>
+          <path class="parente" d="M440 68 V108 H555 V122" data-ch="35"/>
+          <path class="batard" d="M100 68 V108 H620 V122" data-ch="2"/>
+          <g data-ch="2"><rect class="boite" x="52" y="42" width="96" height="26" rx="8"/><text x="100" y="59" text-anchor="middle">Eddard Stark</text></g>
+          <g data-ch="3"><rect class="boite" x="182" y="42" width="96" height="26" rx="8"/><text x="230" y="59" text-anchor="middle">Catelyn Tully</text></g>
+          <g data-ch="3"><rect class="boite" x="322" y="42" width="96" height="26" rx="8"/><text x="370" y="59" text-anchor="middle">Lysa Tully</text></g>
+          <g data-ch="3"><rect class="boite" x="462" y="42" width="96" height="26" rx="8"/><text x="510" y="59" text-anchor="middle">Jon Arryn †</text></g>
+          <g data-ch="2"><rect class="boite" x="-3" y="122" width="96" height="26" rx="8"/><text x="45" y="139" text-anchor="middle">Robb</text></g>
+          <g data-ch="2"><rect class="boite" x="92" y="122" width="96" height="26" rx="8"/><text x="140" y="139" text-anchor="middle">Sansa</text></g>
+          <g data-ch="2"><rect class="boite" x="187" y="122" width="96" height="26" rx="8"/><text x="235" y="139" text-anchor="middle">Arya</text></g>
+          <g data-ch="2"><rect class="boite" x="282" y="122" width="96" height="26" rx="8"/><text x="330" y="139" text-anchor="middle">Bran</text></g>
+          <g data-ch="2"><rect class="boite" x="377" y="122" width="96" height="26" rx="8"/><text x="425" y="139" text-anchor="middle">Rickon</text></g>
+          <g data-ch="35"><rect class="boite" x="507" y="122" width="96" height="26" rx="8"/><text x="555" y="139" text-anchor="middle">Robin Arryn</text></g>
+          <g data-ch="2"><rect class="boite" x="572" y="122" width="102" height="26" rx="8"/><text x="623" y="139" text-anchor="middle">Jon Snow</text></g>
+          <!-- ===== Baratheon / Lannister ===== -->
+          <text class="sect" x="12" y="205" data-ch="5">MAISONS BARATHEON · LANNISTER</text>
+          <line class="mariage" x1="168" y1="240" x2="202" y2="240" data-ch="5"/>
+          <line class="parente" x1="298" y1="240" x2="332" y2="240" data-ch="5"/>
+          <line class="parente" x1="428" y1="240" x2="462" y2="240" data-ch="6"/>
+          <text class="mini" x="360" y="222" data-ch="5">enfants de lord Tywin</text>
+          <path class="parente" d="M185 253 V302" data-ch="5"/>
+          <g data-ch="5"><rect class="boite" x="72" y="227" width="96" height="26" rx="8"/><text x="120" y="244" text-anchor="middle">Robert</text></g>
+          <g data-ch="5"><rect class="boite" x="202" y="227" width="96" height="26" rx="8"/><text x="250" y="244" text-anchor="middle">Cersei</text></g>
+          <g data-ch="5"><rect class="boite" x="332" y="227" width="96" height="26" rx="8"/><text x="380" y="244" text-anchor="middle">Jaime</text></g>
+          <g data-ch="6"><rect class="boite" x="462" y="227" width="96" height="26" rx="8"/><text x="510" y="244" text-anchor="middle">Tyrion</text></g>
+          <g data-ch="5"><rect class="boite" x="137" y="302" width="96" height="26" rx="8"/><text x="185" y="319" text-anchor="middle">Joffrey</text></g>
+          <!-- ===== Targaryen ===== -->
+          <text class="sect" x="12" y="385" data-ch="4">MAISON TARGARYEN</text>
+          <text class="mini" x="200" y="385" data-ch="4">derniers enfants du roi Aerys II †</text>
+          <line class="parente" x1="198" y1="425" x2="252" y2="425" data-ch="4"/>
+          <text class="mini" x="200" y="417" data-ch="4">frère &amp; sœur</text>
+          <line class="mariage" x1="348" y1="425" x2="402" y2="425" data-ch="4"/>
+          <g data-ch="4"><rect class="boite" x="102" y="412" width="96" height="26" rx="8"/><text x="150" y="429" text-anchor="middle">Viserys</text></g>
+          <g data-ch="4"><rect class="boite" x="252" y="412" width="96" height="26" rx="8"/><text x="300" y="429" text-anchor="middle">Daenerys</text></g>
+          <g data-ch="4"><rect class="boite" x="402" y="412" width="96" height="26" rx="8"/><text x="450" y="429" text-anchor="middle">Khal Drogo</text></g>
+          <!-- ===== Légende ===== -->
+          <line class="mariage" x1="20" y1="478" x2="50" y2="478"/><text class="mini" x="56" y="482">mariage</text>
+          <line class="parente" x1="150" y1="478" x2="180" y2="478"/><text class="mini" x="186" y="482">parenté</text>
+          <line class="batard" x1="280" y1="478" x2="310" y2="478"/><text class="mini" x="316" y="482">fils illégitime</text>
+        </svg>
+      </div>
     </section>
     </div>
 
@@ -423,55 +475,6 @@
         </div>
       </section>
     </div>
-
-    <section class="widget" id="wFamille">
-      <div class="widget-titre"><span class="picto">⚚</span> Familles & relations</div>
-      <div class="widget-corps">
-        <svg id="arbre" viewBox="0 0 680 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre des familles">
-          <text class="sect" x="12" y="24" data-ch="2">MAISONS STARK · TULLY · ARRYN</text>
-          <line class="mariage" x1="148" y1="55" x2="182" y2="55" data-ch="3"/>
-          <line class="parente" x1="278" y1="55" x2="322" y2="55" data-ch="3"/>
-          <text class="mini" x="283" y="48" data-ch="3">sœurs</text>
-          <line class="mariage" x1="418" y1="55" x2="462" y2="55" data-ch="3"/>
-          <path class="parente" d="M165 68 V95 H45 M165 95 H425 M45 95 V122 M140 95 V122 M235 95 V122 M330 95 V122 M425 95 V122" data-ch="2"/>
-          <path class="parente" d="M440 68 V108 H555 V122" data-ch="35"/>
-          <path class="batard" d="M100 68 V108 H620 V122" data-ch="2"/>
-          <g data-ch="2"><rect class="boite" x="52" y="42" width="96" height="26" rx="8"/><text x="100" y="59" text-anchor="middle">Eddard Stark</text></g>
-          <g data-ch="3"><rect class="boite" x="182" y="42" width="96" height="26" rx="8"/><text x="230" y="59" text-anchor="middle">Catelyn Tully</text></g>
-          <g data-ch="3"><rect class="boite" x="322" y="42" width="96" height="26" rx="8"/><text x="370" y="59" text-anchor="middle">Lysa Tully</text></g>
-          <g data-ch="3"><rect class="boite" x="462" y="42" width="96" height="26" rx="8"/><text x="510" y="59" text-anchor="middle">Jon Arryn †</text></g>
-          <g data-ch="2"><rect class="boite" x="-3" y="122" width="96" height="26" rx="8"/><text x="45" y="139" text-anchor="middle">Robb</text></g>
-          <g data-ch="2"><rect class="boite" x="92" y="122" width="96" height="26" rx="8"/><text x="140" y="139" text-anchor="middle">Sansa</text></g>
-          <g data-ch="2"><rect class="boite" x="187" y="122" width="96" height="26" rx="8"/><text x="235" y="139" text-anchor="middle">Arya</text></g>
-          <g data-ch="2"><rect class="boite" x="282" y="122" width="96" height="26" rx="8"/><text x="330" y="139" text-anchor="middle">Bran</text></g>
-          <g data-ch="2"><rect class="boite" x="377" y="122" width="96" height="26" rx="8"/><text x="425" y="139" text-anchor="middle">Rickon</text></g>
-          <g data-ch="35"><rect class="boite" x="507" y="122" width="96" height="26" rx="8"/><text x="555" y="139" text-anchor="middle">Robin Arryn</text></g>
-          <g data-ch="2"><rect class="boite" x="572" y="122" width="102" height="26" rx="8"/><text x="623" y="139" text-anchor="middle">Jon Snow</text></g>
-          <text class="sect" x="12" y="205" data-ch="5">MAISONS BARATHEON · LANNISTER</text>
-          <line class="mariage" x1="168" y1="240" x2="202" y2="240" data-ch="5"/>
-          <line class="parente" x1="298" y1="240" x2="332" y2="240" data-ch="5"/>
-          <line class="parente" x1="428" y1="240" x2="462" y2="240" data-ch="6"/>
-          <text class="mini" x="360" y="222" data-ch="5">enfants de lord Tywin</text>
-          <path class="parente" d="M185 253 V302" data-ch="5"/>
-          <g data-ch="5"><rect class="boite" x="72" y="227" width="96" height="26" rx="8"/><text x="120" y="244" text-anchor="middle">Robert</text></g>
-          <g data-ch="5"><rect class="boite" x="202" y="227" width="96" height="26" rx="8"/><text x="250" y="244" text-anchor="middle">Cersei</text></g>
-          <g data-ch="5"><rect class="boite" x="332" y="227" width="96" height="26" rx="8"/><text x="380" y="244" text-anchor="middle">Jaime</text></g>
-          <g data-ch="6"><rect class="boite" x="462" y="227" width="96" height="26" rx="8"/><text x="510" y="244" text-anchor="middle">Tyrion</text></g>
-          <g data-ch="5"><rect class="boite" x="137" y="302" width="96" height="26" rx="8"/><text x="185" y="319" text-anchor="middle">Joffrey</text></g>
-          <text class="sect" x="12" y="385" data-ch="4">MAISON TARGARYEN</text>
-          <text class="mini" x="200" y="385" data-ch="4">derniers enfants du roi Aerys II †</text>
-          <line class="parente" x1="198" y1="425" x2="252" y2="425" data-ch="4"/>
-          <text class="mini" x="200" y="417" data-ch="4">frère &amp; sœur</text>
-          <line class="mariage" x1="348" y1="425" x2="402" y2="425" data-ch="4"/>
-          <g data-ch="4"><rect class="boite" x="102" y="412" width="96" height="26" rx="8"/><text x="150" y="429" text-anchor="middle">Viserys</text></g>
-          <g data-ch="4"><rect class="boite" x="252" y="412" width="96" height="26" rx="8"/><text x="300" y="429" text-anchor="middle">Daenerys</text></g>
-          <g data-ch="4"><rect class="boite" x="402" y="412" width="96" height="26" rx="8"/><text x="450" y="429" text-anchor="middle">Khal Drogo</text></g>
-          <line class="mariage" x1="20" y1="478" x2="50" y2="478"/><text class="mini" x="56" y="482">mariage</text>
-          <line class="parente" x1="150" y1="478" x2="180" y2="478"/><text class="mini" x="186" y="482">parenté</text>
-          <line class="batard" x1="280" y1="478" x2="310" y2="478"/><text class="mini" x="316" y="482">fils illégitime</text>
-        </svg>
-      </div>
-    </section>
   </div>
 </div>
 
