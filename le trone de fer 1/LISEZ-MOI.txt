@@ -1,0 +1,50 @@
+DOSSIER D'IMAGES — LE TRÔNE DE FER, TOME 1
+============================================
+
+Dépose ici tes images (Pinterest, etc.) en les nommant
+scene-01 à scene-36 selon le chapitre du livre audio :
+
+  scene-01  Prologue — Au-delà du Mur
+  scene-02  Bran — L'exécution du déserteur
+  scene-03  Catelyn — Le bois sacré
+  scene-04  Daenerys — La promise de Pentos
+  scene-05  Eddard — L'arrivée du roi
+  scene-06  Jon — Le festin
+  scene-07  Catelyn — La lettre de Lysa
+  scene-08  Arya — L'aiguille d'Arya
+  scene-09  Bran — Le petit grimpeur
+  scene-10  Tyrion — Le lion au petit matin
+  scene-11  Jon — Les adieux
+  scene-12  Daenerys — Le mariage dothraki
+  scene-13  Eddard — La route royale
+  scene-14  Tyrion — Vers le Mur
+  scene-15  Catelyn — La nuit du poignard
+  scene-16  Sansa — Au bord du Trident
+  scene-17  Eddard — Justice à Darry
+  scene-18  Bran — La corneille à trois yeux
+  scene-19  Catelyn — Port-Réal
+  scene-20  Jon — Châteaunoir
+  scene-21  Eddard — La Main du Roi
+  scene-22  Tyrion — Le sommet du monde
+  scene-23  Arya — La danse de l'eau
+  scene-24  Daenerys — La mer d'herbe
+  scene-25  Bran — Le garçon brisé
+  scene-26  Eddard — Sur les traces de la Main
+  scene-27  Jon — Le couard courageux
+  scene-28  Eddard — L'apprenti armurier
+  scene-29  Catelyn — L'auberge du carrefour
+  scene-30  Sansa — Le tournoi de la Main
+  scene-31  Eddard — Après les lices
+  scene-32  Tyrion — La haute route
+  scene-33  Arya — Les souterrains
+  scene-34  Eddard — La colère du roi
+  scene-35  Catelyn — Les Eyrié
+  scene-36  Eddard — L'acier dans la nuit
+
+Formats acceptés : .jpg, .jpeg, .png, .webp
+Exemples : scene-01.jpg, scene-12.png, scene-36.webp
+
+IMPORTANT :
+- Ce dossier doit rester à côté de index.html.
+- Si une image manque, le chapitre s'affiche sans photo.
+- Pour le tome 2 : dossier "le trone de fer 2" à venir.

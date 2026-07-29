@@ -1,0 +1,38 @@
+DOSSIER MUSIQUE — THÈMES PAR MAISON
+=====================================
+
+Dépose ici tes musiques en les nommant selon la maison :
+
+  Stark theme.mp3
+  Targaryen theme.mp3
+  Lannister theme.mp3
+  Baratheon theme.mp3
+  Greyjoy theme.mp3
+  Tully theme.mp3
+  Arryn theme.mp3
+  Martell theme.mp3
+  Tyrell theme.mp3
+  Dothraki theme.mp3
+  Garde de Nuit theme.mp3
+  Main theme.mp3
+
+Formats acceptés : .mp3, .ogg, .m4a
+
+PLUSIEURS MORCEAUX PAR MAISON :
+Ajoute " 2" ou " 3" au nom, par exemple :
+  Stark theme 2.mp3
+  Stark theme 3.mp3
+(Il faut que "Stark theme.mp3" existe pour que
+les variantes soient détectées.)
+
+UTILISATION SUR LE SITE :
+- Le bouton ♪ en haut à droite ouvre le panneau musique.
+- Menu déroulant pour choisir le thème (seuls les fichiers
+  réellement présents dans ce dossier apparaissent).
+- Réglage du volume (20% par défaut pour ne pas couvrir
+  ton livre audio).
+- La musique joue en boucle jusqu'à ce que tu en changes.
+
+IMPORTANT : respecte exactement l'orthographe des noms
+ci-dessus (majuscules comprises), sinon le site ne
+trouvera pas les fichiers.
