@@ -321,12 +321,6 @@
   .perso:last-child{border-bottom:none}
   .miniB{width:30px;height:30px;flex:none;border-radius:50%;object-fit:cover;
     border:1px solid var(--bord);margin-top:2px}
-  .portrait{
-    width:44px;height:44px;flex:none;border-radius:10px;object-fit:cover;
-    border:1px solid var(--bord);margin-top:1px;
-    box-shadow:0 3px 10px rgba(0,0,0,.4);
-  }
-  .portrait.blasonRepli{border-radius:50%;object-fit:contain;background:rgba(255,255,255,.03);padding:4px}
   .persoNom{font-size:1rem;color:var(--neige)}
   .persoDesc{font-size:.88rem;color:var(--acier);line-height:1.45}
   .persoCompte{margin-left:auto;font-size:.74rem;letter-spacing:.1em;color:var(--bougie)}
@@ -353,98 +347,6 @@
     vector-effect:non-scaling-stroke;
   }
 
-
-  /* ===== Mode nuit d'écoute ===== */
-  #btnNuit{
-    position:absolute;top:10px;left:46px;
-    width:38px;height:38px;border-radius:12px;flex:none;
-    border:1px solid var(--bord);
-    background:var(--carte);color:var(--acier);
-    font-size:1rem;cursor:pointer;transition:all .25s;
-    backdrop-filter:blur(10px);
-  }
-  #btnNuit.actif{border-color:var(--bougie);color:var(--bougie)}
-  #btnNuit:focus-visible{outline:2px solid var(--bougie);outline-offset:2px}
-  body.nuit .colonne{display:none}
-  body.nuit #wFamille{display:none}
-  body.nuit #wScene{background:transparent;border-color:transparent;box-shadow:none;backdrop-filter:none}
-  body.nuit #wScene .widget-titre{display:none}
-  body.nuit .desc,body.nuit .motscles{display:none}
-  body.nuit .visuel{max-height:56dvh}
-  body.nuit #fond{filter:blur(30px) brightness(.12) saturate(.8)}
-  body.nuit canvas#particles{display:none}
-  body.nuit header .book{opacity:.35}
-  body.nuit .scene-nav button{opacity:.45;background:transparent;border-color:rgba(238,241,245,.12)}
-  body.nuit .scene-nav button:hover{opacity:1}
-  body.nuit .grille{grid-template-columns:1fr;max-width:720px;margin:0 auto}
-
-  /* ===== Widget lexique ===== */
-  #lexListe{max-height:280px;overflow-y:auto;padding-right:4px}
-  .lex{padding:8px 2px;border-bottom:1px solid var(--bord)}
-  .lex:last-child{border-bottom:none}
-  .lexTerme{font-size:.98rem;color:var(--bougie)}
-  .lexDef{font-size:.88rem;color:var(--acier);line-height:1.45}
-  .lexCompte{margin-left:auto;font-size:.74rem;letter-spacing:.1em;color:var(--bougie)}
-
-  /* ===== Écran d'accueil ===== */
-  #accueil{
-    position:fixed;inset:0;z-index:90;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    gap:14px;text-align:center;padding:24px;
-    background:radial-gradient(ellipse at 50% 30%, #101623 0%, #05070c 70%);
-    transition:opacity .7s ease;
-  }
-  #accueil.ferme{opacity:0;pointer-events:none}
-  #accueil .eyebrow{font-size:.78rem;letter-spacing:.34em;text-transform:uppercase;color:var(--acier)}
-  #accueil h2{
-    font-family:'IM Fell English',serif;font-weight:normal;
-    font-size:clamp(2.2rem,9vw,3.6rem);line-height:1.05;color:var(--neige);
-    text-shadow:0 6px 30px rgba(0,0,0,.8);
-  }
-  #accueil .tome{font-style:italic;color:var(--bougie);margin-bottom:14px}
-  #btnReprendre{
-    font-family:'EB Garamond',serif;font-size:1.1rem;
-    padding:14px 34px;border-radius:999px;cursor:pointer;
-    background:var(--sang);color:var(--neige);
-    border:1px solid var(--sang);transition:all .25s;
-  }
-  #btnReprendre:hover{filter:brightness(1.2)}
-  #btnReprendre:focus-visible{outline:2px solid var(--bougie);outline-offset:3px}
-  #btnRecommencer{
-    font-family:'EB Garamond',serif;font-size:.92rem;
-    background:none;border:none;cursor:pointer;
-    color:var(--acier);text-decoration:underline;text-underline-offset:3px;
-  }
-  #btnRecommencer:hover{color:var(--neige)}
-
-
-  /* ===== Widget Maisons ===== */
-  #wMaisons{grid-column:1/-1}
-  .grilleMaisons{
-    display:grid;gap:14px;
-    grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
-  }
-  .carteMaison{
-    display:flex;flex-direction:column;gap:8px;
-    background:rgba(255,255,255,.02);
-    border:1px solid var(--bord);border-radius:14px;
-    padding:14px 15px;
-  }
-  .carteMaison .entete{display:flex;align-items:center;gap:12px}
-  .carteMaison .blasonM{
-    width:52px;height:52px;flex:none;border-radius:50%;object-fit:cover;
-    border:1px solid var(--bord);box-shadow:0 6px 16px rgba(0,0,0,.5);
-  }
-  .carteMaison .nomM{font-family:'IM Fell English',serif;font-size:1.18rem;color:var(--neige)}
-  .carteMaison .devise{font-style:italic;color:var(--bougie);font-size:.9rem}
-  .carteMaison .infosM{
-    display:flex;flex-wrap:wrap;gap:6px 14px;
-    font-size:.78rem;letter-spacing:.06em;color:var(--acier);
-    text-transform:uppercase;
-  }
-  .carteMaison .infosM b{color:#c8d2e0;font-weight:normal}
-  .carteMaison .descM{font-size:.9rem;line-height:1.5;color:#c8d2e0}
-
   @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -457,7 +359,6 @@
   <header>
     <div class="book"><b>Le Trône de Fer</b> · Tome 1 · Guide d'écoute</div>
     <button id="btnPleinEcran" aria-label="Passer en plein écran" title="Plein écran">⛶</button>
-    <button id="btnNuit" aria-label="Activer le mode nuit" title="Mode nuit d'écoute">☾</button>
   </header>
 
   <div class="grille">
@@ -466,11 +367,6 @@
     <section class="widget" id="wScene">
       <div class="widget-titre"><span class="picto">◆</span> Chapitre en cours</div>
       <div class="widget-corps voile-zone" id="scene"></div>
-    </section>
-
-    <section class="widget" id="wMaisons">
-      <div class="widget-titre"><span class="picto">🛡</span> Les grandes maisons</div>
-      <div class="widget-corps"><div class="grilleMaisons" id="grilleMaisons"></div></div>
     </section>
 
     <section class="widget" id="wFamille">
@@ -568,11 +464,6 @@
         <div class="widget-corps"><div id="persoListe"></div></div>
       </section>
 
-      <section class="widget" id="wLexique">
-        <div class="widget-titre"><span class="picto">✧</span> Lexique <span class="lexCompte" id="lexCompte"></span></div>
-        <div class="widget-corps"><div id="lexListe"></div></div>
-      </section>
-
       <section class="widget" id="wNotes">
         <div class="widget-titre"><span class="picto">✎</span> Notes & marque-page</div>
         <div class="widget-corps">
@@ -585,15 +476,6 @@
       </section>
     </div>
   </div>
-</div>
-
-<!-- ===== Écran d'accueil ===== -->
-<div id="accueil" role="dialog" aria-modal="true" aria-label="Écran d'accueil">
-  <div class="eyebrow">Guide d'écoute</div>
-  <h2>Le Trône de Fer</h2>
-  <div class="tome">Tome 1 · d'après A Game of Thrones</div>
-  <button id="btnReprendre">Commencer la lecture</button>
-  <button id="btnRecommencer">Recommencer le tome (efface la progression)</button>
 </div>
 
 <!-- ===== Modale carte agrandie ===== -->
@@ -829,83 +711,59 @@ document.addEventListener('keydown', e=>{
    PERSONNAGES — apparaissent au fil des chapitres révélés
 ===================================================== */
 const PERSONNAGES = [
-  {nom:"Eddard « Ned » Stark", slug:"eddard-stark", maison:"stark", ch:2, desc:"Seigneur de Winterfell, gardien du Nord. L'honneur fait homme — parfois à ses dépens."},
-  {nom:"Robb Stark", slug:"robb-stark", maison:"stark", ch:2, desc:"L'aîné des enfants Stark, élevé pour succéder à son père. Son loup : Vent Gris."},
-  {nom:"Jon Snow", slug:"jon-snow", maison:"stark", ch:2, desc:"Fils illégitime de Ned, élevé à Winterfell. Son loup blanc et silencieux : Fantôme."},
-  {nom:"Bran Stark", slug:"bran-stark", maison:"stark", ch:2, desc:"Sept ans, passionné d'escalade, rêve de chevalerie. Son loup : Été."},
-  {nom:"Rickon Stark", slug:"rickon-stark", maison:"stark", ch:2, desc:"Le benjamin des Stark, trois ans. Son loup : Broussaille."},
-  {nom:"Theon Greyjoy", slug:"theon-greyjoy", maison:"greyjoy", ch:2, desc:"Pupille (et otage) de Ned, héritier des îles de Fer. Sourire facile, arc toujours prêt."},
-  {nom:"Catelyn Stark", slug:"catelyn-stark", maison:"tully", ch:3, desc:"Née Tully de Vivesaigues, épouse de Ned. Mère avant tout — dans ses forces comme dans ses failles."},
-  {nom:"Mestre Luwin", slug:"mestre-luwin", maison:"autre", ch:3, desc:"Le mestre de Winterfell : médecin, précepteur et conseiller fidèle de la famille."},
-  {nom:"Daenerys Targaryen", slug:"daenerys-targaryen", maison:"targaryen", ch:4, desc:"Treize ans, dernière fille du roi déchu. Vendue en mariage par son frère — pour l'instant."},
-  {nom:"Viserys Targaryen", slug:"viserys-targaryen", maison:"targaryen", ch:4, desc:"Se proclame roi légitime des Sept Couronnes. Le « dragon » s'éveille surtout quand on le contrarie."},
-  {nom:"Khal Drogo", slug:"khal-drogo", maison:"autre", ch:4, desc:"Seigneur de guerre dothraki, jamais vaincu au combat. Sa tresse n'a jamais été coupée."},
-  {nom:"Illyrio Mopatis", slug:"illyrio-mopatis", maison:"autre", ch:4, desc:"Riche magistrat de Pentos, hôte des Targaryen. Généreux — trop, peut-être."},
-  {nom:"Robert Baratheon", slug:"robert-baratheon", maison:"baratheon", ch:5, desc:"Le roi des Sept Couronnes, vieux frère d'armes de Ned. Le guerrier est devenu bon vivant."},
-  {nom:"Cersei Lannister", slug:"cersei-lannister", maison:"lannister", ch:5, desc:"La reine, belle et glaciale. Ne pardonne rien, n'oublie rien."},
-  {nom:"Jaime Lannister", slug:"jaime-lannister", maison:"lannister", ch:5, desc:"Frère jumeau de la reine, dit le Régicide. L'épée la plus brillante du royaume, la langue aussi affûtée."},
-  {nom:"Joffrey Baratheon", slug:"joffrey-baratheon", maison:"baratheon", ch:5, desc:"Le prince héritier, douze ans. Beau visage — caractère à découvrir."},
-  {nom:"Sansa Stark", slug:"sansa-stark", maison:"stark", ch:5, desc:"Onze ans, parfaite demoiselle éprise de chansons et de chevaliers. Sa louve : Lady."},
-  {nom:"Arya Stark", slug:"arya-stark", maison:"stark", ch:5, desc:"Neuf ans, aussi indomptée que sa sœur est sage. Sa louve : Nymeria."},
-  {nom:"Sandor Clegane", slug:"sandor-clegane", maison:"autre", ch:5, desc:"« Le Limier », garde du corps de Joffrey. Une moitié de visage brûlée, aucune illusion."},
-  {nom:"Tyrion Lannister", slug:"tyrion-lannister", maison:"lannister", ch:6, desc:"Le nain de la famille Lannister. Compense sa taille par un esprit redoutable — et une soif solide."},
-  {nom:"Benjen Stark", slug:"benjen-stark", maison:"garde", ch:6, desc:"Frère cadet de Ned, Premier Patrouilleur de la Garde de Nuit."},
-  {nom:"Jorah Mormont", slug:"jorah-mormont", maison:"autre", ch:12, desc:"Chevalier exilé de Westeros, rallié aux Targaryen. Connaît les deux mondes."},
-  {nom:"Petyr « Littlefinger » Baelish", slug:"petyr-baelish", maison:"autre", ch:19, desc:"Grand Argentier du royaume. Ami d'enfance de Catelyn — il n'a rien oublié."},
-  {nom:"Jeor Mormont", slug:"jeor-mormont", maison:"garde", ch:20, desc:"« Le Vieil Ours », lord Commandant de la Garde de Nuit."},
-  {nom:"Alliser Thorne", slug:"alliser-thorne", maison:"garde", ch:20, desc:"Maître d'armes de Châteaunoir. A fait de l'humiliation une méthode pédagogique."},
-  {nom:"Varys", slug:"varys", maison:"autre", ch:21, desc:"« L'Araignée », maître des chuchoteurs. Ses petits oiseaux entendent tout."},
-  {nom:"Grand Mestre Pycelle", slug:"grand-mestre-pycelle", maison:"autre", ch:21, desc:"Doyen du conseil restreint, au service de la couronne depuis des décennies."},
-  {nom:"Renly Baratheon", slug:"renly-baratheon", maison:"baratheon", ch:21, desc:"Frère cadet du roi, maître des lois. Le charme des Baratheon sans les cicatrices."},
-  {nom:"Syrio Forel", slug:"syrio-forel", maison:"autre", ch:23, desc:"Première épée de Braavos, professeur de « danse » d'Arya. « Pas aujourd'hui. »"},
-  {nom:"Samwell Tarly", slug:"samwell-tarly", maison:"garde", ch:27, desc:"Se dit couard, mange pour dix — mais voit plus juste que bien des braves."},
-  {nom:"Gendry", slug:"gendry", maison:"autre", ch:28, desc:"Apprenti forgeron de la rue de l'Acier, têtu et costaud. Ce regard rappelle quelqu'un…"},
-  {nom:"Bronn", slug:"bronn", maison:"autre", ch:29, desc:"Mercenaire croisé à l'auberge du carrefour. Son épée va au plus offrant."},
-  {nom:"Loras Tyrell", slug:"loras-tyrell", maison:"tyrell", ch:30, desc:"« Le chevalier aux Fleurs », prodige du tournoi, idole de Sansa."},
-  {nom:"Gregor Clegane", slug:"gregor-clegane", maison:"autre", ch:30, desc:"« La Montagne », frère aîné du Limier. Immense, brutal, redouté de tous."},
-  {nom:"Lysa Arryn", slug:"lysa-arryn", maison:"arryn", ch:35, desc:"Sœur de Catelyn, veuve de la Main du Roi. Le deuil ne lui a pas réussi."}
+  {nom:"Eddard « Ned » Stark", maison:"stark", ch:2, desc:"Seigneur de Winterfell, gardien du Nord. L'honneur fait homme — parfois à ses dépens."},
+  {nom:"Robb Stark", maison:"stark", ch:2, desc:"L'aîné des enfants Stark, élevé pour succéder à son père. Son loup : Vent Gris."},
+  {nom:"Jon Snow", maison:"stark", ch:2, desc:"Fils illégitime de Ned, élevé à Winterfell. Son loup blanc et silencieux : Fantôme."},
+  {nom:"Bran Stark", maison:"stark", ch:2, desc:"Sept ans, passionné d'escalade, rêve de chevalerie. Son loup : Été."},
+  {nom:"Rickon Stark", maison:"stark", ch:2, desc:"Le benjamin des Stark, trois ans. Son loup : Broussaille."},
+  {nom:"Theon Greyjoy", maison:"greyjoy", ch:2, desc:"Pupille (et otage) de Ned, héritier des îles de Fer. Sourire facile, arc toujours prêt."},
+  {nom:"Catelyn Stark", maison:"tully", ch:3, desc:"Née Tully de Vivesaigues, épouse de Ned. Mère avant tout — dans ses forces comme dans ses failles."},
+  {nom:"Mestre Luwin", maison:"autre", ch:3, desc:"Le mestre de Winterfell : médecin, précepteur et conseiller fidèle de la famille."},
+  {nom:"Daenerys Targaryen", maison:"targaryen", ch:4, desc:"Treize ans, dernière fille du roi déchu. Vendue en mariage par son frère — pour l'instant."},
+  {nom:"Viserys Targaryen", maison:"targaryen", ch:4, desc:"Se proclame roi légitime des Sept Couronnes. Le « dragon » s'éveille surtout quand on le contrarie."},
+  {nom:"Khal Drogo", maison:"autre", ch:4, desc:"Seigneur de guerre dothraki, jamais vaincu au combat. Sa tresse n'a jamais été coupée."},
+  {nom:"Illyrio Mopatis", maison:"autre", ch:4, desc:"Riche magistrat de Pentos, hôte des Targaryen. Généreux — trop, peut-être."},
+  {nom:"Robert Baratheon", maison:"baratheon", ch:5, desc:"Le roi des Sept Couronnes, vieux frère d'armes de Ned. Le guerrier est devenu bon vivant."},
+  {nom:"Cersei Lannister", maison:"lannister", ch:5, desc:"La reine, belle et glaciale. Ne pardonne rien, n'oublie rien."},
+  {nom:"Jaime Lannister", maison:"lannister", ch:5, desc:"Frère jumeau de la reine, dit le Régicide. L'épée la plus brillante du royaume, la langue aussi affûtée."},
+  {nom:"Joffrey Baratheon", maison:"baratheon", ch:5, desc:"Le prince héritier, douze ans. Beau visage — caractère à découvrir."},
+  {nom:"Sansa Stark", maison:"stark", ch:5, desc:"Onze ans, parfaite demoiselle éprise de chansons et de chevaliers. Sa louve : Lady."},
+  {nom:"Arya Stark", maison:"stark", ch:5, desc:"Neuf ans, aussi indomptée que sa sœur est sage. Sa louve : Nymeria."},
+  {nom:"Sandor Clegane", maison:"autre", ch:5, desc:"« Le Limier », garde du corps de Joffrey. Une moitié de visage brûlée, aucune illusion."},
+  {nom:"Tyrion Lannister", maison:"lannister", ch:6, desc:"Le nain de la famille Lannister. Compense sa taille par un esprit redoutable — et une soif solide."},
+  {nom:"Benjen Stark", maison:"garde", ch:6, desc:"Frère cadet de Ned, Premier Patrouilleur de la Garde de Nuit."},
+  {nom:"Jorah Mormont", maison:"autre", ch:12, desc:"Chevalier exilé de Westeros, rallié aux Targaryen. Connaît les deux mondes."},
+  {nom:"Petyr « Littlefinger » Baelish", maison:"autre", ch:19, desc:"Grand Argentier du royaume. Ami d'enfance de Catelyn — il n'a rien oublié."},
+  {nom:"Jeor Mormont", maison:"garde", ch:20, desc:"« Le Vieil Ours », lord Commandant de la Garde de Nuit."},
+  {nom:"Alliser Thorne", maison:"garde", ch:20, desc:"Maître d'armes de Châteaunoir. A fait de l'humiliation une méthode pédagogique."},
+  {nom:"Varys", maison:"autre", ch:21, desc:"« L'Araignée », maître des chuchoteurs. Ses petits oiseaux entendent tout."},
+  {nom:"Grand Mestre Pycelle", maison:"autre", ch:21, desc:"Doyen du conseil restreint, au service de la couronne depuis des décennies."},
+  {nom:"Renly Baratheon", maison:"baratheon", ch:21, desc:"Frère cadet du roi, maître des lois. Le charme des Baratheon sans les cicatrices."},
+  {nom:"Syrio Forel", maison:"autre", ch:23, desc:"Première épée de Braavos, professeur de « danse » d'Arya. « Pas aujourd'hui. »"},
+  {nom:"Samwell Tarly", maison:"garde", ch:27, desc:"Se dit couard, mange pour dix — mais voit plus juste que bien des braves."},
+  {nom:"Gendry", maison:"autre", ch:28, desc:"Apprenti forgeron de la rue de l'Acier, têtu et costaud. Ce regard rappelle quelqu'un…"},
+  {nom:"Bronn", maison:"autre", ch:29, desc:"Mercenaire croisé à l'auberge du carrefour. Son épée va au plus offrant."},
+  {nom:"Loras Tyrell", maison:"tyrell", ch:30, desc:"« Le chevalier aux Fleurs », prodige du tournoi, idole de Sansa."},
+  {nom:"Gregor Clegane", maison:"autre", ch:30, desc:"« La Montagne », frère aîné du Limier. Immense, brutal, redouté de tous."},
+  {nom:"Lysa Arryn", maison:"arryn", ch:35, desc:"Sœur de Catelyn, veuve de la Main du Roi. Le deuil ne lui a pas réussi."}
 ];
 
 const BLASON_AUTRE = `<svg class="miniB" viewBox="0 0 34 34"><circle cx="17" cy="17" r="15.5" fill="#242b36" stroke="#4a5460" stroke-width="1.4"/><path d="M17 8 L17 25 M12 13 L22 13" stroke="#93a0b2" stroke-width="2" stroke-linecap="round"/></svg>`;
-const MAISONS_FICHIERS = ["stark","targaryen","lannister","baratheon","arryn","tully","greyjoy","tyrell","frey","bolton","martell","garde"];
-
-const EXT_PORTRAIT = ["jpg","jpeg","png","webp","JPG","JPEG","PNG","WEBP"];
-
-function blasonReplifHTML(maison){
-  return MAISONS_FICHIERS.includes(maison)
-    ? `<img class="portrait blasonRepli miniB" src="blasons/${maison}.png" data-maison="${maison}" alt="">`
-    : BLASON_AUTRE.replace('class="miniB"','class="portrait blasonRepli miniB"');
-}
+const MAISONS_FICHIERS = ["stark","targaryen","lannister","baratheon","arryn","tully","greyjoy","tyrell","frey","bolton","garde"];
 
 function majPersonnages(maxCh){
   const liste = document.getElementById('persoListe');
   const compte = document.getElementById('persoCompte');
   const visibles = PERSONNAGES.filter(p=>p.ch<=maxCh);
   compte.textContent = visibles.length + ' rencontrés';
-  liste.innerHTML = visibles.map(p=>
-    `<div class="perso" data-slug="${p.slug}" data-maison="${p.maison}">
-      <span class="portraitSlot">${blasonReplifHTML(p.maison)}</span>
-      <div><div class="persoNom">${p.nom}</div><div class="persoDesc">${p.desc}</div></div>
-    </div>`
-  ).join('');
-  liste.querySelectorAll('img.blasonRepli').forEach(im=>{
+  liste.innerHTML = visibles.map(p=>{
+    const b = MAISONS_FICHIERS.includes(p.maison)
+      ? `<img class="miniB" src="blasons/${p.maison}.png" data-maison="${p.maison}" alt="">`
+      : BLASON_AUTRE;
+    return `<div class="perso">${b}<div><div class="persoNom">${p.nom}</div><div class="persoDesc">${p.desc}</div></div></div>`;
+  }).join('');
+  liste.querySelectorAll('img.miniB').forEach(im=>{
     im.onerror = ()=>{ im.outerHTML = BLASONS[im.dataset.maison] || BLASON_AUTRE; };
-  });
-  /* Tente de charger un vrai portrait par-dessus le blason, sans jamais casser l'affichage */
-  liste.querySelectorAll('.perso').forEach(el=>{
-    const slug = el.dataset.slug;
-    let e = 0;
-    function essayer(){
-      if(e >= EXT_PORTRAIT.length) return;
-      const img = new Image();
-      img.onload = ()=>{
-        const slot = el.querySelector('.portraitSlot');
-        slot.innerHTML = `<img class="portrait" src="personnages/${slug}.${EXT_PORTRAIT[e]}" alt="Portrait de ${el.querySelector('.persoNom').textContent}">`;
-      };
-      img.onerror = ()=>{ e++; essayer(); };
-      img.src = `personnages/${slug}.${EXT_PORTRAIT[e]}`;
-    }
-    essayer();
   });
 }
 
@@ -945,7 +803,6 @@ function dessinerTrajets(svg, carte, maxCh){
 function majProgressif(){
   const maxCh = revealed.size ? Math.max(...revealed)+1 : 1;
   majPersonnages(maxCh);
-  majLexique(maxCh);
   document.querySelectorAll('#arbre [data-ch]').forEach(el=>{
     el.style.display = (Number(el.dataset.ch) <= maxCh) ? '' : 'none';
   });
@@ -1232,132 +1089,6 @@ function tick(){
   requestAnimationFrame(tick);
 }
 if(!reduced){tick();}
-
-/* =====================================================
-   MAISONS — fiches de référence (affichées d'emblée,
-   ce sont des informations générales, pas des spoilers de scène)
-===================================================== */
-const MAISONS_INFO = [
-  {id:"stark", nom:"Maison Stark", devise:"L'Hiver vient", siege:"Winterfell", region:"Le Nord",
-   desc:"La plus ancienne lignée du Nord, descendante des Rois de l'Hiver. Réputée pour son sens de l'honneur, sa rigueur et son endurance face au froid."},
-  {id:"targaryen", nom:"Maison Targaryen", devise:"Feu et Sang", siege:"Peyredragon (jadis Port-Réal)", region:"Sang valyrien",
-   desc:"Dynastie de sang valyrien, seule lignée à avoir jadis dompté des dragons. A régné trois siècles sur les Sept Couronnes avant d'en être chassée."},
-  {id:"lannister", nom:"Maison Lannister", devise:"Un Lannister paie toujours ses dettes", siege:"Castral Roc", region:"L'Ouest",
-   desc:"La famille la plus riche du royaume, assise sur des mines d'or. Fière, redoutée, et connue pour ne jamais oublier un affront."},
-  {id:"baratheon", nom:"Maison Baratheon", devise:"Nôtre est la Fureur", siege:"Accalmie", region:"Les Terres de l'Orage",
-   desc:"Maison régnante des Sept Couronnes depuis la fin de la dynastie Targaryen, née d'une lignée guerrière alliée par le sang aux anciens rois."},
-  {id:"arryn", nom:"Maison Arryn", devise:"Aussi haut que l'honneur", siege:"Les Eyrié", region:"Le Val",
-   desc:"Très ancienne maison régnant sur le Val depuis les Premiers Hommes, connue pour sa forteresse imprenable perchée dans les montagnes."},
-  {id:"tully", nom:"Maison Tully", devise:"Famille, Devoir, Honneur", siege:"Vivesaigues", region:"Les Conflans",
-   desc:"Maison fluviale au confluent de trois rivières, ralliée très tôt à la cause Targaryen lors de la Conquête. Alliée aux Stark par mariage."},
-  {id:"greyjoy", nom:"Maison Greyjoy", devise:"Nous ne semons pas", siege:"Pyk", region:"Les Îles de Fer",
-   desc:"Peuple de marins et de pillards attaché aux anciennes coutumes de la mer, où l'on paie le prix du fer plutôt que l'or."},
-  {id:"tyrell", nom:"Maison Tyrell", devise:"Croissant en Force", siege:"Hautjardin", region:"Le Bief",
-   desc:"Maison la plus riche en terres agricoles du royaume, montée en puissance en tant qu'intendants avant de recevoir le titre de seigneurs du Bief."},
-  {id:"frey", nom:"Maison Frey", devise:"Nous tenons parole", siege:"Les Jumeaux", region:"Les Conflans",
-   desc:"Vassaux des Tully, contrôlant un pont stratégique sur le Trident. Maison nombreuse, prudente, et connue pour son sens aigu du calcul."},
-  {id:"bolton", nom:"Maison Bolton", devise:"Nos lames sont acérées", siege:"Fort-Terreur", region:"Le Nord",
-   desc:"Vassaux des Stark à la réputation sinistre, anciens rivaux historiques de Winterfell avant leur soumission. Leur emblème : un homme écorché."},
-  {id:"martell", nom:"Maison Martell", devise:"Jamais on ne se courbe, jamais on ne rompt", siege:"Lancehélion", region:"Dorne",
-   desc:"Seule région à avoir résisté à la conquête Targaryen par les armes. Dorne suit des coutumes et des lois qui lui sont propres."},
-  {id:"garde", nom:"La Garde de Nuit", devise:"Je suis l'épée dans les ténèbres…", siege:"Châteaunoir", region:"Le Mur",
-   desc:"Pas une maison mais un ordre fraternel juré : on y sert à vie, en renonçant à ses terres et à sa famille, pour garder le royaume des périls du Nord."}
-];
-
-const BLASON_GENERIQUE = `<svg class="blasonM" viewBox="0 0 34 34"><circle cx="17" cy="17" r="15.5" fill="#242b36" stroke="#4a5460" stroke-width="1.4"/><path d="M17 6 L26 10 V17 C26 23 22 27 17 29 C12 27 8 23 8 17 V10 Z" fill="none" stroke="#93a0b2" stroke-width="1.6"/></svg>`;
-
-function afficherMaisons(){
-  const grille = document.getElementById('grilleMaisons');
-  grille.innerHTML = MAISONS_INFO.map(m=>{
-    const img = MAISONS_FICHIERS.includes(m.id)
-      ? `<img class="blasonM" src="blasons/${m.id}.png" data-id="${m.id}" alt="Blason ${m.nom}">`
-      : BLASON_GENERIQUE;
-    return `<div class="carteMaison">
-      <div class="entete">${img}<div><div class="nomM">${m.nom}</div><div class="devise">« ${m.devise} »</div></div></div>
-      <div class="infosM"><span><b>Siège :</b> ${m.siege}</span><span><b>Région :</b> ${m.region}</span></div>
-      <div class="descM">${m.desc}</div>
-    </div>`;
-  }).join('');
-  grille.querySelectorAll('img.blasonM').forEach(im=>{
-    im.onerror = ()=>{ im.outerHTML = BLASONS[im.dataset.id] || BLASON_GENERIQUE; };
-  });
-}
-afficherMaisons();
-
-/* =====================================================
-   LEXIQUE — les termes se dévoilent au fil des chapitres
-===================================================== */
-const LEXIQUE = [
-  {t:"La Garde de Nuit", ch:1, d:"Ordre juré qui défend le Mur, tout au nord. On y sert à vie, vêtu de noir, en renonçant terres, titres et famille."},
-  {t:"Patrouilleur", ch:1, d:"Membre de la Garde de Nuit chargé d'explorer les terres au-delà du Mur."},
-  {t:"Sauvageons", ch:1, d:"Peuples libres vivant au nord du Mur, hors des lois des Sept Couronnes."},
-  {t:"Le Mur", ch:1, d:"Muraille de glace de plus de deux cents mètres de haut, vieille de huit mille ans, qui ferme le nord du royaume."},
-  {t:"Ser", ch:2, d:"Titre donné aux chevaliers. On dit « ser Jaime », comme on dirait « sire »."},
-  {t:"Loup géant", ch:2, d:"Cousin monstrueux du loup, rarissime au sud du Mur. C'est l'emblème de la maison Stark."},
-  {t:"Barral", ch:3, d:"Arbre sacré à l'écorce blanche et aux feuilles rouges, au visage sculpté. Les anciens dieux voient par ses yeux."},
-  {t:"La Main du Roi", ch:3, d:"Second du roi, qui gouverne en son nom. « Le roi rêve, la Main bâtit », dit le proverbe."},
-  {t:"Mestre", ch:3, d:"Savant, médecin et conseiller attaché à un château. Sa chaîne aux multiples métaux atteste ses savoirs."},
-  {t:"Le Trône de Fer", ch:4, d:"Trône des Sept Couronnes, forgé dans les épées des ennemis vaincus. Inconfortable à dessein."},
-  {t:"Khal / Khalasar", ch:4, d:"Un khal est un seigneur de guerre dothraki ; son khalasar est la horde qui le suit, cavaliers et familles."},
-  {t:"Dothrakis", ch:4, d:"Peuple cavalier des grandes plaines d'Essos. Tout ce qui compte se fait à cheval, sous le ciel ouvert."},
-  {t:"Septa", ch:8, d:"Religieuse de la Foi des Sept, souvent gouvernante des filles nobles."},
-  {t:"La route royale", ch:13, d:"Grand axe qui traverse le royaume du Mur jusqu'à Port-Réal, en passant par Winterfell."},
-  {t:"Corneille à trois yeux", ch:18, d:"Créature des rêves de Bran, qui semble en savoir long sur ce que les hommes ont oublié."},
-  {t:"Port-Réal", ch:19, d:"Capitale des Sept Couronnes, où siègent le Trône de Fer et le Donjon Rouge. Un demi-million d'âmes, et autant d'odeurs."},
-  {t:"Conseil restreint", ch:21, d:"Petit cercle de conseillers qui gouverne avec le roi : Main, Grand Argentier, maître des chuchoteurs…"},
-  {t:"Grand Argentier", ch:21, d:"Ministre des finances de la couronne — celui qui trouve l'or, ou l'emprunte."},
-  {t:"Braavos", ch:23, d:"Cité libre au-delà du détroit, célèbre pour ses canaux, sa banque… et ses maîtres d'escrime."},
-  {t:"La danse de l'eau", ch:23, d:"École d'escrime braavosienne : vitesse et précision plutôt que force. On frappe de la pointe."},
-  {t:"Tournoi de la Main", ch:30, d:"Grand tournoi donné en l'honneur d'une nouvelle Main du Roi : joutes, mêlée et fortunes en prix."},
-  {t:"Les Eyrié", ch:35, d:"Forteresse imprenable de la maison Arryn, perchée au sommet des montagnes de la Lune."}
-];
-
-function majLexique(maxCh){
-  const liste = document.getElementById('lexListe');
-  const compte = document.getElementById('lexCompte');
-  const visibles = LEXIQUE.filter(l=>l.ch<=maxCh);
-  compte.textContent = visibles.length + ' termes';
-  liste.innerHTML = visibles.map(l=>
-    `<div class="lex"><div class="lexTerme">${l.t}</div><div class="lexDef">${l.d}</div></div>`
-  ).join('');
-}
-
-/* ===== Mode nuit d'écoute ===== */
-const btnNuit = document.getElementById('btnNuit');
-function appliquerNuit(){
-  document.body.classList.toggle('nuit', !!etat.nuit);
-  btnNuit.classList.toggle('actif', !!etat.nuit);
-  btnNuit.title = etat.nuit ? 'Quitter le mode nuit' : "Mode nuit d'écoute";
-}
-btnNuit.onclick = ()=>{
-  etat.nuit = !etat.nuit; sauver();
-  appliquerNuit();
-};
-appliquerNuit();
-
-/* ===== Écran d'accueil ===== */
-const accueil = document.getElementById('accueil');
-const btnReprendre = document.getElementById('btnReprendre');
-const btnRecommencer = document.getElementById('btnRecommencer');
-btnReprendre.textContent = etat.idx > 0
-  ? `Reprendre — Chapitre ${etat.idx+1}`
-  : 'Commencer la lecture';
-btnReprendre.onclick = ()=>{
-  accueil.classList.add('ferme');
-  setTimeout(()=>accueil.remove(), 800);
-};
-btnRecommencer.onclick = ()=>{
-  if(!confirm('Recommencer le tome ? Ta progression, tes chapitres révélés et tes notes seront effacés.')) return;
-  try{ localStorage.removeItem(CLE); }catch(e){}
-  etat = {idx:0, revealed:[0,1,2,3,4,5], volume:20, theme:null, auto:false, notes:{}, marquePage:'', nuit:false};
-  idx = 0;
-  revealed = new Set(etat.revealed);
-  notesTa.value=''; marquePage.value='';
-  appliquerNuit();
-  render();
-  accueil.classList.add('ferme');
-  setTimeout(()=>accueil.remove(), 800);
-};
 
 render();
 </script>
