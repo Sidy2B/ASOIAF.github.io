@@ -45,9 +45,19 @@
     max-width:1060px;margin:0 auto;padding:0 18px 26px;
   }
   header{
-    display:flex;align-items:center;justify-content:space-between;
-    padding:16px 2px 14px;gap:12px;
+    display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
+    padding:16px 2px 14px;gap:8px 14px;
   }
+  .entete-icones{display:flex;gap:8px;flex:none}
+  .selecteurTome{display:flex;gap:6px;flex:none}
+  .selecteurTome button{
+    padding:0 14px;height:34px;border-radius:10px;cursor:pointer;
+    font-family:'IM Fell English',serif;font-size:.85rem;letter-spacing:.04em;
+    border:1px solid var(--bord);background:var(--carte);color:var(--acier);
+    transition:all .25s;
+  }
+  .selecteurTome button.actif{border-color:var(--bougie);background:var(--bougie);color:#141005}
+  .selecteurTome button:focus-visible{outline:2px solid var(--bougie);outline-offset:2px}
   header .book{
     font-family:'IM Fell English',serif;
     font-size:clamp(.85rem,2.6vw,1.02rem);
@@ -55,15 +65,16 @@
     color:var(--acier);
   }
   header .book b{color:var(--bougie);font-weight:normal}
-  #btnPleinEcran{
+  header .book{flex:1;min-width:130px;text-align:center}
+  #btnPleinEcran,#btnNuit{
     width:38px;height:38px;border-radius:12px;flex:none;
     border:1px solid var(--bord);
     background:var(--carte);color:var(--acier);
     font-size:1rem;cursor:pointer;transition:all .25s;
     backdrop-filter:blur(10px);
   }
-  #btnPleinEcran.actif{border-color:var(--bougie);color:var(--bougie)}
-  #btnPleinEcran:focus-visible{outline:2px solid var(--bougie);outline-offset:2px}
+  #btnPleinEcran.actif,#btnNuit.actif{border-color:var(--bougie);color:var(--bougie)}
+  #btnPleinEcran:focus-visible,#btnNuit:focus-visible{outline:2px solid var(--bougie);outline-offset:2px}
 
   /* ===== Grille de widgets ===== */
   .grille{
@@ -355,16 +366,6 @@
 
 
   /* ===== Mode nuit d'écoute ===== */
-  #btnNuit{
-    position:absolute;top:10px;left:46px;
-    width:38px;height:38px;border-radius:12px;flex:none;
-    border:1px solid var(--bord);
-    background:var(--carte);color:var(--acier);
-    font-size:1rem;cursor:pointer;transition:all .25s;
-    backdrop-filter:blur(10px);
-  }
-  #btnNuit.actif{border-color:var(--bougie);color:var(--bougie)}
-  #btnNuit:focus-visible{outline:2px solid var(--bougie);outline-offset:2px}
   body.nuit .colonne{display:none}
   body.nuit #wFamille{display:none}
   body.nuit #wScene{background:transparent;border-color:transparent;box-shadow:none;backdrop-filter:none}
@@ -455,9 +456,15 @@
 
 <div class="page">
   <header>
-    <div class="book"><b>Le Trône de Fer</b> · Tome 1 · Guide d'écoute</div>
-    <button id="btnPleinEcran" aria-label="Passer en plein écran" title="Plein écran">⛶</button>
-    <button id="btnNuit" aria-label="Activer le mode nuit" title="Mode nuit d'écoute">☾</button>
+    <div class="entete-icones">
+      <button id="btnPleinEcran" aria-label="Passer en plein écran" title="Plein écran">⛶</button>
+      <button id="btnNuit" aria-label="Activer le mode nuit" title="Mode nuit d'écoute">☾</button>
+    </div>
+    <div class="book"><b>Le Trône de Fer</b> · <span id="sousTitreTome">Tome 1</span> · Guide d'écoute</div>
+    <div class="selecteurTome">
+      <button data-tome="1" aria-label="Tome 1">I</button>
+      <button data-tome="2" aria-label="Tome 2">II</button>
+    </div>
   </header>
 
   <div class="grille">
@@ -591,7 +598,7 @@
 <div id="accueil" role="dialog" aria-modal="true" aria-label="Écran d'accueil">
   <div class="eyebrow">Guide d'écoute</div>
   <h2>Le Trône de Fer</h2>
-  <div class="tome">Tome 1 · d'après A Game of Thrones</div>
+  <div class="tome" id="accueilSousTitre">Tome 1 · d'après A Game of Thrones</div>
   <button id="btnReprendre">Commencer la lecture</button>
   <button id="btnRecommencer">Recommencer le tome (efface la progression)</button>
 </div>
@@ -632,7 +639,11 @@ const LIEUX = {
   portreal: {nom:"Port-Réal", carte:"westeros", x:68.0, y:69.2},
   pentos:   {nom:"Pentos — en Essos", carte:"essos", x:10.5, y:47.0},
   merdothrak:{nom:"La mer Dothrak — en Essos", carte:"essos", x:55.5, y:58.5},
-  khalasar: {nom:"Avec le khalasar, vers l'est — en Essos", carte:"essos", x:33.0, y:50.0}
+  khalasar: {nom:"Avec le khalasar, vers l'est — en Essos", carte:"essos", x:33.0, y:50.0},
+  vivesaigues:{nom:"Vivesaigues", carte:"westeros", x:47.0, y:57.0},
+  boisdesmurmures:{nom:"Le Bois-aux-Murmures", carte:"westeros", x:45.0, y:59.0},
+  lannisport:{nom:"Lannisport · Castral Roc", carte:"westeros", x:19.0, y:58.0},
+  routenord:{nom:"Sur la route du Nord", carte:"westeros", x:52.0, y:47.0}
 };
 
 const TH_NORD   = ["Stark","Main theme"];
@@ -643,7 +654,7 @@ const TH_LANN   = ["Lannister","Main theme"];
 const TH_TULLY  = ["Tully","Stark","Main theme"];
 const TH_ARRYN  = ["Arryn","Tully","Main theme"];
 
-const SCENES = [
+const CHAPITRES_T1 = [
   {chap:"Chapitre 1 · Prologue",titre:"Au-delà du Mur",desc:"Trois patrouilleurs de la Garde de Nuit s'enfoncent dans la forêt hantée, sur la piste de sauvageons. Le froid tombe, trop vite, trop fort — et quelque chose les observe entre les arbres.",mots:"forêt hantée · givre · ombres pâles",atmo:"linear-gradient(180deg,#0a0f16 0%,#14202e 55%,#233648 100%)",part:"neige",maison:"garde",lieu:"audela",themes:TH_GARDE},
   {chap:"Chapitre 2 · Bran",titre:"L'exécution du déserteur",desc:"Ned Stark décapite lui-même un déserteur devant ses fils. « Celui qui prononce la sentence doit tenir l'épée. » Sur le chemin du retour : une louve géante morte, et ses petits encore vivants.",mots:"billot · Glace · six louveteaux et un blanc",atmo:"linear-gradient(180deg,#1a2230 0%,#2c3a4d 55%,#46586e 100%)",part:"neige",maison:"stark",lieu:"winterfell",themes:TH_NORD},
   {chap:"Chapitre 3 · Catelyn",titre:"Le bois sacré",desc:"Catelyn rejoint Ned sous le barral, arbre blanc aux feuilles rouge sang. Elle apporte deux nouvelles : Jon Arryn, la Main du Roi, est mort — et le roi Robert chevauche vers Winterfell.",mots:"barral · étangs noirs · une lettre du sud",atmo:"linear-gradient(180deg,#111820 0%,#1e2a28 50%,#31261f 100%)",part:"feuilles",maison:"stark",lieu:"winterfell",themes:TH_NORD},
@@ -682,6 +693,46 @@ const SCENES = [
   {chap:"Chapitre 36 · Eddard",titre:"L'acier dans la nuit",desc:"L'enquête de Ned le mène dans la ville basse, vers une découverte qui éclaire tout d'un jour nouveau. Mais dans Port-Réal, les secrets se paient — et certains créanciers ne patientent pas.",mots:"ville basse · une évidence · lances sous la pluie",atmo:"linear-gradient(180deg,#12141c 0%,#242834 55%,#3c414e 100%)",part:"braises",maison:"stark",lieu:"portreal",themes:TH_SUD}
 ];
 
+const CHAPITRES_T2 = [
+  {chap:"Chapitre 1 · Tyrion",titre:"Le jugement des Eyrié",desc:"Refusant le jugement de Lysa Arryn, Tyrion réclame un procès par combat. Bronn, mercenaire croisé sur la route, se porte volontaire comme champion — face au chevalier du Val, ser Vardis Egen.",mots:"la Lune et le vide · un champion · une dette de vie",atmo:"linear-gradient(180deg,#141c2a 0%,#2a3a54 50%,#4d648a 100%)",part:"neige",maison:"lannister",lieu:"eyrie",themes:TH_LANN},
+  {chap:"Chapitre 2 · Eddard",titre:"La preuve",desc:"Ned confronte Cersei avec la vérité qu'il a assemblée pièce par pièce : aucun enfant du roi Robert n'a jamais eu les cheveux noirs des Baratheon. Il lui laisse le temps de fuir — une erreur, peut-être.",mots:"cheveux d'or · un ultimatum · le temps qui presse",atmo:"linear-gradient(180deg,#1e150f 0%,#3c2818 50%,#663f22 100%)",part:"braises",maison:"stark",lieu:"portreal",themes:TH_SUD},
+  {chap:"Chapitre 3 · Catelyn",titre:"Sans armée",desc:"Lysa refuse d'engager les chevaliers du Val dans une guerre qui n'est pas la sienne. Catelyn repart des Eyrié les mains vides, pressée de retrouver Robb et de rentrer au pays.",mots:"promesses refusées · un nid d'aigle · le sud qui attend",atmo:"linear-gradient(180deg,#131b28 0%,#28374c 50%,#465f80 100%)",part:"neige",maison:"tully",lieu:"eyrie",themes:TH_ARRYN},
+  {chap:"Chapitre 4 · Bran",titre:"Le régent de Winterfell",desc:"Robb lève les bannières du Nord et prend la route du sud. Bran, trop jeune pour la guerre, trop brisé pour la selle, se retrouve seigneur de Winterfell par intérim — un trône de bois pour un garçon qui ne marche plus.",mots:"bannières qui partent · un siège trop grand · mestre Luwin veille",atmo:"linear-gradient(180deg,#151d28 0%,#28354a 55%,#41536e 100%)",part:"neige",maison:"stark",lieu:"winterfell",themes:TH_NORD},
+  {chap:"Chapitre 5 · Daenerys",titre:"L'insulte",desc:"Un cavalier dothraki insulte Daenerys devant tout le khalasar. Drogo le tue à mains nues — mais une entaille superficielle reçue dans le duel va tout changer, plus qu'aucun des deux ne l'imagine encore.",mots:"une insulte de trop · un duel bref · une égratignure",atmo:"linear-gradient(180deg,#1f1a12 0%,#3d3018 50%,#6e5526 100%)",part:"braises",maison:"targaryen",lieu:"khalasar",themes:TH_TARG},
+  {chap:"Chapitre 6 · Tyrion",titre:"Les clans de la lune",desc:"Libéré, Tyrion redescend des Eyrié avec Bronn — droit dans une embuscade des clans des montagnes. Plutôt que de mourir sous leurs arakhs de fortune, il leur promet de l'or et de l'acier.",mots:"Chella, Timett, Shagga · un marché risqué · des clans affamés",atmo:"linear-gradient(180deg,#131820 0%,#28303e 55%,#48505e 100%)",part:"neige",maison:"lannister",lieu:"hauteroute",themes:TH_LANN},
+  {chap:"Chapitre 7 · Arya",titre:"Le chaos du Donjon Rouge",desc:"Les gardes de Ned tombent un à un dans la cour. Arya, en pleine leçon d'escrime avec Syrio, voit le monde basculer en quelques instants — et doit fuir sans se retourner.",mots:"cour en sang · Aiguille en main · courir",atmo:"linear-gradient(180deg,#1a1410 0%,#332619 50%,#584327 100%)",part:"braises",maison:"stark",lieu:"portreal",themes:TH_SUD},
+  {chap:"Chapitre 8 · Eddard",titre:"La trahison de l'or",desc:"Petyr Baelish avait promis les manteaux d'or à la cause de Ned. Au moment décisif, ils se retournent contre lui. Ned se réveille enchaîné, dans un cachot qu'il n'avait pas vu venir.",mots:"manteaux dorés · un sourire de trop · les fers",atmo:"linear-gradient(180deg,#1c130e 0%,#3a2114 50%,#6a3d1e 100%)",part:"braises",maison:"stark",lieu:"portreal",themes:TH_SUD},
+  {chap:"Chapitre 9 · Sansa",titre:"Une supplique",desc:"Sansa se jette aux pieds de Joffrey et de Cersei pour implorer la vie de son père. On lui promet la clémence — à condition que Ned confesse une trahison qu'il n'a pas commise.",mots:"genoux à terre · une promesse ambiguë · un prix à payer",atmo:"linear-gradient(180deg,#221a10 0%,#43331a 50%,#7a5c2c 100%)",part:"braises",maison:"stark",lieu:"portreal",themes:TH_SUD},
+  {chap:"Chapitre 10 · Jon",titre:"Les nouvelles du sud",desc:"Un corbeau apporte à Châteaunoir la nouvelle de l'arrestation de Ned. Jon, loin de tout, sent le Nord et le Sud se déchirer sans lui — et la tentation de déserter grandit.",mots:"un message noir · la colère qui monte · le serment qui pèse",atmo:"linear-gradient(180deg,#0e141c 0%,#1c2b3d 50%,#37556e 100%)",part:"neige",maison:"garde",lieu:"mur",themes:TH_GARDE},
+  {chap:"Chapitre 11 · Catelyn",titre:"La route de Vivesaigues",desc:"Catelyn presse son escorte vers le sud, vers Vivesaigues, vers Robb. Chaque lieue parcourue porte son lot de rumeurs de guerre, et son père, lord Hoster, décline dans son lit.",mots:"terres en armes · un père malade · retrouver les siens",atmo:"linear-gradient(180deg,#18202c 0%,#2b3646 50%,#4a5a6e 100%)",part:"neige",maison:"tully",lieu:"vivesaigues",themes:TH_TULLY},
+  {chap:"Chapitre 12 · Tyrion",titre:"Un pacte dans la caillasse",desc:"Tyrion scelle son alliance avec les clans des montagnes : de l'acier, de l'or, une place dans son armée improvisée. Une troupe hirsute et redoutable descend avec lui vers l'ouest.",mots:"promesses tenues · une armée de fortune · l'ouest en vue",atmo:"linear-gradient(180deg,#161c24 0%,#2c3644 55%,#4a5765 100%)",part:"neige",maison:"lannister",lieu:"hauteroute",themes:TH_LANN},
+  {chap:"Chapitre 13 · Bran",titre:"Le rêve du corbeau",desc:"Les rêves de Bran se font plus insistants : un corbeau à trois yeux, une crypte, un mot qu'il ne comprend pas encore. Ses jambes ne marchent plus, mais quelque chose en lui commence à voler.",mots:"trois yeux · une crypte de pierre · Été à ses côtés",atmo:"linear-gradient(180deg,#0c1220 0%,#1c2640 55%,#334366 100%)",part:"neige",maison:"stark",lieu:"winterfell",themes:TH_NORD},
+  {chap:"Chapitre 14 · Eddard",titre:"Le cachot",desc:"Dans l'obscurité de sa cellule, Ned reçoit la visite de Varys. L'eunuque ne lui offre ni pitié ni promesse claire — seulement un choix impossible entre l'honneur et la vie de ses filles.",mots:"une flamme de bougie · l'Araignée dans le noir · un choix cruel",atmo:"linear-gradient(180deg,#100d10 0%,#201a20 55%,#332a33 100%)",part:"braises",maison:"stark",lieu:"portreal",themes:TH_SUD},
+  {chap:"Chapitre 15 · Arya",titre:"Aiguille dans la boue",desc:"Traquée dans les rues de Port-Réal, Arya tue un garçon d'écurie pour survivre. Seule, affamée, elle se cache parmi les statues du Grand Septuaire, à des lieues de la petite fille qu'elle était.",mots:"une ruelle sombre · la faim · une statue pour abri",atmo:"linear-gradient(180deg,#12141c 0%,#242834 55%,#3c414e 100%)",part:"braises",maison:"stark",lieu:"portreal",themes:TH_SUD},
+  {chap:"Chapitre 16 · Daenerys",titre:"Le prix du sang",desc:"La blessure de Drogo s'infecte malgré les soins. Désespérée, Daenerys se tourne vers Mirri Maz Duur, la guérisseuse qu'elle a sauvée d'un pillage — et vers une magie dont le prix reste à fixer.",mots:"une plaie qui pourrit · une maegi captive · un rituel ancien",atmo:"linear-gradient(180deg,#1a1015 0%,#3a1a20 50%,#6b2d2d 100%)",part:"braises",maison:"targaryen",lieu:"khalasar",themes:TH_TARG},
+  {chap:"Chapitre 17 · Catelyn",titre:"Retrouvailles à Vivesaigues",desc:"Catelyn retrouve enfin son fils devenu chef de guerre, et son frère ser Edmure, prompt à vouloir tout risquer d'un coup. Son père agonise dans la tour au-dessus d'eux.",mots:"un fils changé · un frère impatient · les rives natales",atmo:"linear-gradient(180deg,#171f2a 0%,#2c3a4e 50%,#4c6178 100%)",part:"neige",maison:"tully",lieu:"vivesaigues",themes:TH_TULLY},
+  {chap:"Chapitre 18 · Jon",titre:"Le choix",desc:"N'y tenant plus, Jon déserte Châteaunoir en pleine nuit, décidé à rejoindre la guerre de son frère Robb. Le froid et le remords ne suffisent pas à le faire douter — pas encore.",mots:"un cheval volé · la nuit noire · un serment trahi",atmo:"linear-gradient(180deg,#0a0f16 0%,#151f2c 55%,#263548 100%)",part:"neige",maison:"garde",lieu:"mur",themes:TH_GARDE},
+  {chap:"Chapitre 19 · Sansa",titre:"La cour du lion",desc:"Otage à la cour, Sansa apprend à sourire pour survivre. Joffrey se révèle chaque jour un peu plus, et la jeune fille qui rêvait de chansons apprend à taire les siennes.",mots:"un sourire figé · un prince cruel · le silence comme armure",atmo:"linear-gradient(180deg,#1d1812 0%,#362a1b 50%,#59452c 100%)",part:"braises",maison:"stark",lieu:"portreal",themes:TH_SUD},
+  {chap:"Chapitre 20 · Eddard",titre:"Le marché",desc:"Varys revient avec une offre : confesser une fausse trahison, prendre le noir à Châteaunoir, et vivre pour revoir ses filles. Ned, pensant sauver Sansa et Arya, finit par céder.",mots:"un parchemin à signer · le noir plutôt que la mort · un dernier espoir",atmo:"linear-gradient(180deg,#151013 0%,#2a1f24 55%,#453640 100%)",part:"braises",maison:"stark",lieu:"portreal",themes:TH_SUD},
+  {chap:"Chapitre 21 · Bran",titre:"L'ombre dans l'escalier",desc:"Un homme armé d'un poignard se glisse dans la chambre de Bran en pleine nuit. Été le déchire avant qu'il n'achève son geste — mais qui a envoyé cet assassin reste un mystère entier.",mots:"une lame dans le noir · des crocs qui sauvent · une question sans réponse",atmo:"linear-gradient(180deg,#0a0a10 0%,#181620 55%,#2b2735 100%)",part:"braises",maison:"stark",lieu:"winterfell",themes:TH_NORD},
+  {chap:"Chapitre 22 · Tyrion",titre:"Lannisport",desc:"Tyrion arrive enfin à Lannisport, à la tête de sa troupe de clansmen dépenaillés. Le camp de guerre de son père l'accueille avec plus de moquerie que d'honneurs — pour l'instant.",mots:"les tours de Castral Roc · des rires moqueurs · une armée à prouver",atmo:"linear-gradient(180deg,#1c1610 0%,#332618 50%,#584023 100%)",part:"braises",maison:"lannister",lieu:"lannisport",themes:TH_LANN},
+  {chap:"Chapitre 23 · Catelyn",titre:"Le conseil de guerre",desc:"Autour de la table de guerre de Vivesaigues, Robb écoute ses bannerets se disputer la meilleure stratégie contre les deux armées Lannister qui approchent. La décision qu'il prend surprend jusqu'à sa mère.",mots:"une carte couverte de pions · deux armées ennemies · un jeune chef qui tranche",atmo:"linear-gradient(180deg,#161c26 0%,#2b3746 55%,#48586a 100%)",part:"neige",maison:"tully",lieu:"vivesaigues",themes:TH_TULLY},
+  {chap:"Chapitre 24 · Arya",titre:"Un nom parmi d'autres",desc:"Yoren, recruteur de la Garde de Nuit, trouve la fillette affamée et comprend en un regard qui elle est. Il lui coupe les cheveux, lui donne un nouveau nom — Arry — et une place dans son convoi de recrues.",mots:"des ciseaux · un nom de garçon · un convoi vers le nord",atmo:"linear-gradient(180deg,#1a1712 0%,#332a1e 50%,#584a30 100%)",part:"braises",maison:"stark",lieu:"portreal",themes:TH_SUD},
+  {chap:"Chapitre 25 · Daenerys",titre:"Les mots de la sorcière",desc:"Dans la tente rituelle, Mirri Maz Duur chante toute la nuit tandis que Daenerys donne naissance à un enfant que personne ne devait voir. Ce que le rituel a réellement coûté ne se révèle qu'au matin.",mots:"un chant sans fin · un enfant né trop tôt · un khal qui ne répond plus",atmo:"linear-gradient(180deg,#160b0e 0%,#33141a 50%,#5c2028 100%)",part:"braises",maison:"targaryen",lieu:"merdothrak",themes:TH_TARG},
+  {chap:"Chapitre 26 · Eddard",titre:"Les marches de Baelor",desc:"Sur les marches du grand Septuaire, Ned confesse la trahison qu'on lui a dictée, croyant encore à la clémence promise. Le jeune roi en décide autrement, devant la foule entière.",mots:"une foule silencieuse · une confession forcée · un ordre qui tombe",atmo:"linear-gradient(180deg,#100d0f 0%,#221a1e 55%,#3a2e33 100%)",part:"braises",maison:"stark",lieu:"portreal",themes:TH_SUD},
+  {chap:"Chapitre 27 · Sansa",titre:"Ce qu'elle a vu",desc:"Sansa, au premier rang, ne peut ni fuir ni détourner les yeux. Ce qu'elle voit ce jour-là referme définitivement le livre de contes qu'elle croyait vivre.",mots:"le premier rang · un dernier regard · un conte achevé",atmo:"linear-gradient(180deg,#151013 0%,#291f24 55%,#453640 100%)",part:"braises",maison:"stark",lieu:"portreal",themes:TH_SUD},
+  {chap:"Chapitre 28 · Jon",titre:"Ramené de force",desc:"Sam, Grenn, Pyp et Halder rattrapent Jon avant qu'il n'ait franchi la frontière de sa désertion. Ramené à Châteaunoir, il retrouve le Vieil Ours — et une punition plus clémente qu'il ne l'espérait.",mots:"des amis obstinés · un retour honteux · une seconde chance",atmo:"linear-gradient(180deg,#0e141c 0%,#1c2b3d 50%,#37556e 100%)",part:"neige",maison:"garde",lieu:"mur",themes:TH_GARDE},
+  {chap:"Chapitre 29 · Catelyn",titre:"Le Bois-aux-Murmures",desc:"Robb tend une embuscade nocturne dans le Bois-aux-Murmures, près de Vivesaigues. Ser Jaime Lannister lui-même tombe entre ses mains — la plus belle prise de toute la guerre.",mots:"une forêt silencieuse · des torches surgissant · le Régicide capturé",atmo:"linear-gradient(180deg,#0e1218 0%,#1c2b26 50%,#2f4a3a 100%)",part:"braises",maison:"tully",lieu:"boisdesmurmures",themes:TH_TULLY},
+  {chap:"Chapitre 30 · Arya",titre:"Sur la route du Nord",desc:"Le convoi de Yoren quitte enfin Port-Réal par la grande porte. Arya, cachée sous son nouveau nom, regarde la capitale rapetisser derrière elle — en direction du Mur, et peut-être de son frère Jon.",mots:"une charrette de recrues · la ville qui s'efface · le nord à l'horizon",atmo:"linear-gradient(180deg,#161c26 0%,#2a3646 55%,#465a70 100%)",part:"neige",maison:"stark",lieu:"routenord",themes:TH_GARDE},
+  {chap:"Chapitre 31 · Bran",titre:"Le départ de Theon",desc:"Theon Greyjoy quitte Winterfell pour les Îles de Fer, chargé par Robb de négocier l'appui de son père. Bran le regarde partir avec un malaise qu'il ne sait pas nommer.",mots:"un pupille qui rentre chez lui · une mission délicate · un doute muet",atmo:"linear-gradient(180deg,#161e2a 0%,#293648 55%,#42546a 100%)",part:"neige",maison:"stark",lieu:"winterfell",themes:TH_NORD},
+  {chap:"Chapitre 32 · Tyrion",titre:"La Main par intérim",desc:"Avec Ned mort et le royaume exsangue, Tywin choisit d'envoyer son fils là où un Lannister est nécessaire : à la cour, pour tenir la place de Main du Roi jusqu'à son propre retour.",mots:"un père qui décide · une charge inattendue · la route de l'est",atmo:"linear-gradient(180deg,#1c1610 0%,#332618 50%,#584023 100%)",part:"braises",maison:"lannister",lieu:"lannisport",themes:TH_LANN},
+  {chap:"Chapitre 33 · Daenerys",titre:"Adieu, cavalier de mon soleil",desc:"Il ne reste de Khal Drogo qu'un corps vide, sans plus de conscience qu'une bête. Daenerys, seule face à ce qu'elle a provoqué, lui offre la seule miséricorde qui lui reste à donner.",mots:"un regard éteint · un dernier geste d'amour · un khalasar qui se disperse",atmo:"linear-gradient(180deg,#140d10 0%,#2c1620 50%,#4d2230 100%)",part:"braises",maison:"targaryen",lieu:"merdothrak",themes:TH_TARG},
+  {chap:"Chapitre 34 · Catelyn",titre:"La bataille des camps",desc:"Pendant que Jaime croupit prisonnier, Robb écrase l'armée restée devant Vivesaigues d'un coup de filet parfaitement orchestré. Le siège est levé, et le nom du jeune loup commence à courir tout le royaume.",mots:"un piège nocturne · un siège brisé · une réputation qui naît",atmo:"linear-gradient(180deg,#12181f 0%,#25333f 55%,#3f5568 100%)",part:"neige",maison:"tully",lieu:"vivesaigues",themes:TH_TULLY},
+  {chap:"Chapitre 35 · Jon",titre:"Le grand raid",desc:"Le Vieil Ours annonce une expédition sans précédent : toute la force de la Garde de Nuit s'apprête à partir au-delà du Mur, à la recherche de Benjen Stark et de la vérité sur ce qui remue dans le froid.",mots:"toutes les patrouilles réunies · un oncle disparu · la porte qui s'ouvre",atmo:"linear-gradient(180deg,#0a0f16 0%,#14202e 55%,#233648 100%)",part:"neige",maison:"garde",lieu:"audela",themes:TH_GARDE},
+  {chap:"Chapitre 36 · Catelyn",titre:"Le Roi du Nord",desc:"À la nouvelle de l'exécution de Ned, les bannerets du Nord n'attendent plus l'aval de personne : ils acclament Robb comme Roi du Nord, rompant huit mille ans d'allégeance au Trône de Fer.",mots:"des épées levées · un cri unanime · une couronne de fer battu",atmo:"linear-gradient(180deg,#161c26 0%,#2c3a4e 50%,#4c6178 100%)",part:"neige",maison:"stark",lieu:"vivesaigues",themes:TH_NORD},
+  {chap:"Chapitre 37 · Daenerys",titre:"Le feu et le sang",desc:"Sur le bûcher de Khal Drogo, Daenerys dépose les trois œufs de pierre et marche elle-même dans les flammes. À l'aube, ses derniers cavaliers la retrouvent intacte — trois dragons vivants blottis contre elle.",mots:"un bûcher immense · une reine dans les flammes · trois cris nouveau-nés",atmo:"linear-gradient(180deg,#170d0a 0%,#3d1c12 45%,#7a3b1a 75%,#c46a1f 100%)",part:"braises",maison:"targaryen",lieu:"merdothrak",themes:TH_TARG}
+];
+
 const BLASONS = {
   stark:`<svg viewBox="0 0 34 34" aria-label="Maison Stark"><circle cx="17" cy="17" r="15.5" fill="#3d454f" stroke="#8a97a8" stroke-width="1.4"/><path d="M10 8 L14 14 L8 15 Z" fill="#e8ecf1"/><path d="M24 8 L20 14 L26 15 Z" fill="#e8ecf1"/><path d="M9.5 14.5 L24.5 14.5 L21 24 L17 28 L13 24 Z" fill="#e8ecf1"/><circle cx="13.8" cy="18" r="1.2" fill="#3d454f"/><circle cx="20.2" cy="18" r="1.2" fill="#3d454f"/><path d="M15.6 22.6 L18.4 22.6 L17 25 Z" fill="#3d454f"/></svg>`,
   targaryen:`<svg viewBox="0 0 34 34" aria-label="Maison Targaryen"><circle cx="17" cy="17" r="15.5" fill="#16090b" stroke="#a32c2c" stroke-width="1.4"/><path d="M17 27 C17 20 17 15 17 9" stroke="#a32c2c" stroke-width="2.3" fill="none" stroke-linecap="round"/><path d="M17 26 C15 20 10 19 9 12" stroke="#a32c2c" stroke-width="2.3" fill="none" stroke-linecap="round"/><path d="M17 26 C19 20 24 19 25 12" stroke="#a32c2c" stroke-width="2.3" fill="none" stroke-linecap="round"/><circle cx="17" cy="8" r="2" fill="#a32c2c"/><circle cx="8.6" cy="11" r="2" fill="#a32c2c"/><circle cx="25.4" cy="11" r="2" fill="#a32c2c"/></svg>`,
@@ -690,11 +741,23 @@ const BLASONS = {
 };
 
 /* ===== État & sauvegarde ===== */
-const CLE = 'asoiaf-tome1';
-let etat = {
-  idx: 0, revealed: [0,1,2,3,4,5], volume: 20,
-  theme: null, auto: false, notes: {}, marquePage: ''
-};
+const CLES = {1:'asoiaf-tome1', 2:'asoiaf-tome2'};
+const DOSSIERS = {1:"le trone de fer 1", 2:"le trone de fer 2"};
+
+let tomeActif = 1;
+try{ const dernier = localStorage.getItem('asoiaf-tome-actif'); if(dernier) tomeActif = Number(dernier); }catch(e){}
+
+let SCENES = (tomeActif===2) ? CHAPITRES_T2 : CHAPITRES_T1;
+let CLE = CLES[tomeActif];
+let DOSSIER = DOSSIERS[tomeActif];
+
+function etatParDefaut(t){
+  return {
+    idx: 0, revealed: (t===1 ? [0,1,2,3,4,5] : [0]), volume: 20,
+    theme: null, auto: false, notes: {}, marquePage: '', nuit: false
+  };
+}
+let etat = etatParDefaut(tomeActif);
 function charger(){
   try{
     const brut = localStorage.getItem(CLE);
@@ -863,7 +926,13 @@ const PERSONNAGES = [
   {nom:"Bronn", slug:"bronn", maison:"autre", ch:29, desc:"Mercenaire croisé à l'auberge du carrefour. Son épée va au plus offrant."},
   {nom:"Loras Tyrell", slug:"loras-tyrell", maison:"tyrell", ch:30, desc:"« Le chevalier aux Fleurs », prodige du tournoi, idole de Sansa."},
   {nom:"Gregor Clegane", slug:"gregor-clegane", maison:"autre", ch:30, desc:"« La Montagne », frère aîné du Limier. Immense, brutal, redouté de tous."},
-  {nom:"Lysa Arryn", slug:"lysa-arryn", maison:"arryn", ch:35, desc:"Sœur de Catelyn, veuve de la Main du Roi. Le deuil ne lui a pas réussi."}
+  {nom:"Lysa Arryn", slug:"lysa-arryn", maison:"arryn", ch:35, desc:"Sœur de Catelyn, veuve de la Main du Roi. Le deuil ne lui a pas réussi.", tome:1},
+
+  {nom:"Yoren", slug:"yoren", maison:"garde", ch:24, desc:"Recruteur de la Garde de Nuit, rugueux et taciturne. Ramène au Mur tout ce que le royaume ne veut plus.", tome:2},
+  {nom:"Mirri Maz Duur", slug:"mirri-maz-duur", maison:"autre", ch:16, desc:"Guérisseuse et prêtresse sauvée d'un pillage par Daenerys. Son savoir a un prix que personne n'avait anticipé.", tome:2},
+  {nom:"Shagga fils de Dolf", slug:"shagga", maison:"autre", ch:6, desc:"Chef d'un clan des montagnes de la Lune, hache toujours prête. Menace de trancher certaines parties de l'anatomie avec une belle constance.", tome:2},
+  {nom:"Ilyn Payne", slug:"ilyn-payne", maison:"stark", ch:2, desc:"Bourreau royal, muet depuis qu'on lui a arraché la langue. Son épée ne pose jamais de questions.", tome:2},
+  {nom:"Osha", slug:"osha", maison:"stark", ch:21, desc:"Sauvageonne capturée près de Winterfell, devenue servante par nécessité. En sait plus sur le Nord sauvage que quiconque au château.", tome:2}
 ];
 
 const BLASON_AUTRE = `<svg class="miniB" viewBox="0 0 34 34"><circle cx="17" cy="17" r="15.5" fill="#242b36" stroke="#4a5460" stroke-width="1.4"/><path d="M17 8 L17 25 M12 13 L22 13" stroke="#93a0b2" stroke-width="2" stroke-linecap="round"/></svg>`;
@@ -880,7 +949,7 @@ function blasonReplifHTML(maison){
 function majPersonnages(maxCh){
   const liste = document.getElementById('persoListe');
   const compte = document.getElementById('persoCompte');
-  const visibles = PERSONNAGES.filter(p=>p.ch<=maxCh);
+  const visibles = PERSONNAGES.filter(p=>(p.tome||1) < tomeActif || ((p.tome||1)===tomeActif && p.ch<=maxCh));
   compte.textContent = visibles.length + ' rencontrés';
   liste.innerHTML = visibles.map(p=>
     `<div class="perso" data-slug="${p.slug}" data-maison="${p.maison}">
@@ -914,18 +983,26 @@ function majPersonnages(maxCh){
 ===================================================== */
 const TRAJETS = {
   westeros: [
-    {pts:[[44,23.6],[42.5,38]], ch:13, c:"#d4a94e"},
-    {pts:[[42.5,38],[55,56.8]], ch:16, c:"#d4a94e"},
-    {pts:[[55,56.8],[62,58]],   ch:17, c:"#d4a94e"},
-    {pts:[[62,58],[68,69.2]],   ch:19, c:"#d4a94e"},
-    {pts:[[44,23.6],[49,16]],   ch:14, c:"#7fb3ff"},
-    {pts:[[49,16],[58.5,9]],    ch:20, c:"#7fb3ff"},
-    {pts:[[54,56],[63,52.3]],   ch:32, c:"#c8d2e0"},
-    {pts:[[63,52.3],[66.5,49.6]],ch:35, c:"#c8d2e0"}
+    {pts:[[44,23.6],[42.5,38]], ch:13, tome:1, c:"#d4a94e"},
+    {pts:[[42.5,38],[55,56.8]], ch:16, tome:1, c:"#d4a94e"},
+    {pts:[[55,56.8],[62,58]],   ch:17, tome:1, c:"#d4a94e"},
+    {pts:[[62,58],[68,69.2]],   ch:19, tome:1, c:"#d4a94e"},
+    {pts:[[44,23.6],[49,16]],   ch:14, tome:1, c:"#7fb3ff"},
+    {pts:[[49,16],[58.5,9]],    ch:20, tome:1, c:"#7fb3ff"},
+    {pts:[[54,56],[63,52.3]],   ch:32, tome:1, c:"#c8d2e0"},
+    {pts:[[63,52.3],[66.5,49.6]],ch:35, tome:1, c:"#c8d2e0"},
+
+    {pts:[[66.5,49.6],[63,52.3]], ch:1, tome:2, c:"#c9a45c"},
+    {pts:[[63,52.3],[40,55]],     ch:6, tome:2, c:"#c9a45c"},
+    {pts:[[40,55],[19,58]],       ch:12,tome:2, c:"#c9a45c"},
+    {pts:[[66.5,49.6],[47,57]],   ch:3, tome:2, c:"#93c47d"},
+    {pts:[[47,57],[45,59]],       ch:29,tome:2, c:"#93c47d"},
+    {pts:[[68,69.2],[52,47]],     ch:30,tome:2, c:"#7fb3ff"},
+    {pts:[[58.5,9],[59,5.8]],     ch:35,tome:2, c:"#7fb3ff"}
   ],
   essos: [
-    {pts:[[10.5,47],[33,50]],   ch:13, c:"#c0392b"},
-    {pts:[[33,50],[55.5,58.5]], ch:24, c:"#c0392b"}
+    {pts:[[10.5,47],[33,50]],   ch:13, tome:1, c:"#c0392b"},
+    {pts:[[33,50],[55.5,58.5]], ch:24, tome:1, c:"#c0392b"}
   ]
 };
 
@@ -933,6 +1010,7 @@ function dessinerTrajets(svg, carte, maxCh){
   if(!svg) return;
   svg.innerHTML = '';
   for(const t of (TRAJETS[carte]||[])){
+    if((t.tome||1) !== tomeActif) continue;
     if(t.ch > maxCh) continue;
     const pl = document.createElementNS('http://www.w3.org/2000/svg','polyline');
     pl.setAttribute('points', t.pts.map(p=>p.join(',')).join(' '));
@@ -955,7 +1033,6 @@ function majProgressif(){
 }
 
 /* ===== Images (dossier "le trone de fer 1") ===== */
-const DOSSIER = "le trone de fer 1";
 const EXTS = ["jpg","jpeg","png","webp","JPG","JPEG","PNG","WEBP"];
 
 function chargerImage(i){
@@ -1309,13 +1386,21 @@ const LEXIQUE = [
   {t:"Braavos", ch:23, d:"Cité libre au-delà du détroit, célèbre pour ses canaux, sa banque… et ses maîtres d'escrime."},
   {t:"La danse de l'eau", ch:23, d:"École d'escrime braavosienne : vitesse et précision plutôt que force. On frappe de la pointe."},
   {t:"Tournoi de la Main", ch:30, d:"Grand tournoi donné en l'honneur d'une nouvelle Main du Roi : joutes, mêlée et fortunes en prix."},
-  {t:"Les Eyrié", ch:35, d:"Forteresse imprenable de la maison Arryn, perchée au sommet des montagnes de la Lune."}
+  {t:"Les Eyrié", ch:35, d:"Forteresse imprenable de la maison Arryn, perchée au sommet des montagnes de la Lune.", tome:1},
+
+  {t:"Jugement par combat", ch:1, d:"Droit ancien permettant à un accusé de désigner un champion pour se battre à sa place, laissant le résultat trancher sa culpabilité.", tome:2},
+  {t:"Clans des montagnes", ch:6, d:"Peuples des montagnes de la Lune vivant de pillage et de rançons, méprisés par les seigneurs du Val comme par ceux du Val d'en bas.", tome:2},
+  {t:"Manteaux d'or", ch:8, d:"Surnom du Guet de Port-Réal, la garde municipale de la capitale, à la solde du Trône de Fer.", tome:2},
+  {t:"Bannerets", ch:11, d:"Seigneurs vassaux tenus de répondre à l'appel aux armes de leur suzerain, formant le gros de toute armée féodale.", tome:2},
+  {t:"Grand Septuaire de Baelor", ch:26, d:"Principal lieu de culte de la Foi des Sept à Port-Réal, dont les marches servent aussi de tribune aux annonces royales.", tome:2},
+  {t:"Roi dans le Nord", ch:36, d:"Titre proclamé par les bannerets du Nord en rupture avec le Trône de Fer, ressuscitant une couronne éteinte depuis des siècles.", tome:2},
+  {t:"Maegi", ch:16, d:"Terme dothraki désignant une sorcière ou une prêtresse étrangère ; porte une connotation de méfiance profonde chez les cavaliers.", tome:2}
 ];
 
 function majLexique(maxCh){
   const liste = document.getElementById('lexListe');
   const compte = document.getElementById('lexCompte');
-  const visibles = LEXIQUE.filter(l=>l.ch<=maxCh);
+  const visibles = LEXIQUE.filter(l=>(l.tome||1) < tomeActif || ((l.tome||1)===tomeActif && l.ch<=maxCh));
   compte.textContent = visibles.length + ' termes';
   liste.innerHTML = visibles.map(l=>
     `<div class="lex"><div class="lexTerme">${l.t}</div><div class="lexDef">${l.d}</div></div>`
@@ -1335,10 +1420,49 @@ btnNuit.onclick = ()=>{
 };
 appliquerNuit();
 
+/* ===== Tomes : sélecteur + bascule ===== */
+const NOMS_TOMES = {1:"Tome 1", 2:"Tome 2"};
+const SOUS_TITRES_TOMES = {1:"Tome 1 · d'après A Game of Thrones", 2:"Tome 2 · Le Donjon Rouge"};
+
+function majSelecteurTome(){
+  document.querySelectorAll('.selecteurTome button').forEach(b=>{
+    b.classList.toggle('actif', Number(b.dataset.tome)===tomeActif);
+  });
+  document.getElementById('sousTitreTome').textContent = NOMS_TOMES[tomeActif];
+}
+
+function chargerTome(n){
+  if(n === tomeActif) return;
+  const prefs = { volume: etat.volume, theme: etat.theme, auto: etat.auto, nuit: etat.nuit };
+  tomeActif = n;
+  SCENES = (n===2) ? CHAPITRES_T2 : CHAPITRES_T1;
+  CLE = CLES[n];
+  DOSSIER = DOSSIERS[n];
+  etat = Object.assign(etatParDefaut(n), prefs);
+  charger();
+  idx = Math.min(Math.max(etat.idx,0), SCENES.length-1);
+  revealed = new Set(etat.revealed);
+  notesTa.value = etat.notes[idx] || '';
+  marquePage.value = etat.marquePage || '';
+  volume.value = etat.volume ?? 20;
+  volAffiche.textContent = (etat.volume ?? 20) + '%';
+  autoChk.checked = !!etat.auto;
+  appliquerNuit();
+  try{ localStorage.setItem('asoiaf-tome-actif', String(n)); }catch(e){}
+  majSelecteurTome();
+  render();
+}
+
+document.querySelectorAll('.selecteurTome button').forEach(b=>{
+  b.onclick = ()=> chargerTome(Number(b.dataset.tome));
+});
+majSelecteurTome();
+
 /* ===== Écran d'accueil ===== */
 const accueil = document.getElementById('accueil');
 const btnReprendre = document.getElementById('btnReprendre');
 const btnRecommencer = document.getElementById('btnRecommencer');
+document.getElementById('accueilSousTitre').textContent = SOUS_TITRES_TOMES[tomeActif];
 btnReprendre.textContent = etat.idx > 0
   ? `Reprendre — Chapitre ${etat.idx+1}`
   : 'Commencer la lecture';
@@ -1347,12 +1471,14 @@ btnReprendre.onclick = ()=>{
   setTimeout(()=>accueil.remove(), 800);
 };
 btnRecommencer.onclick = ()=>{
-  if(!confirm('Recommencer le tome ? Ta progression, tes chapitres révélés et tes notes seront effacés.')) return;
+  if(!confirm('Recommencer ce tome ? Ta progression, tes chapitres révélés et tes notes pour ce tome seront effacés.')) return;
   try{ localStorage.removeItem(CLE); }catch(e){}
-  etat = {idx:0, revealed:[0,1,2,3,4,5], volume:20, theme:null, auto:false, notes:{}, marquePage:'', nuit:false};
+  etat = etatParDefaut(tomeActif);
   idx = 0;
   revealed = new Set(etat.revealed);
   notesTa.value=''; marquePage.value='';
+  volume.value = etat.volume; volAffiche.textContent = etat.volume + '%';
+  autoChk.checked = false;
   appliquerNuit();
   render();
   accueil.classList.add('ferme');
