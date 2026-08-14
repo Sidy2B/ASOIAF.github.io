@@ -1123,6 +1123,21 @@ async function testerFichier(src){
       if(v==="" && !trouve) break;
     }
   }
+  /* Morceaux hors maison (ambiance, moments clés...) listés dans musique/autres.json */
+  try{
+    const r = await fetch('musique/autres.json');
+    if(r.ok){
+      const noms = await r.json();
+      if(Array.isArray(noms)){
+        for(const nomFichier of noms){
+          if(await testerFichier(`musique/${encodeURIComponent(nomFichier)}`)){
+            const nomAffiche = nomFichier.replace(/\.[^.]+$/, '');
+            themes.push({nom: nomAffiche, base:null, src:`musique/${nomFichier}`});
+          }
+        }
+      }
+    }
+  }catch(e){}
   if(themes.length === 0){
     corpsMusique.innerHTML = '<p class="vide">Aucune musique installée. Dépose tes fichiers dans le dossier « musique » (ex : Stark theme.mp3) — voir le LISEZ-MOI du dossier.</p>';
     return;
