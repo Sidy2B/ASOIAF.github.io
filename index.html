@@ -112,7 +112,9 @@
     display:flex;flex-direction:column;justify-content:space-between;
   }
   @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-  .visuel{display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:70% 30%;z-index:0}
+  @keyframes kenBurns{from{transform:scale(1)}to{transform:scale(1.07)}}
+  .visuel{display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:70% 30%;z-index:0;
+    animation:kenBurns 26s ease-in-out infinite alternate;transform-origin:70% 30%;will-change:transform}
   .visuel.ok{display:block}
   .hero.voile .visuel{filter:blur(16px)}
   .hero-vide{
@@ -136,6 +138,53 @@
   .hero-entete{
     position:relative;z-index:2;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
     gap:10px 14px;padding:18px 20px 0;
+  }
+  .hero-persos{
+    position:absolute;right:20px;bottom:20px;z-index:3;max-width:min(260px,calc(100% - 40px));
+    display:none;flex-direction:column;align-items:flex-end;gap:7px;
+  }
+  .hero-persos.actif{display:flex}
+  .hero-persos .cadreP{
+    position:relative;border:none;padding:0;background:transparent;cursor:pointer;flex:none;
+    transition:opacity .4s ease;
+  }
+  .hero-persos .cadreP .imgWrap{
+    display:block;width:64px;height:64px;border-radius:50%;overflow:hidden;background:#0b0e13;
+    box-shadow:0 0 0 3px var(--ringP,var(--accent)),0 6px 18px rgba(0,0,0,.55);
+    transition:transform .25s ease;
+  }
+  .hero-persos .cadreP:hover .imgWrap{transform:scale(1.05)}
+  .hero-persos .cadreP:focus-visible{outline:2px solid var(--neige);outline-offset:3px}
+  .hero-persos .cadreP img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+  .hero-persos .compteurP{
+    position:absolute;top:-3px;right:-3px;min-width:18px;height:18px;padding:0 5px;
+    border-radius:999px;background:var(--neige);color:var(--nuit);
+    font-family:'Instrument Sans',sans-serif;font-size:.6rem;font-weight:700;
+    display:none;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.5);
+  }
+  .hero-persos .compteurP.visible{display:flex}
+  .hero-persos .labelP{
+    font-family:'Instrument Sans',sans-serif;font-size:.68rem;color:var(--neige);
+    background:rgba(5,7,10,.6);padding:3px 10px;border-radius:999px;backdrop-filter:blur(4px);
+    white-space:nowrap;max-width:150px;overflow:hidden;text-overflow:ellipsis;
+    transition:opacity .4s ease;cursor:pointer;
+  }
+  .hero-persos .descP{
+    display:none;font-family:'Instrument Sans',sans-serif;font-size:.78rem;line-height:1.45;
+    color:var(--neige);background:rgba(5,7,10,.72);backdrop-filter:blur(6px);
+    padding:10px 13px;border-radius:12px;border:1px solid var(--bord);
+    text-align:right;animation:fadeIn .3s ease;
+  }
+  .hero-persos.ouvert{align-items:stretch;max-width:min(320px,calc(100% - 40px))}
+  .hero-persos.ouvert .cadreP{align-self:flex-end}
+  .hero-persos.ouvert .labelP{align-self:flex-end}
+  .hero-persos.ouvert .descP{display:block}
+  @media (max-width:640px){
+    .hero-persos{right:12px;bottom:12px;gap:5px}
+    .hero-persos .cadreP .imgWrap{width:46px;height:46px;box-shadow:0 0 0 2px var(--ringP,var(--accent)),0 4px 12px rgba(0,0,0,.5)}
+    .hero-persos .labelP{font-size:.6rem;padding:2px 8px;max-width:110px}
+    .hero-persos .descP{font-size:.72rem;padding:8px 11px}
+    .hero-persos .compteurP{min-width:15px;height:15px;font-size:.54rem}
   }
   .hero-texte{
     position:relative;z-index:2;
@@ -288,6 +337,22 @@
     text-align:left;font-weight:700;color:var(--neige);
     font-size:1rem;margin-top:10px;
   }
+  .relationsMaison{display:none;flex-direction:column;gap:6px;margin-top:10px}
+  .relationsMaison.actif{display:flex}
+  .relationsMaison .ligneRel{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .relationsMaison .etiquetteRel{
+    font-family:'Instrument Sans',sans-serif;font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--discret);flex:none;
+  }
+  .relationsMaison .puceRel{
+    width:22px;height:22px;border-radius:50%;object-fit:cover;flex:none;
+    box-shadow:0 0 0 1.5px var(--bord);
+  }
+  .relationsMaison .puceRel.allie{box-shadow:0 0 0 1.5px var(--givre)}
+  .relationsMaison .puceRel.rival{box-shadow:0 0 0 1.5px var(--sang)}
+  span.puceRel{display:inline-block}
+  span.puceRel svg{width:100%;height:100%;display:block}
+  .relationsMaison .nomRel{display:inline-flex;align-items:center;gap:4px;font-size:.74rem;color:var(--acier)}
   #btnAgrandir{
     display:block;width:fit-content;margin-top:12px;
     padding:9px 18px;border-radius:999px;cursor:pointer;
@@ -507,6 +572,7 @@
       <div class="hero-vide" id="heroVide"><span id="heroVideTxt"></span></div>
       <div class="hero-voile"></div>
       <div class="hero-halo" id="heroHalo"></div>
+      <div class="hero-persos" id="heroPersos"></div>
       <header class="hero-entete">
         <div class="marque">
           <span class="point"></span>
@@ -550,6 +616,7 @@
             </div>
           </div>
           <div class="lieuNom" id="lieuNom"></div>
+          <div class="relationsMaison" id="relationsMaison"></div>
           <button id="btnAgrandir">Agrandir la carte ⤢</button>
         </div>
       </section>
@@ -938,6 +1005,7 @@ function render(){
   atmo.style.background=s.atmo;
   setParticles(s.part);
   appliquerAccent(s.maison);
+  majRelationsMaison(s.maison);
   const locked=!revealed.has(idx);
   const heroWrap = document.getElementById('wScene');
   heroWrap.classList.toggle('voile', locked);
@@ -970,6 +1038,16 @@ function render(){
     };
   }
   chargerImage(idx);
+
+  /* Portraits du chapitre (défilement auto) — jamais avant révélation, anti-spoiler */
+  if(locked){
+    heroPersosJeton++;
+    if(heroPersosTimer){ clearInterval(heroPersosTimer); heroPersosTimer = null; }
+    const hp = document.getElementById('heroPersos');
+    if(hp) hp.classList.remove('actif');
+  }else{
+    majPortraitsChapitre();
+  }
 
   /* Carte (widget + modale) */
   const l = LIEUX[s.lieu];
@@ -1091,6 +1169,39 @@ const BLASON_AUTRE = `<svg class="miniB" viewBox="0 0 34 34"><circle cx="17" cy=
 const MAISONS_FICHIERS = ["stark","targaryen","lannister","baratheon","arryn","tully","greyjoy","tyrell","frey","bolton","martell","garde"];
 
 const EXT_PORTRAIT = ["jpg","jpeg","png","webp","JPG","JPEG","PNG","WEBP"];
+/* Plusieurs illustrations pour un même personnage : perso.jpg, "perso 2.jpg", "perso 3.jpg"... */
+const VARIANTES_PORTRAIT = ["", " 2", " 3", " 4"];
+
+function testerImage(src){
+  return new Promise(resolve=>{
+    const img = new Image();
+    img.onload = ()=> resolve(true);
+    img.onerror = ()=> resolve(false);
+    img.src = src;
+  });
+}
+
+/* Repère toutes les illustrations disponibles pour un slug donné (toutes variantes/extensions confondues) */
+async function detecterVariantesPortrait(slug){
+  const trouvees = [];
+  for(const v of VARIANTES_PORTRAIT){
+    let trouve = null;
+    for(const ext of EXT_PORTRAIT){
+      const src = `personnages/${encodeURIComponent(`${slug}${v}.${ext}`)}`;
+      if(await testerImage(src)){ trouve = src; break; }
+    }
+    if(v==="" && !trouve) break; // pas d'illustration de base => pas de variantes à chercher
+    if(trouve) trouvees.push(trouve);
+  }
+  return trouvees;
+}
+
+/* Choisit une illustration au hasard parmi celles disponibles pour ce personnage */
+async function chargerPortraitPerso(slug){
+  const variantes = await detecterVariantesPortrait(slug);
+  if(variantes.length === 0) return null;
+  return variantes[Math.floor(Math.random() * variantes.length)];
+}
 
 function blasonReplifHTML(maison){
   return MAISONS_FICHIERS.includes(maison)
@@ -1114,22 +1225,142 @@ function majPersonnages(maxCh){
   liste.querySelectorAll('img.blasonRepli').forEach(im=>{
     im.onerror = ()=>{ im.outerHTML = BLASONS[im.dataset.maison] || BLASON_AUTRE; };
   });
-  /* Tente de charger un vrai portrait par-dessus le blason, sans jamais casser l'affichage */
+  /* Tente de charger un vrai portrait par-dessus le blason (au hasard s'il y en a plusieurs), sans jamais casser l'affichage */
   liste.querySelectorAll('.perso').forEach(el=>{
     const slug = el.dataset.slug;
-    let e = 0;
-    function essayer(){
-      if(e >= EXT_PORTRAIT.length) return;
-      const img = new Image();
-      img.onload = ()=>{
-        const slot = el.querySelector('.portraitSlot');
-        slot.innerHTML = `<img class="portrait" src="personnages/${slug}.${EXT_PORTRAIT[e]}" alt="Portrait de ${el.querySelector('.persoNom').textContent}">`;
-      };
-      img.onerror = ()=>{ e++; essayer(); };
-      img.src = `personnages/${slug}.${EXT_PORTRAIT[e]}`;
-    }
-    essayer();
+    chargerPortraitPerso(slug).then(src=>{
+      if(!src) return;
+      const slot = el.querySelector('.portraitSlot');
+      if(slot) slot.innerHTML = `<img class="portrait" src="${src}" alt="Portrait de ${el.querySelector('.persoNom').textContent}">`;
+    });
   });
+}
+
+/* =====================================================
+   PORTRAITS DU CHAPITRE — défilement automatique (toutes les 10s)
+   des personnages présents dans le chapitre affiché, repérés dans
+   le texte de la scène (titre, résumé, mots-clés). Ne montre jamais
+   un personnage avant son chapitre d'apparition (anti-spoiler).
+===================================================== */
+function genererAlias(nom){
+  const nick = (nom.match(/«\s*([^»]+?)\s*»/) || [])[1];
+  const base = nom.replace(/«[^»]*»/g, ' ').replace(/[().,]/g, ' ');
+  const titres = ["Ser","Lady","Lord","Mestre","Grand","Septa","Septon","Roi","Reine","Khal","Khaleesi","Prince","Princesse"];
+  const mots = base.split(/\s+/).filter(Boolean).filter(m => !titres.includes(m));
+  const alias = new Set();
+  if(mots[0] && mots[0].length > 2) alias.add(mots[0]);
+  if(nick) alias.add(nick);
+  return [...alias];
+}
+/* Surnoms utilisés dans les résumés mais absents du nom complet */
+const ALIAS_EXTRA = {
+  "sandor-clegane": ["Limier"],
+  "gregor-clegane": ["Montagne"],
+  "samwell-tarly": ["Sam"],
+  "varys": ["Araignée"],
+  "petyr-baelish": ["Littlefinger"],
+};
+const PERSO_ALIAS = {};
+PERSONNAGES.forEach(p=>{
+  const al = genererAlias(p.nom).concat(ALIAS_EXTRA[p.slug] || []);
+  PERSO_ALIAS[p.slug] = [...new Set(al)];
+});
+
+function echapperRegex(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+function personnagesDuChapitre(s){
+  if(!s) return [];
+  const texte = `${s.chap||''} ${s.titre||''} ${s.desc||''} ${s.mots||''}`;
+  const maxCh = idx + 1; // chapitre affiché, même échelle que PERSONNAGES[].ch
+  return PERSONNAGES.filter(p=>{
+    const dejaRevele = (p.tome||1) < tomeActif || ((p.tome||1)===tomeActif && p.ch<=maxCh);
+    if(!dejaRevele) return false;
+    const alias = PERSO_ALIAS[p.slug] || [];
+    return alias.some(a => new RegExp(`\\b${echapperRegex(a)}\\b`, 'i').test(texte));
+  });
+}
+
+let heroPersosTimer = null;
+let heroPersosJeton = 0;
+const heroPersosEtat = { trouves: [], i: 0, pause: false, ouvert: false };
+
+function heroPersosDemarrerCycle(){
+  if(heroPersosTimer){ clearInterval(heroPersosTimer); heroPersosTimer = null; }
+  if(heroPersosEtat.trouves.length < 2) return;
+  heroPersosTimer = setInterval(()=>{
+    if(heroPersosEtat.pause || heroPersosEtat.ouvert) return;
+    heroPersosAvancer();
+  }, 10000);
+}
+
+function heroPersosAvancer(){
+  const conteneur = document.getElementById('heroPersos');
+  if(!conteneur) return;
+  const cadre = conteneur.querySelector('.cadreP');
+  const label = conteneur.querySelector('.labelP');
+  cadre.style.opacity = 0; label.style.opacity = 0;
+  setTimeout(()=>{
+    heroPersosEtat.i = (heroPersosEtat.i + 1) % heroPersosEtat.trouves.length;
+    heroPersosAfficher(heroPersosEtat.i);
+    cadre.style.opacity = 1; label.style.opacity = 1;
+  }, 400);
+}
+
+function heroPersosAfficher(n){
+  const conteneur = document.getElementById('heroPersos');
+  if(!conteneur) return;
+  const p = heroPersosEtat.trouves[n];
+  const total = heroPersosEtat.trouves.length;
+  const cadre = conteneur.querySelector('.cadreP');
+  const img = conteneur.querySelector('img');
+  const label = conteneur.querySelector('.labelP');
+  const descEl = conteneur.querySelector('.descP');
+  const compteur = conteneur.querySelector('.compteurP');
+  cadre.style.setProperty('--ringP', ACCENT_PAR_MAISON[p.maison] || 'var(--accent)');
+  img.src = p.src;
+  img.alt = `Portrait de ${p.nom}`;
+  label.textContent = p.nom;
+  if(descEl) descEl.textContent = p.desc || '';
+  if(compteur){
+    compteur.textContent = `${n+1}/${total}`;
+    compteur.classList.toggle('visible', total > 1);
+  }
+}
+
+function heroPersosBasculerOuvert(){
+  const conteneur = document.getElementById('heroPersos');
+  if(!conteneur) return;
+  heroPersosEtat.ouvert = !heroPersosEtat.ouvert;
+  conteneur.classList.toggle('ouvert', heroPersosEtat.ouvert);
+}
+
+async function majPortraitsChapitre(){
+  const conteneur = document.getElementById('heroPersos');
+  if(!conteneur) return;
+  if(heroPersosTimer){ clearInterval(heroPersosTimer); heroPersosTimer = null; }
+  conteneur.classList.remove('actif','ouvert');
+  heroPersosEtat.trouves = []; heroPersosEtat.i = 0; heroPersosEtat.pause = false; heroPersosEtat.ouvert = false;
+  const jeton = ++heroPersosJeton;
+  const candidats = personnagesDuChapitre(SCENES[idx]);
+  const trouves = [];
+  for(const p of candidats){
+    const src = await chargerPortraitPerso(p.slug);
+    if(jeton !== heroPersosJeton) return; // le chapitre a changé entre-temps
+    if(src) trouves.push({nom:p.nom, maison:p.maison, src, desc:p.desc});
+  }
+  if(jeton !== heroPersosJeton || trouves.length === 0) return;
+
+  if(!conteneur.dataset.pret){
+    conteneur.innerHTML = `<button type="button" class="cadreP" aria-label="Voir la description de ce personnage"><span class="imgWrap"><img alt=""></span><span class="compteurP"></span></button><div class="labelP"></div><div class="descP"></div>`;
+    conteneur.dataset.pret = '1';
+    conteneur.addEventListener('click', heroPersosBasculerOuvert);
+    conteneur.addEventListener('mouseenter', ()=>{ heroPersosEtat.pause = true; });
+    conteneur.addEventListener('mouseleave', ()=>{ heroPersosEtat.pause = false; });
+  }
+  heroPersosEtat.trouves = trouves;
+  heroPersosAfficher(0);
+  conteneur.classList.add('actif');
+  heroPersosDemarrerCycle();
 }
 
 /* =====================================================
@@ -1227,10 +1458,27 @@ function chargerImage(i){
 ===================================================== */
 const MAISONS_MUSIQUE = [
   "Stark","Targaryen","Lannister","Baratheon","Greyjoy",
-  "Tully","Arryn","Martell","Tyrell","Dothraki",
+  "Tully","Arryn","Martell","Tyrell","Frey","Bolton","Dothraki",
   "Garde de Nuit","Main theme"
 ];
 const EXT_AUDIO = ["mp3","ogg","m4a","MP3","OGG","M4A"];
+/* Liste de secours utilisée si musique/autres.json est inaccessible (voir detecterThemes) */
+const AUTRES_PAR_DEFAUT = [
+  "Light of the Seven.mp3",
+  "The Winds of Winter.mp3",
+  "The Rains of Castamere.mp3",
+  "The Bear and the Maiden Fair.mp3",
+  "Mhysa.mp3",
+  "Blackwater.mp3",
+  "A Lannister Always Pays His Debts.mp3",
+  "Dracarys.mp3",
+  "The Children.mp3",
+  "Hold the Door.mp3",
+  "The Night King.mp3",
+  "The Long Night.mp3",
+  "The Iron Throne.mp3",
+  "Truth.mp3"
+];
 const VARIANTES = [""," 2"," 3"];
 
 const corpsMusique = document.getElementById('corpsMusique');
@@ -1281,10 +1529,11 @@ async function testerFichier(src){
 
 (async function detecterThemes(){
   for(const maison of MAISONS_MUSIQUE){
+    const nomCompletDeja = /\btheme$/i.test(maison); // ex. "Main theme" : pas de " theme" à ajouter
     for(const v of VARIANTES){
       let trouve = false;
       for(const ext of EXT_AUDIO){
-        const nomFichier = `${maison} theme${v}.${ext}`;
+        const nomFichier = nomCompletDeja ? `${maison}${v}.${ext}` : `${maison} theme${v}.${ext}`;
         if(await testerFichier(`musique/${encodeURIComponent(nomFichier)}`)){
           themes.push({nom:`${maison}${v?` (${v.trim()})`:''}`, base:maison, src:`musique/${nomFichier}`});
           trouve = true;
@@ -1294,21 +1543,24 @@ async function testerFichier(src){
       if(v==="" && !trouve) break;
     }
   }
-  /* Morceaux hors maison (ambiance, moments clés...) listés dans musique/autres.json */
+  /* Morceaux hors maison (ambiance, moments clés...) listés dans musique/autres.json,
+     avec une liste de secours intégrée au code : certains navigateurs bloquent par
+     sécurité le fetch() d'un fichier JSON local quand le site est ouvert en double-clic
+     (protocole file://) — la liste ci-dessous garantit que la détection fonctionne
+     quand même dans ce cas. Pour un site hébergé (http/https), c'est autres.json qui
+     fait foi et qui peut être modifié librement sans toucher au code. */
+  let nomsAutres = null;
   try{
     const r = await fetch('musique/autres.json');
-    if(r.ok){
-      const noms = await r.json();
-      if(Array.isArray(noms)){
-        for(const nomFichier of noms){
-          if(await testerFichier(`musique/${encodeURIComponent(nomFichier)}`)){
-            const nomAffiche = nomFichier.replace(/\.[^.]+$/, '');
-            themes.push({nom: nomAffiche, base:null, src:`musique/${nomFichier}`});
-          }
-        }
-      }
-    }
+    if(r.ok) nomsAutres = await r.json();
   }catch(e){}
+  if(!Array.isArray(nomsAutres)) nomsAutres = AUTRES_PAR_DEFAUT;
+  for(const nomFichier of nomsAutres){
+    if(await testerFichier(`musique/${encodeURIComponent(nomFichier)}`)){
+      const nomAffiche = nomFichier.replace(/\.[^.]+$/, '');
+      themes.push({nom: nomAffiche, base:null, src:`musique/${nomFichier}`});
+    }
+  }
   if(themes.length === 0){
     corpsMusique.innerHTML = '<p class="vide">Aucune musique installée. Dépose tes fichiers dans le dossier « musique » (ex : Stark theme.mp3) — voir le LISEZ-MOI du dossier.</p>';
     return;
@@ -1556,6 +1808,56 @@ function afficherMaisons(){
   });
 }
 afficherMaisons();
+
+/* =====================================================
+   RELATIONS ENTRE MAISONS — alliances / rivalités historiques,
+   connues dès le début de l'histoire (aucun risque de spoiler)
+===================================================== */
+const RELATIONS_MAISONS = {
+  stark:     { allies:["tully","arryn","baratheon"], rivaux:["greyjoy"] },
+  tully:     { allies:["stark","arryn","frey"],       rivaux:[] },
+  arryn:     { allies:["tully","stark"],              rivaux:[] },
+  baratheon: { allies:["stark","lannister"],          rivaux:["targaryen","greyjoy"] },
+  lannister: { allies:["baratheon"],                  rivaux:["stark","martell"] },
+  targaryen: { allies:[],                             rivaux:["baratheon","stark","lannister"] },
+  greyjoy:   { allies:[],                              rivaux:["stark","baratheon"] },
+  tyrell:    { allies:[],                              rivaux:[] },
+  frey:      { allies:["tully","stark"],               rivaux:[] },
+  bolton:    { allies:["stark"],                        rivaux:[] },
+  martell:   { allies:[],                               rivaux:["lannister"] },
+  garde:     { allies:[],                               rivaux:[] }
+};
+
+function puceMaisonHTML(id, type){
+  const info = MAISONS_INFO.find(m=>m.id===id);
+  const nom = info ? info.nom.replace(/^Maison /,'') : id;
+  const img = MAISONS_FICHIERS.includes(id)
+    ? `<img class="puceRel ${type}" src="blasons/${id}.png" alt="" title="${nom}">`
+    : `<span class="puceRel ${type}">${BLASON_GENERIQUE}</span>`;
+  return `<span class="nomRel">${img}${nom}</span>`;
+}
+
+function majRelationsMaison(maison){
+  const zone = document.getElementById('relationsMaison');
+  if(!zone) return;
+  const rel = RELATIONS_MAISONS[maison];
+  if(!rel || (rel.allies.length===0 && rel.rivaux.length===0)){
+    zone.classList.remove('actif'); zone.innerHTML = ''; return;
+  }
+  let html = '';
+  if(rel.allies.length){
+    html += `<div class="ligneRel"><span class="etiquetteRel">Alliés</span>${rel.allies.map(id=>puceMaisonHTML(id,'allie')).join('')}</div>`;
+  }
+  if(rel.rivaux.length){
+    html += `<div class="ligneRel"><span class="etiquetteRel">Rivaux</span>${rel.rivaux.map(id=>puceMaisonHTML(id,'rival')).join('')}</div>`;
+  }
+  zone.innerHTML = html;
+  zone.classList.add('actif');
+  zone.querySelectorAll('img.puceRel').forEach(im=>{
+    const type = im.className.replace('puceRel','').trim();
+    im.onerror = ()=>{ im.outerHTML = BLASON_AUTRE.replace('class="miniB"', `class="puceRel ${type}"`); };
+  });
+}
 
 /* =====================================================
    LEXIQUE — les termes se dévoilent au fil des chapitres
