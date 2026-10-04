@@ -285,15 +285,21 @@
   #lecture.joue{background:var(--braise);color:var(--neige)}
   .infoPiste{flex:1;min-width:0}
   #choixTheme{
-    width:100%;padding:2px 0;border-radius:0;
+    width:100%;padding:3px 22px 3px 2px;border-radius:5px;
     font-family:'Unbounded',sans-serif;font-size:1.02rem;font-weight:700;
-    background:transparent;color:var(--neige);
-    border:none;cursor:pointer;appearance:none;
+    background-color:transparent;color:var(--neige);
+    border:none;cursor:pointer;appearance:none;color-scheme:dark;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%238d97a6' d='M4 6l4 4 4-4z'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 2px center;background-size:13px;
+    transition:background-color .15s;
   }
+  #choixTheme:hover{background-color:rgba(238,241,245,.06)}
   #choixTheme option{
-    color:#1a1d24;background:#f2f4f8;
-    font-family:'Instrument Sans',sans-serif;
+    color:var(--neige);background:#161b24;
+    font-family:'Instrument Sans',sans-serif;font-weight:500;font-size:.95rem;
+    padding:7px 10px;
   }
+  #choixTheme option:checked{color:var(--nuit);background:var(--bougie)}
   .sousPiste{font-size:.82rem;color:var(--acier);margin-top:1px}
   .ctrl-label{
     display:flex;justify-content:space-between;align-items:baseline;
@@ -456,15 +462,42 @@
   }
 
   /* ===== Widget familles (arbre) ===== */
+  .arbreOnglets{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+  .arbreOnglets button{
+    font:inherit;cursor:pointer;padding:6px 14px;border-radius:20px;
+    border:1px solid rgba(238,241,245,.22);background:rgba(7,10,16,.5);
+    color:var(--neige);font-size:.78rem;font-weight:600;letter-spacing:.02em;
+    transition:background .15s,border-color .15s,color .15s;
+  }
+  .arbreOnglets button:hover{border-color:rgba(238,241,245,.45)}
+  .arbreOnglets button.actif{background:var(--bougie);border-color:var(--bougie);color:var(--nuit)}
   #wFamille .widget-corps{overflow-x:auto}
-  #arbre{min-width:680px;width:100%;display:block}
-  #arbre text{font-family:'Instrument Sans',sans-serif;fill:var(--neige);font-size:12.5px}
-  #arbre .boite{fill:rgba(7,10,16,.72);stroke:rgba(238,241,245,.28);rx:8}
-  #arbre .sect{fill:var(--bougie);font-size:10.5px;letter-spacing:.2em}
-  #arbre .mini{fill:var(--acier);font-size:9px;font-style:italic}
-  #arbre .mariage{stroke:var(--bougie);stroke-width:1.6}
-  #arbre .parente{stroke:#93a0b2;stroke-width:1.2;fill:none}
-  #arbre .batard{stroke:#93a0b2;stroke-width:1.2;fill:none;stroke-dasharray:5 4}
+  #arbreConteneur{width:100%}
+  .arbreSvg{display:none;width:100%}
+  .arbreSvg.actif{display:block}
+  .arbreSvg[data-groupe="stark"]{min-width:760px}
+  .arbreSvg[data-groupe="greyjoy"]{min-width:400px}
+  .arbreSvg[data-groupe="tully"]{min-width:500px}
+  .arbreSvg[data-groupe="arryn"]{min-width:460px}
+  .arbreSvg[data-groupe="targaryen"]{min-width:660px}
+  .arbreSvg[data-groupe="baratheon"]{min-width:640px}
+  .arbreSvg[data-groupe="lannister"]{min-width:580px}
+  .arbreSvg text{font-family:'Instrument Sans',sans-serif;fill:var(--neige);font-size:12.5px}
+  .arbreSvg .sect{fill:var(--bougie);font-size:10.5px;letter-spacing:.2em}
+  .arbreSvg .mini{fill:var(--acier);font-size:9px;font-style:italic}
+  .arbreSvg .mariage{stroke:var(--bougie);stroke-width:1.6}
+  .arbreSvg .parente{stroke:#93a0b2;stroke-width:1.2;fill:none}
+  .arbreSvg .batard{stroke:#93a0b2;stroke-width:1.2;fill:none;stroke-dasharray:5 4}
+  .arbreSvg .fondArbre{fill:#11161f}
+  .arbreSvg .anneauArbre{fill:none;stroke:var(--coulA,#93a0b2);stroke-width:2.5}
+  .arbreSvg .nomArbre{text-anchor:middle;fill:var(--neige);font-size:11.5px}
+  .arbreSvg image.portraitArbre{pointer-events:none}
+  .arbreSvg .lienArbre{fill:var(--givre);font-size:8.3px;font-style:italic;cursor:pointer;text-decoration:underline}
+  .arbreSvg .lienArbre:hover{fill:var(--bougie)}
+  .arbreLegende{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:14px;font-size:.72rem;font-style:italic;color:var(--acier)}
+  .arbreLegende i.legTrait{display:inline-block;width:24px;height:0;border-top:2px solid #93a0b2;vertical-align:middle;margin-right:5px}
+  .arbreLegende i.legTrait.mariage{border-top-color:var(--bougie);border-top-width:2.4px}
+  .arbreLegende i.legTrait.batard{border-top-style:dashed}
 
   /* ===== Tracés de voyage sur les cartes ===== */
   .trajets{
@@ -666,53 +699,98 @@
     <section class="widget" id="wFamille">
       <div class="widget-titre"><span class="picto">⚭</span> Familles & relations</div>
       <div class="widget-corps">
-        <svg id="arbre" viewBox="0 0 680 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre des familles">
-          <!-- ===== Stark / Tully / Arryn ===== -->
-          <text class="sect" x="12" y="24" data-ch="2">MAISONS STARK · TULLY · ARRYN</text>
-          <line class="mariage" x1="148" y1="55" x2="182" y2="55" data-ch="3"/>
-          <line class="parente" x1="278" y1="55" x2="322" y2="55" data-ch="3"/>
-          <text class="mini" x="283" y="48" data-ch="3">sœurs</text>
-          <line class="mariage" x1="418" y1="55" x2="462" y2="55" data-ch="3"/>
-          <path class="parente" d="M165 68 V95 H45 M165 95 H425 M45 95 V122 M140 95 V122 M235 95 V122 M330 95 V122 M425 95 V122" data-ch="2"/>
-          <path class="parente" d="M440 68 V108 H555 V122" data-ch="35"/>
-          <path class="batard" d="M100 68 V108 H620 V122" data-ch="2"/>
-          <g data-ch="2"><rect class="boite" x="52" y="42" width="96" height="26" rx="8"/><text x="100" y="59" text-anchor="middle">Eddard Stark</text></g>
-          <g data-ch="3"><rect class="boite" x="182" y="42" width="96" height="26" rx="8"/><text x="230" y="59" text-anchor="middle">Catelyn Tully</text></g>
-          <g data-ch="3"><rect class="boite" x="322" y="42" width="96" height="26" rx="8"/><text x="370" y="59" text-anchor="middle">Lysa Tully</text></g>
-          <g data-ch="3"><rect class="boite" x="462" y="42" width="96" height="26" rx="8"/><text x="510" y="59" text-anchor="middle">Jon Arryn †</text></g>
-          <g data-ch="2"><rect class="boite" x="-3" y="122" width="96" height="26" rx="8"/><text x="45" y="139" text-anchor="middle">Robb</text></g>
-          <g data-ch="2"><rect class="boite" x="92" y="122" width="96" height="26" rx="8"/><text x="140" y="139" text-anchor="middle">Sansa</text></g>
-          <g data-ch="2"><rect class="boite" x="187" y="122" width="96" height="26" rx="8"/><text x="235" y="139" text-anchor="middle">Arya</text></g>
-          <g data-ch="2"><rect class="boite" x="282" y="122" width="96" height="26" rx="8"/><text x="330" y="139" text-anchor="middle">Bran</text></g>
-          <g data-ch="2"><rect class="boite" x="377" y="122" width="96" height="26" rx="8"/><text x="425" y="139" text-anchor="middle">Rickon</text></g>
-          <g data-ch="35"><rect class="boite" x="507" y="122" width="96" height="26" rx="8"/><text x="555" y="139" text-anchor="middle">Robin Arryn</text></g>
-          <g data-ch="2"><rect class="boite" x="572" y="122" width="102" height="26" rx="8"/><text x="623" y="139" text-anchor="middle">Jon Snow</text></g>
-          <!-- ===== Baratheon / Lannister ===== -->
-          <text class="sect" x="12" y="205" data-ch="5">MAISONS BARATHEON · LANNISTER</text>
-          <line class="mariage" x1="168" y1="240" x2="202" y2="240" data-ch="5"/>
-          <line class="parente" x1="298" y1="240" x2="332" y2="240" data-ch="5"/>
-          <line class="parente" x1="428" y1="240" x2="462" y2="240" data-ch="6"/>
-          <text class="mini" x="360" y="222" data-ch="5">enfants de lord Tywin</text>
-          <path class="parente" d="M185 253 V302" data-ch="5"/>
-          <g data-ch="5"><rect class="boite" x="72" y="227" width="96" height="26" rx="8"/><text x="120" y="244" text-anchor="middle">Robert</text></g>
-          <g data-ch="5"><rect class="boite" x="202" y="227" width="96" height="26" rx="8"/><text x="250" y="244" text-anchor="middle">Cersei</text></g>
-          <g data-ch="5"><rect class="boite" x="332" y="227" width="96" height="26" rx="8"/><text x="380" y="244" text-anchor="middle">Jaime</text></g>
-          <g data-ch="6"><rect class="boite" x="462" y="227" width="96" height="26" rx="8"/><text x="510" y="244" text-anchor="middle">Tyrion</text></g>
-          <g data-ch="5"><rect class="boite" x="137" y="302" width="96" height="26" rx="8"/><text x="185" y="319" text-anchor="middle">Joffrey</text></g>
-          <!-- ===== Targaryen ===== -->
-          <text class="sect" x="12" y="385" data-ch="4">MAISON TARGARYEN</text>
-          <text class="mini" x="200" y="385" data-ch="4">derniers enfants du roi Aerys II †</text>
-          <line class="parente" x1="198" y1="425" x2="252" y2="425" data-ch="4"/>
-          <text class="mini" x="200" y="417" data-ch="4">frère &amp; sœur</text>
-          <line class="mariage" x1="348" y1="425" x2="402" y2="425" data-ch="4"/>
-          <g data-ch="4"><rect class="boite" x="102" y="412" width="96" height="26" rx="8"/><text x="150" y="429" text-anchor="middle">Viserys</text></g>
-          <g data-ch="4"><rect class="boite" x="252" y="412" width="96" height="26" rx="8"/><text x="300" y="429" text-anchor="middle">Daenerys</text></g>
-          <g data-ch="4"><rect class="boite" x="402" y="412" width="96" height="26" rx="8"/><text x="450" y="429" text-anchor="middle">Khal Drogo</text></g>
-          <!-- ===== Légende ===== -->
-          <line class="mariage" x1="20" y1="478" x2="50" y2="478"/><text class="mini" x="56" y="482">mariage</text>
-          <line class="parente" x1="150" y1="478" x2="180" y2="478"/><text class="mini" x="186" y="482">parenté</text>
-          <line class="batard" x1="280" y1="478" x2="310" y2="478"/><text class="mini" x="316" y="482">fils illégitime</text>
-        </svg>
+        <div class="arbreOnglets" id="arbreOnglets">
+          <button type="button" class="actif" data-groupe="stark">Stark</button>
+          <button type="button" data-groupe="greyjoy">Greyjoy</button>
+          <button type="button" data-groupe="tully">Tully</button>
+          <button type="button" data-groupe="arryn">Arryn</button>
+          <button type="button" data-groupe="targaryen">Targaryen</button>
+          <button type="button" data-groupe="baratheon">Baratheon</button>
+          <button type="button" data-groupe="lannister">Lannister</button>
+        </div>
+        <div id="arbreConteneur">
+          <svg class="arbreSvg actif" data-groupe="stark" viewBox="0 0 760 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre de la maison Stark">
+            <text class="sect" x="12" y="24" data-ch="2">MAISON STARK</text>
+            <path class="parente" d="M355 94 V130 H80 M355 130 H630 M80 130 V166 M210 130 V166 M370 130 V166 M630 130 V166" data-ch="2"/>
+            <line class="mariage" x1="394" y1="190" x2="476" y2="190" data-ch="3"/>
+            <path class="parente" d="M435 214 V260 H60 M435 260 H540 M60 260 V324 M180 260 V324 M300 260 V324 M420 260 V324 M540 260 V324" data-ch="2"/>
+            <path class="batard" d="M370 214 V300 H660 V324" data-ch="2"/>
+            <g class="noeudArbre" data-ch="2" data-maison="stark" style="--coulA:#c6d6e6"><circle class="fondArbre" cx="355" cy="70" r="24"/><circle class="anneauArbre" cx="355" cy="70" r="24"/><text class="nomArbre" x="355" y="108">Rickard Stark †</text></g>
+            <g class="noeudArbre" data-ch="2" data-maison="stark" style="--coulA:#c6d6e6"><circle class="fondArbre" cx="80" cy="190" r="24"/><circle class="anneauArbre" cx="80" cy="190" r="24"/><text class="nomArbre" x="80" y="228">Brandon †</text></g>
+            <g class="noeudArbre" data-ch="2" data-maison="stark" style="--coulA:#c6d6e6"><circle class="fondArbre" cx="210" cy="190" r="24"/><circle class="anneauArbre" cx="210" cy="190" r="24"/><text class="nomArbre" x="210" y="228">Lyanna †</text></g>
+            <g class="noeudArbre" data-ch="2" data-maison="stark" data-slug="eddard-stark" style="--coulA:#c6d6e6"><circle class="fondArbre" cx="370" cy="190" r="24"/><circle class="anneauArbre" cx="370" cy="190" r="24"/><text class="nomArbre" x="370" y="228">Eddard Stark</text></g>
+            <g class="noeudArbre" data-ch="3" data-maison="tully" data-slug="catelyn-stark" style="--coulA:#ef6a6a"><circle class="fondArbre" cx="500" cy="190" r="24"/><circle class="anneauArbre" cx="500" cy="190" r="24"/><text class="nomArbre" x="500" y="228">Catelyn Tully</text><text class="lienArbre" x="500" y="239" text-anchor="middle" onclick="choisirArbreGroupe('tully')">↗ née Tully</text></g>
+            <g class="noeudArbre" data-ch="6" data-maison="stark" data-slug="benjen-stark" style="--coulA:#c6d6e6"><circle class="fondArbre" cx="630" cy="190" r="24"/><circle class="anneauArbre" cx="630" cy="190" r="24"/><text class="nomArbre" x="630" y="228">Benjen</text></g>
+            <g class="noeudArbre" data-ch="2" data-maison="stark" data-slug="robb-stark" style="--coulA:#c6d6e6"><circle class="fondArbre" cx="60" cy="348" r="24"/><circle class="anneauArbre" cx="60" cy="348" r="24"/><text class="nomArbre" x="60" y="386">Robb</text></g>
+            <g class="noeudArbre" data-ch="2" data-maison="stark" data-slug="sansa-stark" style="--coulA:#c6d6e6"><circle class="fondArbre" cx="180" cy="348" r="24"/><circle class="anneauArbre" cx="180" cy="348" r="24"/><text class="nomArbre" x="180" y="386">Sansa</text></g>
+            <g class="noeudArbre" data-ch="2" data-maison="stark" data-slug="arya-stark" style="--coulA:#c6d6e6"><circle class="fondArbre" cx="300" cy="348" r="24"/><circle class="anneauArbre" cx="300" cy="348" r="24"/><text class="nomArbre" x="300" y="386">Arya</text></g>
+            <g class="noeudArbre" data-ch="2" data-maison="stark" data-slug="bran-stark" style="--coulA:#c6d6e6"><circle class="fondArbre" cx="420" cy="348" r="24"/><circle class="anneauArbre" cx="420" cy="348" r="24"/><text class="nomArbre" x="420" y="386">Bran</text></g>
+            <g class="noeudArbre" data-ch="2" data-maison="stark" data-slug="rickon-stark" style="--coulA:#c6d6e6"><circle class="fondArbre" cx="540" cy="348" r="24"/><circle class="anneauArbre" cx="540" cy="348" r="24"/><text class="nomArbre" x="540" y="386">Rickon</text></g>
+            <g class="noeudArbre" data-ch="2" data-maison="stark" data-slug="jon-snow" style="--coulA:#c6d6e6"><circle class="fondArbre" cx="660" cy="348" r="24"/><circle class="anneauArbre" cx="660" cy="348" r="24"/><text class="nomArbre" x="660" y="386">Jon Snow</text></g>
+          </svg>
+          <svg class="arbreSvg" data-groupe="greyjoy" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre de la maison Greyjoy">
+            <text class="sect" x="12" y="24" data-ch="2">MAISON GREYJOY</text>
+            <path class="parente" d="M200 94 V130 H100 M200 130 H300 M100 130 V166 M300 130 V166" data-tome="3" data-ch="12"/>
+            <g class="noeudArbre" data-tome="3" data-ch="12" data-maison="greyjoy" data-slug="balon-greyjoy" style="--coulA:#d6b55c"><circle class="fondArbre" cx="200" cy="70" r="24"/><circle class="anneauArbre" cx="200" cy="70" r="24"/><text class="nomArbre" x="200" y="108">Balon Greyjoy</text></g>
+            <g class="noeudArbre" data-ch="2" data-maison="greyjoy" data-slug="theon-greyjoy" style="--coulA:#d6b55c"><circle class="fondArbre" cx="100" cy="190" r="24"/><circle class="anneauArbre" cx="100" cy="190" r="24"/><text class="nomArbre" x="100" y="228">Theon</text><text class="lienArbre" x="100" y="239" text-anchor="middle" onclick="choisirArbreGroupe('stark')">↗ pupille des Stark</text></g>
+            <g class="noeudArbre" data-tome="3" data-ch="12" data-maison="greyjoy" data-slug="asha-greyjoy" style="--coulA:#d6b55c"><circle class="fondArbre" cx="300" cy="190" r="24"/><circle class="anneauArbre" cx="300" cy="190" r="24"/><text class="nomArbre" x="300" y="228">Asha</text></g>
+          </svg>
+          <svg class="arbreSvg" data-groupe="tully" viewBox="0 0 500 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre de la maison Tully">
+            <text class="sect" x="12" y="24" data-ch="3">MAISON TULLY</text>
+            <line class="parente" x1="244" y1="70" x2="396" y2="70" data-tome="3" data-ch="8"/>
+            <text class="mini" x="320" y="55" text-anchor="middle" data-tome="3" data-ch="8">frères</text>
+            <path class="parente" d="M220 94 V130 H140 M220 130 H300 M140 130 V166 M300 130 V166" data-ch="3"/>
+            <g class="noeudArbre" data-ch="3" data-maison="tully" style="--coulA:#ef6a6a"><circle class="fondArbre" cx="220" cy="70" r="24"/><circle class="anneauArbre" cx="220" cy="70" r="24"/><text class="nomArbre" x="220" y="108">Hoster Tully</text></g>
+            <g class="noeudArbre" data-tome="3" data-ch="8" data-maison="tully" data-slug="brynden-tully" style="--coulA:#ef6a6a"><circle class="fondArbre" cx="420" cy="70" r="24"/><circle class="anneauArbre" cx="420" cy="70" r="24"/><text class="nomArbre" x="420" y="108">Brynden Tully</text></g>
+            <g class="noeudArbre" data-ch="3" data-maison="tully" data-slug="catelyn-stark" style="--coulA:#ef6a6a"><circle class="fondArbre" cx="140" cy="190" r="24"/><circle class="anneauArbre" cx="140" cy="190" r="24"/><text class="nomArbre" x="140" y="228">Catelyn</text><text class="lienArbre" x="140" y="239" text-anchor="middle" onclick="choisirArbreGroupe('stark')">↗ épouse d'Eddard Stark</text></g>
+            <g class="noeudArbre" data-ch="3" data-maison="tully" data-slug="lysa-arryn" style="--coulA:#ef6a6a"><circle class="fondArbre" cx="300" cy="190" r="24"/><circle class="anneauArbre" cx="300" cy="190" r="24"/><text class="nomArbre" x="300" y="228">Lysa</text><text class="lienArbre" x="300" y="239" text-anchor="middle" onclick="choisirArbreGroupe('arryn')">↗ épouse de Jon Arryn</text></g>
+          </svg>
+          <svg class="arbreSvg" data-groupe="arryn" viewBox="0 0 460 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre de la maison Arryn">
+            <text class="sect" x="12" y="24" data-ch="3">MAISON ARRYN</text>
+            <line class="mariage" x1="244" y1="70" x2="356" y2="70" data-ch="3"/>
+            <path class="parente" d="M300 94 V166" data-ch="35"/>
+            <g class="noeudArbre" data-ch="3" data-maison="arryn" style="--coulA:#a3c6ea"><circle class="fondArbre" cx="220" cy="70" r="24"/><circle class="anneauArbre" cx="220" cy="70" r="24"/><text class="nomArbre" x="220" y="108">Jon Arryn †</text></g>
+            <g class="noeudArbre" data-ch="3" data-maison="tully" data-slug="lysa-arryn" style="--coulA:#ef6a6a"><circle class="fondArbre" cx="380" cy="70" r="24"/><circle class="anneauArbre" cx="380" cy="70" r="24"/><text class="nomArbre" x="380" y="108">Lysa</text><text class="lienArbre" x="380" y="119" text-anchor="middle" onclick="choisirArbreGroupe('tully')">↗ née Tully</text></g>
+            <g class="noeudArbre" data-ch="35" data-maison="arryn" style="--coulA:#a3c6ea"><circle class="fondArbre" cx="300" cy="190" r="24"/><circle class="anneauArbre" cx="300" cy="190" r="24"/><text class="nomArbre" x="300" y="228">Robin Arryn</text></g>
+          </svg>
+          <svg class="arbreSvg" data-groupe="targaryen" viewBox="0 0 660 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre de la maison Targaryen">
+            <text class="sect" x="12" y="24" data-ch="4">MAISON TARGARYEN</text>
+            <path class="parente" d="M300 94 V130 H100 M300 130 H420 M100 130 V166 M260 130 V166 M420 130 V166" data-ch="4"/>
+            <line class="mariage" x1="444" y1="190" x2="556" y2="190" data-ch="4"/>
+            <g class="noeudArbre" data-ch="4" data-maison="targaryen" style="--coulA:#ff6a45"><circle class="fondArbre" cx="300" cy="70" r="24"/><circle class="anneauArbre" cx="300" cy="70" r="24"/><text class="nomArbre" x="300" y="108">Aerys II †</text></g>
+            <g class="noeudArbre" data-ch="4" data-maison="targaryen" style="--coulA:#ff6a45"><circle class="fondArbre" cx="100" cy="190" r="24"/><circle class="anneauArbre" cx="100" cy="190" r="24"/><text class="nomArbre" x="100" y="228">Rhaegar †</text></g>
+            <g class="noeudArbre" data-ch="4" data-maison="targaryen" data-slug="viserys-targaryen" style="--coulA:#ff6a45"><circle class="fondArbre" cx="260" cy="190" r="24"/><circle class="anneauArbre" cx="260" cy="190" r="24"/><text class="nomArbre" x="260" y="228">Viserys</text></g>
+            <g class="noeudArbre" data-ch="4" data-maison="targaryen" data-slug="daenerys-targaryen" style="--coulA:#ff6a45"><circle class="fondArbre" cx="420" cy="190" r="24"/><circle class="anneauArbre" cx="420" cy="190" r="24"/><text class="nomArbre" x="420" y="228">Daenerys</text></g>
+            <g class="noeudArbre" data-ch="4" data-slug="khal-drogo"><circle class="fondArbre" cx="580" cy="190" r="24"/><circle class="anneauArbre" cx="580" cy="190" r="24"/><text class="nomArbre" x="580" y="228">Khal Drogo</text></g>
+          </svg>
+          <svg class="arbreSvg" data-groupe="baratheon" viewBox="0 0 640 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre de la maison Baratheon">
+            <text class="sect" x="12" y="24" data-ch="5">MAISON BARATHEON</text>
+            <path class="parente" d="M100 66 V50 H560 V66" data-ch="21"/>
+            <path class="parente" d="M400 50 V66" data-tome="3" data-ch="1"/>
+            <line class="mariage" x1="124" y1="90" x2="206" y2="90" data-ch="5"/>
+            <path class="parente" d="M165 114 V196" data-ch="5"/>
+            <g class="noeudArbre" data-ch="5" data-maison="baratheon" data-slug="robert-baratheon" style="--coulA:#f4cc3a"><circle class="fondArbre" cx="100" cy="90" r="24"/><circle class="anneauArbre" cx="100" cy="90" r="24"/><text class="nomArbre" x="100" y="128">Robert</text></g>
+            <g class="noeudArbre" data-ch="5" data-maison="lannister" data-slug="cersei-lannister" style="--coulA:#ecbf58"><circle class="fondArbre" cx="230" cy="90" r="24"/><circle class="anneauArbre" cx="230" cy="90" r="24"/><text class="nomArbre" x="230" y="128">Cersei</text><text class="lienArbre" x="230" y="139" text-anchor="middle" onclick="choisirArbreGroupe('lannister')">↗ née Lannister</text></g>
+            <g class="noeudArbre" data-ch="21" data-maison="baratheon" data-slug="renly-baratheon" style="--coulA:#f4cc3a"><circle class="fondArbre" cx="400" cy="90" r="24"/><circle class="anneauArbre" cx="400" cy="90" r="24"/><text class="nomArbre" x="400" y="128">Renly</text></g>
+            <g class="noeudArbre" data-tome="3" data-ch="1" data-maison="baratheon" data-slug="stannis-baratheon" style="--coulA:#f4cc3a"><circle class="fondArbre" cx="560" cy="90" r="24"/><circle class="anneauArbre" cx="560" cy="90" r="24"/><text class="nomArbre" x="560" y="128">Stannis</text></g>
+            <g class="noeudArbre" data-ch="5" data-maison="baratheon" data-slug="joffrey-baratheon" style="--coulA:#f4cc3a"><circle class="fondArbre" cx="165" cy="220" r="24"/><circle class="anneauArbre" cx="165" cy="220" r="24"/><text class="nomArbre" x="165" y="258">Joffrey</text></g>
+          </svg>
+          <svg class="arbreSvg" data-groupe="lannister" viewBox="0 0 580 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre de la maison Lannister">
+            <text class="sect" x="12" y="24" data-ch="5">MAISON LANNISTER</text>
+            <path class="parente" d="M300 94 V130 H100 M300 130 H500 M100 130 V166 M300 130 V166 M500 130 V166" data-ch="6"/>
+            <line class="parente" x1="124" y1="190" x2="276" y2="190" data-ch="5"/>
+            <text class="mini" x="200" y="175" text-anchor="middle" data-ch="5">jumeaux</text>
+            <g class="noeudArbre" data-ch="6" data-maison="lannister" style="--coulA:#ecbf58"><circle class="fondArbre" cx="300" cy="70" r="24"/><circle class="anneauArbre" cx="300" cy="70" r="24"/><text class="nomArbre" x="300" y="108">Tywin Lannister</text></g>
+            <g class="noeudArbre" data-ch="5" data-maison="lannister" data-slug="cersei-lannister" style="--coulA:#ecbf58"><circle class="fondArbre" cx="100" cy="190" r="24"/><circle class="anneauArbre" cx="100" cy="190" r="24"/><text class="nomArbre" x="100" y="228">Cersei</text><text class="lienArbre" x="100" y="239" text-anchor="middle" onclick="choisirArbreGroupe('baratheon')">↗ épouse de Robert Baratheon</text></g>
+            <g class="noeudArbre" data-ch="5" data-maison="lannister" data-slug="jaime-lannister" style="--coulA:#ecbf58"><circle class="fondArbre" cx="300" cy="190" r="24"/><circle class="anneauArbre" cx="300" cy="190" r="24"/><text class="nomArbre" x="300" y="228">Jaime</text></g>
+            <g class="noeudArbre" data-ch="6" data-maison="lannister" data-slug="tyrion-lannister" style="--coulA:#ecbf58"><circle class="fondArbre" cx="500" cy="190" r="24"/><circle class="anneauArbre" cx="500" cy="190" r="24"/><text class="nomArbre" x="500" y="228">Tyrion</text></g>
+          </svg>
+        </div>
+        <div class="arbreLegende">
+          <span><i class="legTrait mariage"></i> mariage</span>
+          <span><i class="legTrait parente"></i> parenté</span>
+          <span><i class="legTrait batard"></i> fils illégitime</span>
+        </div>
       </div>
     </section>
 
@@ -1085,7 +1163,7 @@ function render(){
     </div>`:''}
   `;
   const bl = sceneEl.querySelector('.blason');
-  if(bl){ bl.onerror = ()=>{ bl.outerHTML = BLASONS[s.maison] || ''; }; }
+  if(bl){ attacherBlasonFallback(bl, s.maison, BLASONS[s.maison] || ''); }
   document.getElementById('prev').onclick=()=>{if(idx>0){idx--;render();}};
   document.getElementById('next').onclick=()=>{if(idx<SCENES.length-1){idx++;render();}};
   document.getElementById('prev').disabled = idx===0;
@@ -1226,6 +1304,23 @@ const PERSONNAGES = [
 const BLASON_AUTRE = `<svg class="miniB" viewBox="0 0 34 34"><circle cx="17" cy="17" r="15.5" fill="#242b36" stroke="#4a5460" stroke-width="1.4"/><path d="M17 8 L17 25 M12 13 L22 13" stroke="#93a0b2" stroke-width="2" stroke-linecap="round"/></svg>`;
 const MAISONS_FICHIERS = ["stark","targaryen","lannister","baratheon","arryn","tully","greyjoy","tyrell","frey","bolton","martell","garde"];
 
+/* Blasons de maison : si "martell.png" ne charge pas, on tente d'autres casses/extensions
+   (martell.PNG, martell.jpg...) avant de retomber sur une icône générique — évite les faux
+   "ça ne marche pas" quand l'explorateur de fichiers masque l'extension réelle. */
+const EXT_BLASON = ["png","PNG","jpg","JPG","jpeg","JPEG","webp","WEBP"];
+function attacherBlasonFallback(img, cle, secoursHTML){
+  if(!img) return;
+  let i = 0;
+  img.onerror = ()=>{
+    i++;
+    if(i < EXT_BLASON.length){
+      img.src = `blasons/${encodeURIComponent(cle)}.${EXT_BLASON[i]}`;
+    }else{
+      img.outerHTML = secoursHTML || '';
+    }
+  };
+}
+
 const EXT_PORTRAIT = ["jpg","jpeg","png","webp","JPG","JPEG","PNG","WEBP"];
 /* Plusieurs illustrations pour un même personnage : perso.jpg, "perso 2.jpg", "perso 3.jpg"... */
 const VARIANTES_PORTRAIT = ["", " 2", " 3", " 4"];
@@ -1282,7 +1377,7 @@ function majPersonnages(maxCh){
     </div>`;
   }).join('');
   liste.querySelectorAll('img.blasonRepli').forEach(im=>{
-    im.onerror = ()=>{ im.outerHTML = BLASONS[im.dataset.maison] || BLASON_AUTRE; };
+    attacherBlasonFallback(im, im.dataset.maison, BLASONS[im.dataset.maison] || BLASON_AUTRE);
   });
   /* Tente de charger un vrai portrait par-dessus le blason (au hasard s'il y en a plusieurs), sans jamais casser l'affichage */
   liste.querySelectorAll('.perso').forEach(el=>{
@@ -1473,13 +1568,105 @@ function majProgressif(){
   const maxCh = revealed.size ? Math.max(...revealed)+1 : 1;
   majPersonnages(maxCh);
   majLexique(maxCh);
-  document.querySelectorAll('#arbre [data-ch]').forEach(el=>{
-    el.style.display = (Number(el.dataset.ch) <= maxCh) ? '' : 'none';
+  document.querySelectorAll('.arbreSvg [data-ch]').forEach(el=>{
+    const tome = Number(el.dataset.tome || 1);
+    const ch = Number(el.dataset.ch);
+    el.style.display = estRevele(tome, ch, maxCh) ? '' : 'none';
   });
+  if(typeof majOngletsArbre === 'function') majOngletsArbre(maxCh);
+  const svgActif = document.querySelector('.arbreSvg.actif');
+  if(svgActif && typeof dessinerPortraitsArbre === 'function') dessinerPortraitsArbre(svgActif);
   const l = LIEUX[SCENES[idx].lieu];
   dessinerTrajets(document.getElementById('trajets1'), l.carte, maxCh);
   dessinerTrajets(document.getElementById('trajets2'), l.carte, maxCh);
   if(typeof afficherMaisons === 'function') afficherMaisons();
+}
+
+/* ===== Arbre généalogique : familles sélectionnables, débloquées au fil de la lecture ===== */
+function estRevele(tome, ch, maxCh){
+  tome = tome || 1;
+  return tome < tomeActif || (tome === tomeActif && ch <= maxCh);
+}
+const ARBRE_GROUPES = [
+  {id:"stark",     label:"Stark",     tome:1, ch:2},
+  {id:"greyjoy",   label:"Greyjoy",   tome:1, ch:2},
+  {id:"tully",     label:"Tully",     tome:1, ch:3},
+  {id:"arryn",     label:"Arryn",     tome:1, ch:3},
+  {id:"targaryen", label:"Targaryen", tome:1, ch:4},
+  {id:"baratheon", label:"Baratheon", tome:1, ch:5},
+  {id:"lannister", label:"Lannister", tome:1, ch:5}
+];
+let arbreGroupeActif = 'stark';
+
+function choisirArbreGroupe(id){
+  arbreGroupeActif = id;
+  document.querySelectorAll('#arbreOnglets button').forEach(b=>{
+    b.classList.toggle('actif', b.dataset.groupe === id);
+  });
+  document.querySelectorAll('.arbreSvg').forEach(svg=>{
+    svg.classList.toggle('actif', svg.dataset.groupe === id);
+  });
+  const svgActif = document.querySelector(`.arbreSvg[data-groupe="${id}"]`);
+  dessinerPortraitsArbre(svgActif);
+}
+
+function majOngletsArbre(maxCh){
+  const bar = document.getElementById('arbreOnglets');
+  if(!bar) return;
+  let premier = null;
+  ARBRE_GROUPES.forEach(g=>{
+    const ok = estRevele(g.tome, g.ch, maxCh);
+    const btn = bar.querySelector(`[data-groupe="${g.id}"]`);
+    if(btn) btn.style.display = ok ? '' : 'none';
+    if(ok && premier===null) premier = g.id;
+  });
+  const btnActif = bar.querySelector(`[data-groupe="${arbreGroupeActif}"]`);
+  const actifVisible = btnActif && btnActif.style.display !== 'none';
+  if(!actifVisible && premier){
+    choisirArbreGroupe(premier);
+  }
+}
+
+document.getElementById('arbreOnglets')?.addEventListener('click', e=>{
+  const btn = e.target.closest('button[data-groupe]');
+  if(!btn || btn.style.display==='none') return;
+  choisirArbreGroupe(btn.dataset.groupe);
+});
+
+/* Insère, par-dessus chaque nœud de l'arbre, le portrait du personnage (détouré en cercle)
+   quand il en existe un — sinon le nœud reste un simple anneau coloré par maison. */
+async function dessinerPortraitsArbre(svg){
+  if(!svg) return;
+  const noeuds = svg.querySelectorAll('.noeudArbre[data-slug]');
+  for(const g of noeuds){
+    if(g.style.display === 'none') continue;
+    if(g.querySelector('image.portraitArbre')) continue;
+    const slug = g.dataset.slug;
+    const src = await chargerPortraitPerso(slug);
+    if(!src) continue;
+    if(g.querySelector('image.portraitArbre')) continue;
+    const cercle = g.querySelector('circle.fondArbre');
+    const anneau = g.querySelector('circle.anneauArbre');
+    if(!cercle || !anneau) continue;
+    const cx = cercle.cx.baseVal.value, cy = cercle.cy.baseVal.value, r = cercle.r.baseVal.value;
+    const ns = 'http://www.w3.org/2000/svg';
+    const clipId = 'clipArbre' + Math.random().toString(36).slice(2,9);
+    const clip = document.createElementNS(ns,'clipPath');
+    clip.setAttribute('id', clipId);
+    const clipCercle = document.createElementNS(ns,'circle');
+    clipCercle.setAttribute('cx', cx); clipCercle.setAttribute('cy', cy); clipCercle.setAttribute('r', r);
+    clip.appendChild(clipCercle);
+    const img = document.createElementNS(ns,'image');
+    img.setAttribute('class','portraitArbre');
+    img.setAttributeNS('http://www.w3.org/1999/xlink','href', src);
+    img.setAttribute('href', src);
+    img.setAttribute('x', cx - r); img.setAttribute('y', cy - r);
+    img.setAttribute('width', r*2); img.setAttribute('height', r*2);
+    img.setAttribute('preserveAspectRatio','xMidYMid slice');
+    img.setAttribute('clip-path', `url(#${clipId})`);
+    g.insertBefore(clip, cercle.nextSibling);
+    g.insertBefore(img, anneau);
+  }
 }
 
 /* ===== Images (dossier "le trone de fer 1", ou à défaut dossier "lieux") ===== */
@@ -1673,19 +1860,20 @@ async function testerFichier(src){
   actif.src = choix.value;
 })();
 
-function jouerTheme(src, fondu){
-  if(actif.src.endsWith(encodeURI(src)) || actif.src===src){ return; }
+function jouerTheme(src, fondu, boucle){
+  if(boucle === undefined) boucle = true;
+  if(actif.src.endsWith(encodeURI(src)) || actif.src===src){ actif.loop = boucle; return; }
   etat.theme = src; sauver();
   if(!fondu || actif.paused){
     actif.pause();
     actif = new Audio(src);
-    actif.loop = true;
+    actif.loop = boucle;
     actif.volume = volCible;
     return;
   }
   const ancien = actif;
   const nouveau = new Audio(src);
-  nouveau.loop = true;
+  nouveau.loop = boucle;
   nouveau.volume = 0;
   nouveau.play().catch(()=>{});
   actif = nouveau;
@@ -1711,10 +1899,25 @@ function musiqueAuto(){
     const th = themes.find(t=>t.base===p);
     if(th){
       choix.value = th.src;
-      jouerTheme(th.src, true);
+      /* Le thème de maison ne boucle plus sur lui-même en mode Auto : une fois
+         joué en entier, on enchaîne sur un morceau « autre » pris au hasard
+         (hors thèmes de maison), puis on revient au thème de la maison, et
+         ainsi de suite tant que le chapitre reste affiché. */
+      jouerTheme(th.src, true, false);
+      actif.onended = enchainerMusiqueAutre;
       return;
     }
   }
+}
+
+function enchainerMusiqueAutre(){
+  if(!autoChk.checked) return;
+  const autres = themes.filter(t=>t.base===null);
+  if(autres.length===0){ musiqueAuto(); return; }
+  const choisi = autres[Math.floor(Math.random()*autres.length)];
+  choix.value = choisi.src;
+  jouerTheme(choisi.src, true, false);
+  actif.onended = musiqueAuto;
 }
 
 choix.onchange = ()=>{ jouerTheme(choix.value, true); };
@@ -1899,7 +2102,7 @@ function afficherMaisons(){
     </div>`;
   }).join('');
   grille.querySelectorAll('img.blasonM').forEach(im=>{
-    im.onerror = ()=>{ im.outerHTML = BLASONS[im.dataset.id] || BLASON_GENERIQUE; };
+    attacherBlasonFallback(im, im.dataset.id, BLASONS[im.dataset.id] || BLASON_GENERIQUE);
   });
 }
 afficherMaisons();
@@ -1927,7 +2130,7 @@ function puceMaisonHTML(id, type){
   const info = MAISONS_INFO.find(m=>m.id===id);
   const nom = info ? info.nom.replace(/^Maison /,'') : id;
   const img = MAISONS_FICHIERS.includes(id)
-    ? `<img class="puceRel ${type}" src="blasons/${id}.png" alt="" title="${nom}">`
+    ? `<img class="puceRel ${type}" src="blasons/${id}.png" data-id="${id}" alt="" title="${nom}">`
     : `<span class="puceRel ${type}">${BLASON_GENERIQUE}</span>`;
   return `<span class="nomRel">${img}${nom}</span>`;
 }
@@ -1947,6 +2150,9 @@ function majRelationsMaison(maison){
     html += `<div class="ligneRel"><span class="etiquetteRel">Rivaux</span>${rel.rivaux.map(id=>puceMaisonHTML(id,'rival')).join('')}</div>`;
   }
   zone.innerHTML = html;
+  zone.querySelectorAll('img.puceRel').forEach(im=>{
+    attacherBlasonFallback(im, im.dataset.id, BLASONS[im.dataset.id] || BLASON_GENERIQUE);
+  });
   zone.classList.add('actif');
   zone.querySelectorAll('img.puceRel').forEach(im=>{
     const type = im.className.replace('puceRel','').trim();

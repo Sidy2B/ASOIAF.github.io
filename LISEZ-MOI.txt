@@ -1,30 +1,128 @@
-SITE — LE TRÔNE DE FER · GUIDE D'ÉCOUTE
-=========================================
+DOSSIER PERSONNAGES
+=====================
 
-CONTENU DU DOSSIER
-------------------
-  index.html            → la page du site (double-clique pour l'ouvrir)
-  le trone de fer 1/    → tes images du tome 1 (voir LISEZ-MOI.txt dedans)
+Dépose ici les portraits des personnages, un par un, en respectant
+EXACTEMENT ces noms de fichier (minuscules, tirets, sans accents).
+Formats acceptés : .jpg, .jpeg, .png, .webp (minuscules OU majuscules).
 
-DÉMARRAGE
----------
-1. Ouvre index.html dans ton navigateur (Chrome, Edge, Firefox...).
-2. Dépose tes images dans "le trone de fer 1" en les nommant
-   scene-01.jpg ... scene-10.jpg (ou .png / .jpeg / .webp).
-3. Recharge la page : les images apparaissent dans chaque scène.
+TU PEUX EN AJOUTER UN SEUL À LA FOIS : tant qu'un personnage n'a pas
+encore d'image ici, le site affiche simplement le blason de sa maison
+à la place dans la liste « Personnages » — rien ne casse, tu complètes
+à ton rythme.
 
-NAVIGATION
-----------
-- Boutons Précédent / Suivant pour avancer au rythme de l'audio.
-- Les numéros en haut permettent de sauter à une scène.
-- Les scènes que tu n'as pas encore atteintes sont floutées
-  (anti-spoiler) : tape "Révéler la scène" quand tu y arrives.
+PLUSIEURS ILLUSTRATIONS POUR UN MÊME PERSONNAGE
+-----------------------------------------------------------
+Tu peux déposer plusieurs images pour un même personnage : le site en
+choisit une au hasard à chaque affichage (liste « Personnages » et
+médaillon du chapitre). Ajoute " 2", " 3" ou " 4" avant l'extension,
+ex. pour Jon Snow :
 
-PLUS TARD
----------
-- Tome 2 : on créera "le trone de fer 2" et j'ajouterai ses scènes
-  dans le site sur le même principe.
-- Garde tout le dossier ensemble : index.html doit rester à côté
-  des dossiers d'images pour que tout fonctionne.
+  jon-snow.jpg          (la première illustration, obligatoire)
+  jon-snow 2.jpg
+  jon-snow 3.jpg
 
-Bonne écoute !
+Il faut que "jon-snow.jpg" existe pour que les variantes 2/3/4 soient
+prises en compte (même principe que les musiques par maison).
+
+NOUVEAU : DÉFILEMENT AUTOMATIQUE SUR L'IMAGE DU CHAPITRE
+-----------------------------------------------------------
+En haut de chaque chapitre révélé, un médaillon en bas à droite de
+l'illustration fait défiler automatiquement (toutes les 10 secondes)
+les portraits des personnages présents dans CE chapitre précis —
+repérés automatiquement dans le résumé du chapitre. Plus tu ajoutes
+de portraits ici, plus ce défilement est riche. Rien à configurer :
+dès qu'un portrait existe pour un personnage détecté dans le chapitre
+affiché, il apparaît dans la rotation. Aucun personnage n'est jamais
+montré avant son chapitre d'apparition (pas de spoiler).
+
+NOUVEAU : ARBRE GÉNÉALOGIQUE (widget « Familles & relations »)
+-----------------------------------------------------------
+L'arbre généalogique réutilise exactement les mêmes portraits que
+ci-dessus (même dossier, mêmes noms de fichier) pour chaque membre
+d'une maison : dès qu'un portrait existe, il apparaît détouré en
+rond dans l'arbre, avec un anneau coloré selon la maison. Sans
+portrait, le personnage reste un simple anneau coloré — rien ne
+casse.
+
+Chaque maison a maintenant SON PROPRE arbre séparé et complet
+(Stark, Greyjoy, Tully, Arryn, Targaryen, Baratheon, Lannister) —
+avec, pour les Stark, quelques ancêtres utiles pour s'y retrouver
+(lord Rickard Stark et ses enfants). Un onglet par maison permet de
+passer de l'une à l'autre ; chaque onglet n'apparaît que lorsque tu
+as croisé au moins un membre de cette famille (même logique de
+spoiler que pour la liste « Personnages »). Quand un personnage a
+épousé quelqu'un d'une autre maison (ex. Catelyn Tully chez les
+Stark), un petit lien cliquable sous son nom (« ↗ née Tully ») te
+fait passer directement à l'arbre de sa famille de naissance, sans
+jamais dupliquer tout cet arbre dans l'autre.
+
+-----------------------------------------------------------
+TOME 1 — Le Trône de Fer (A Game of Thrones) — 35 personnages
+-----------------------------------------------------------
+  eddard-stark.jpg             Eddard « Ned » Stark
+  robb-stark.jpg                Robb Stark
+  jon-snow.jpg                  Jon Snow
+  bran-stark.jpg                Bran Stark
+  rickon-stark.jpg              Rickon Stark
+  theon-greyjoy.jpg             Theon Greyjoy
+  catelyn-stark.jpg             Catelyn Stark
+  mestre-luwin.jpg              Mestre Luwin
+  daenerys-targaryen.jpg        Daenerys Targaryen
+  viserys-targaryen.jpg         Viserys Targaryen
+  khal-drogo.jpg                Khal Drogo
+  illyrio-mopatis.jpg           Illyrio Mopatis
+  robert-baratheon.jpg          Robert Baratheon
+  cersei-lannister.jpg          Cersei Lannister
+  jaime-lannister.jpg           Jaime Lannister
+  joffrey-baratheon.jpg         Joffrey Baratheon
+  sansa-stark.jpg                Sansa Stark
+  arya-stark.jpg                 Arya Stark
+  sandor-clegane.jpg             Sandor Clegane (« le Limier »)
+  tyrion-lannister.jpg           Tyrion Lannister
+  benjen-stark.jpg                Benjen Stark
+  jorah-mormont.jpg               Jorah Mormont
+  petyr-baelish.jpg               Petyr « Littlefinger » Baelish
+  jeor-mormont.jpg                Jeor Mormont
+  alliser-thorne.jpg              Alliser Thorne
+  varys.jpg                       Varys
+  grand-mestre-pycelle.jpg        Grand Mestre Pycelle
+  renly-baratheon.jpg             Renly Baratheon
+  syrio-forel.jpg                 Syrio Forel
+  samwell-tarly.jpg               Samwell Tarly
+  gendry.jpg                      Gendry
+  bronn.jpg                       Bronn
+  loras-tyrell.jpg                Loras Tyrell
+  gregor-clegane.jpg              Gregor Clegane (« la Montagne »)
+  lysa-arryn.jpg                  Lysa Arryn
+
+-----------------------------------------------------------
+TOME 2 — Le Trône de Fer (A Clash of Kings) — 5 personnages
+(en plus de ceux du tome 1, toujours présents)
+-----------------------------------------------------------
+  yoren.jpg                       Yoren
+  mirri-maz-duur.jpg               Mirri Maz Duur
+  shagga.jpg                       Shagga fils de Dolf
+  ilyn-payne.jpg                   Ilyn Payne
+  osha.jpg                         Osha
+
+-----------------------------------------------------------
+TOME 3 — La Bataille des rois (A Storm of Swords, 1ère moitié) — 14 personnages
+-----------------------------------------------------------
+  mestre-cressen.jpg               Mestre Cressen
+  stannis-baratheon.jpg            Stannis Baratheon
+  melisandre.jpg                   Mélisandre
+  davos-seaworth.jpg                Davos Seaworth
+  salladhor-saan.jpg                Salladhor Saan
+  balon-greyjoy.jpg                 Balon Greyjoy
+  asha-greyjoy.jpg                  Asha Greyjoy
+  jaqen-hghar.jpg                   Jaqen H'ghar
+  amory-lorch.jpg                   Ser Amory Lorch
+  dontos-hollard.jpg                Dontos Hollard
+  brynden-tully.jpg                 Ser Brynden « Poisson-Noir » Tully
+  donella-hornwood.jpg              Lady Donella Hornwood
+  jojen-reed.jpg                    Jojen Reed
+  meera-reed.jpg                    Meera Reed
+
+Conseil recherche : ajoute "asoiaf art" plutôt que "game of thrones"
+pour trouver des fan arts fidèles aux livres plutôt que des captures
+de la série (ou "asoiaf fan art <nom du perso>" pour cibler).
