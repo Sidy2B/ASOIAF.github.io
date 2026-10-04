@@ -1181,13 +1181,14 @@ function testerImage(src){
   });
 }
 
-/* Repère toutes les illustrations disponibles pour un slug donné (toutes variantes/extensions confondues) */
-async function detecterVariantesPortrait(slug){
+/* Repère toutes les illustrations disponibles pour un slug donné dans un dossier,
+   toutes variantes (" 2", " 3"...) et extensions confondues */
+async function detecterVariantesImage(dossier, slug, extensions, variantes){
   const trouvees = [];
-  for(const v of VARIANTES_PORTRAIT){
+  for(const v of variantes){
     let trouve = null;
-    for(const ext of EXT_PORTRAIT){
-      const src = `personnages/${encodeURIComponent(`${slug}${v}.${ext}`)}`;
+    for(const ext of extensions){
+      const src = `${dossier}/${encodeURIComponent(`${slug}${v}.${ext}`)}`;
       if(await testerImage(src)){ trouve = src; break; }
     }
     if(v==="" && !trouve) break; // pas d'illustration de base => pas de variantes à chercher
@@ -1198,7 +1199,7 @@ async function detecterVariantesPortrait(slug){
 
 /* Choisit une illustration au hasard parmi celles disponibles pour ce personnage */
 async function chargerPortraitPerso(slug){
-  const variantes = await detecterVariantesPortrait(slug);
+  const variantes = await detecterVariantesImage('personnages', slug, EXT_PORTRAIT, VARIANTES_PORTRAIT);
   if(variantes.length === 0) return null;
   return variantes[Math.floor(Math.random() * variantes.length)];
 }
@@ -1423,34 +1424,70 @@ function majProgressif(){
   if(typeof afficherMaisons === 'function') afficherMaisons();
 }
 
-/* ===== Images (dossier "le trone de fer 1") ===== */
+/* ===== Images (dossier "le trone de fer 1", ou à défaut dossier "lieux") ===== */
 const EXTS = ["jpg","jpeg","png","webp","JPG","JPEG","PNG","WEBP"];
+/* Plusieurs illustrations pour un même lieu : lieux/winterfell.jpg, "lieux/winterfell 2.jpg"... */
+const VARIANTES_LIEU = ["", " 2", " 3", " 4"];
 
-function chargerImage(i){
+/* Teste scene-01.jpg, scene-01.jpeg, ... dans l'ordre, renvoie la première trouvée ou null */
+async function trouverImageScene(num){
+  for(const ext of EXTS){
+    const src = `${DOSSIER}/scene-${num}.${ext}`;
+    if(await testerImage(src)) return src;
+  }
+  return null;
+}
+
+/* Choisit au hasard une illustration du lieu, s'il y en a (une ou plusieurs) */
+async function chargerImageLieu(lieuKey){
+  if(!lieuKey) return null;
+  const variantes = await detecterVariantesImage('lieux', lieuKey, EXTS, VARIANTES_LIEU);
+  if(variantes.length === 0) return null;
+  return variantes[Math.floor(Math.random() * variantes.length)];
+}
+
+let chargerImageJeton = 0;
+
+async function chargerImage(i){
   const img = document.getElementById('visuel');
   if(!img) return;
+  const jeton = ++chargerImageJeton;
   const num = String(i+1).padStart(2,'0');
   const vide = document.getElementById('heroVide');
   const videTxt = document.getElementById('heroVideTxt');
-  let e = 0;
-  function essayer(){
-    if(e >= EXTS.length){
-      img.classList.remove('ok');
-      if(vide) vide.classList.remove('cachee');
-      if(videTxt) videTxt.textContent = `Emplacement image · ${DOSSIER}/scene-${num}.jpg`;
-      fond.classList.remove('ok');
-      return;
-    }
+  const lieuKey = (SCENES[i] || {}).lieu;
+
+  function appliquer(src){
     img.onload = ()=>{
+      if(jeton !== chargerImageJeton) return;
       img.classList.add('ok');
       if(vide) vide.classList.add('cachee');
       fond.style.backgroundImage = `url("${img.src}")`;
       fond.classList.add('ok');
     };
-    img.onerror = ()=>{ e++; essayer(); };
-    img.src = `${DOSSIER}/scene-${num}.${EXTS[e]}`;
+    img.onerror = ()=> afficherVide();
+    img.src = src;
   }
-  essayer();
+  function afficherVide(){
+    if(jeton !== chargerImageJeton) return;
+    img.classList.remove('ok');
+    if(vide) vide.classList.remove('cachee');
+    if(videTxt) videTxt.textContent = `Emplacement image · ${DOSSIER}/scene-${num}.jpg (ou lieux/${lieuKey||'...'}.jpg)`;
+    fond.classList.remove('ok');
+  }
+
+  /* 1) une image propre à ce chapitre précis, si elle existe */
+  const srcScene = await trouverImageScene(num);
+  if(jeton !== chargerImageJeton) return;
+  if(srcScene){ appliquer(srcScene); return; }
+
+  /* 2) sinon, l'image du lieu où se trouve ce chapitre (au hasard s'il y en a plusieurs) */
+  const srcLieu = await chargerImageLieu(lieuKey);
+  if(jeton !== chargerImageJeton) return;
+  if(srcLieu){ appliquer(srcLieu); return; }
+
+  /* 3) sinon, espace réservé */
+  afficherVide();
 }
 
 /* =====================================================
