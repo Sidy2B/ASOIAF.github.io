@@ -1,0 +1,82 @@
+DOSSIER BLASONS — emblèmes des maisons
+==========================================
+
+Dépose ici les blasons, un par maison, en respectant EXACTEMENT ces
+noms de fichier (minuscules, sans accents). Format : .png uniquement
+(mais le site essaie aussi automatiquement .PNG, .jpg, .JPG, .jpeg,
+.webp si jamais ton fichier n'est pas en .png — au cas où).
+
+Tant qu'un blason n'existe pas, le site affiche un petit écusson
+générique à la place — rien ne casse, tu complètes à ton rythme.
+
+-----------------------------------------------------------
+LES 12 GRANDES MAISONS (déjà présentes)
+-----------------------------------------------------------
+  garde.png          La Garde de Nuit
+  bolton.png         Maison Bolton
+  stark.png          Maison Stark
+  arryn.png          Maison Arryn
+  greyjoy.png        Maison Greyjoy
+  frey.png           Maison Frey
+  tully.png          Maison Tully
+  tyrell.png         Maison Tyrell
+  baratheon.png      Maison Baratheon
+  lannister.png      Maison Lannister
+  martell.png        Maison Martell
+  targaryen.png      Maison Targaryen
+
+-----------------------------------------------------------
+PETITES MAISONS / MAISONS VASSALES
+-----------------------------------------------------------
+  Le Nord
+    mormont.png        Maison Mormont (L'Île aux Ours)
+    karstark.png       Maison Karstark (Karhold)
+    umber.png          Maison Umber (Dernier Foyer)
+    manderly.png       Maison Manderly (Blancport)
+    glover.png         Maison Glover (Deepwood Motte)
+    cerwyn.png         Maison Cerwyn (Castle Cerwyn)
+    hornwood.png       Maison Hornwood (Hornwood)
+    reed.png           Maison Reed (Greywater Watch)
+
+  Le Val
+    royce.png          Maison Royce (Runestone)
+
+  Les Conflans
+    bracken.png        Maison Bracken (Hayes-la-Pierre)
+    blackwood.png      Maison Blackwood (Raventree Hall)
+    mallister.png       Maison Mallister (Seagard)
+    piper.png          Maison Piper (Pinkmaiden)
+    darry.png          Maison Darry (Château de Darry)
+    mooton.png         Maison Mooton (Maidenpool)
+
+  Le Bief
+    tarly.png          Maison Tarly (Hornhill)
+    redwyne.png        Maison Redwyne (The Arbor)
+    hightower.png      Maison Hightower (Oldtown)
+
+  Les Terres de l'Orage
+    selmy.png          Maison Selmy (Harvest Hall)
+
+  L'Ouest
+    clegane.png        Maison Clegane
+    marbrand.png       Maison Marbrand (Ashemark)
+
+  Dorne
+    dayne.png          Maison Dayne (Starfall)
+
+Note sur tes 7 images reçues : j'ai reconnu sans problème le Mormont
+(ours noir), le Karstark (soleil blanc sur noir), le Manderly (triton
+au trident sur fond vert), le Bracken (cheval rouge cabré sur fond
+jaune) et le Blackwood (arbre-cœur blanc + 3 corbeaux sur fond rouge)
+— dépose-les simplement sous les noms ci-dessus. La tour à la flamme
+verte correspond à Hightower, que j'ai justement ajouté dans cette
+mise à jour (couleurs calées sur ton image). En revanche je ne suis
+pas sûr à 100 % de reconnaître la maison aux chaînes croisées blanches
+sur fond rouge — dis-moi de laquelle il s'agit et je l'ajoute si elle
+n'est pas déjà dans la liste.
+
+D'autres petites maisons peuvent être ajoutées de la même façon :
+dis-le simplement et je les rajoute dans le code (fiche + couleurs),
+tu n'as plus qu'à déposer le blason ici ensuite. Quelques pistes pour
+une prochaine fois si tu veux : Waynwood, Corbray, Vance, Payne,
+Yronwood, Harlaw, Botley, Estermont, Swann, Florent, Crakehall.

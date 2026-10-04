@@ -46,15 +46,69 @@ casse.
 
 Chaque maison a maintenant SON PROPRE arbre séparé et complet
 (Stark, Greyjoy, Tully, Arryn, Targaryen, Baratheon, Lannister) —
-avec, pour les Stark, quelques ancêtres utiles pour s'y retrouver
-(lord Rickard Stark et ses enfants). Un onglet par maison permet de
-passer de l'une à l'autre ; chaque onglet n'apparaît que lorsque tu
-as croisé au moins un membre de cette famille (même logique de
-spoiler que pour la liste « Personnages »). Quand un personnage a
-épousé quelqu'un d'une autre maison (ex. Catelyn Tully chez les
-Stark), un petit lien cliquable sous son nom (« ↗ née Tully ») te
-fait passer directement à l'arbre de sa famille de naissance, sans
-jamais dupliquer tout cet arbre dans l'autre.
+avec, pour les Stark et les Targaryen notamment, quelques ancêtres
+utiles pour s'y retrouver. Un onglet par maison permet de passer de
+l'une à l'autre ; chaque onglet n'apparaît que lorsque tu as croisé
+au moins un membre de cette famille (même logique de spoiler que
+pour la liste « Personnages »). Quand un personnage a épousé
+quelqu'un d'une autre maison (ex. Catelyn Tully chez les Stark), un
+petit lien cliquable sous son nom (« ↗ née Tully ») te fait passer
+directement à l'arbre de sa famille de naissance, sans jamais
+dupliquer tout cet arbre dans l'autre.
+
+NOUVEAU : TOUS les personnages de l'arbre peuvent désormais recevoir
+un portrait, y compris ceux qui n'apparaissent pas dans la liste
+« Personnages » classique (ancêtres, parents déjà morts au début de
+l'histoire, etc.) : il suffit de déposer l'image ici avec le bon nom
+de fichier, exactement comme pour les autres. Voici les ancêtres
+actuellement sans portrait et leur nom de fichier attendu :
+
+  rickard-stark.jpg         Lord Rickard Stark (père d'Eddard)
+  brandon-stark.jpg         Brandon Stark (frère aîné d'Eddard)
+  lyanna-stark.jpg          Lyanna Stark (sœur d'Eddard)
+  hoster-tully.jpg          Lord Hoster Tully (père de Catelyn et Lysa)
+  jon-arryn.jpg             Jon Arryn (Second du Roi, mari de Lysa)
+  robin-arryn.jpg           Robin Arryn (fils de Lysa)
+  aerys-targaryen.jpg       Aerys II Targaryen (le Roi Fou)
+  rhaegar-targaryen.jpg     Rhaegar Targaryen
+  tywin-lannister.jpg       Lord Tywin Lannister
+
+NOUVEAU : LES FIGURES FONDATRICES / LÉGENDAIRES
+-----------------------------------------------------------
+Chaque arbre (sauf Tully, voir plus bas) a maintenant, tout en bas,
+une figure fondatrice à part — reconnaissable à son anneau en
+pointillés — qui n'est reliée par aucun trait de parenté aux autres
+personnages (le lien généalogique exact est perdu dans la légende ou
+remonte à des siècles, voire des millénaires). Elle aussi peut
+recevoir un portrait :
+
+  bran-le-batisseur.jpg     Bran le Bâtisseur (fondateur légendaire
+                             de Winterfell et du Mur) — arbre Stark
+  roi-gris.jpg               Le Roi Gris (légende fondatrice des
+                             Îles de Fer) — arbre Greyjoy
+  artys-arryn.jpg            Artys Arryn, « le Chevalier Ailé »
+                             (légende fondatrice du Val) — arbre Arryn
+  aegon-le-conquerant.jpg    Aegon le Conquérant (fondateur de la
+                             dynastie, ~300 ans avant les événements)
+                             — arbre Targaryen
+  orys-baratheon.jpg         Orys Baratheon (premier lord Baratheon,
+                             ~300 ans avant) — arbre Baratheon
+  lann-le-ruse.jpg           Lann le Rusé (légende fondatrice,
+                             prit Castral Roc par la ruse) — arbre
+                             Lannister
+
+Pas de figure équivalente ajoutée pour les Tully : je n'ai pas trouvé
+de fondateur légendaire ou de moment fondateur aussi clairement établi
+pour cette maison. Si tu en connais un, dis-le-moi et je l'ajoute.
+Pour Artys Arryn, le lien avec la maison Arryn est un peu moins
+solidement attesté dans les livres que les autres — à prendre avec
+un peu plus de recul si jamais une source le contredit.
+
+À TERME : au fil de ta lecture, dès qu'un ancêtre Stark ou Targaryen
+supplémentaire est mentionné dans les livres (sans jamais rien
+révéler à l'avance), je l'ajouterai à l'arbre correspondant pour que
+ces deux arbres deviennent de plus en plus complets. N'hésite pas à
+me dire quand tu croises un nom qui mériterait d'y figurer.
 
 -----------------------------------------------------------
 TOME 1 — Le Trône de Fer (A Game of Thrones) — 35 personnages

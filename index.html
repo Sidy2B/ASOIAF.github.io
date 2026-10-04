@@ -437,7 +437,13 @@
   #wNotes textarea:focus-visible,#marquePage:focus-visible{outline:2px solid var(--bougie);outline-offset:1px}
 
   /* ===== Widget personnages ===== */
-  #persoListe{max-height:340px;overflow-y:auto;padding-right:4px}
+  #persoListe,#creaListe{max-height:340px;overflow-y:auto;padding-right:4px}
+  .typeTitre{
+    font-family:'Unbounded',sans-serif;font-size:.72rem;font-weight:600;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--bougie);
+    padding:10px 2px 4px;
+  }
+  .typeTitre:first-child{padding-top:0}
   .perso{
     display:flex;gap:11px;align-items:flex-start;
     padding:9px 2px;border-bottom:1px solid var(--bord);
@@ -490,6 +496,7 @@
   .arbreSvg .batard{stroke:#93a0b2;stroke-width:1.2;fill:none;stroke-dasharray:5 4}
   .arbreSvg .fondArbre{fill:#11161f}
   .arbreSvg .anneauArbre{fill:none;stroke:var(--coulA,#93a0b2);stroke-width:2.5}
+  .arbreSvg .anneauArbre.legendaire{stroke-dasharray:4 3;opacity:.85}
   .arbreSvg .nomArbre{text-anchor:middle;fill:var(--neige);font-size:11.5px}
   .arbreSvg image.portraitArbre{pointer-events:none}
   .arbreSvg .lienArbre{fill:var(--givre);font-size:8.3px;font-style:italic;cursor:pointer;text-decoration:underline}
@@ -598,6 +605,13 @@
   }
   .carteMaison .infosM b{color:#c8d2e0;font-weight:600}
   .carteMaison .descM{font-size:.87rem;line-height:1.5;color:#c8d2e0}
+  .grilleMaisons .regionTitre{
+    grid-column:1/-1;
+    font-family:'Unbounded',sans-serif;font-size:.78rem;font-weight:600;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--bougie);
+    padding:20px 0 4px;border-bottom:1px solid var(--bord);margin-top:4px;
+  }
+  .grilleMaisons .regionTitre:first-child{padding-top:0;margin-top:0}
 
   @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -669,6 +683,11 @@
         <div class="widget-corps"><div id="persoListe"></div></div>
       </section>
 
+      <section class="widget" id="wCreatures">
+        <div class="widget-titre">Créatures <span class="persoCompte" id="creaCompte"></span></div>
+        <div class="widget-corps"><div id="creaListe"></div></div>
+      </section>
+
       <section class="widget" id="wMusique">
       <div class="widget-titre">
         Musique d'ambiance
@@ -709,15 +728,15 @@
           <button type="button" data-groupe="lannister">Lannister</button>
         </div>
         <div id="arbreConteneur">
-          <svg class="arbreSvg actif" data-groupe="stark" viewBox="0 0 760 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre de la maison Stark">
+          <svg class="arbreSvg actif" data-groupe="stark" viewBox="0 0 760 540" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre de la maison Stark">
             <text class="sect" x="12" y="24" data-ch="2">MAISON STARK</text>
             <path class="parente" d="M355 94 V130 H80 M355 130 H630 M80 130 V166 M210 130 V166 M370 130 V166 M630 130 V166" data-ch="2"/>
             <line class="mariage" x1="394" y1="190" x2="476" y2="190" data-ch="3"/>
             <path class="parente" d="M435 214 V260 H60 M435 260 H540 M60 260 V324 M180 260 V324 M300 260 V324 M420 260 V324 M540 260 V324" data-ch="2"/>
             <path class="batard" d="M370 214 V300 H660 V324" data-ch="2"/>
-            <g class="noeudArbre" data-ch="2" data-maison="stark" style="--coulA:#c6d6e6"><circle class="fondArbre" cx="355" cy="70" r="24"/><circle class="anneauArbre" cx="355" cy="70" r="24"/><text class="nomArbre" x="355" y="108">Rickard Stark †</text></g>
-            <g class="noeudArbre" data-ch="2" data-maison="stark" style="--coulA:#c6d6e6"><circle class="fondArbre" cx="80" cy="190" r="24"/><circle class="anneauArbre" cx="80" cy="190" r="24"/><text class="nomArbre" x="80" y="228">Brandon †</text></g>
-            <g class="noeudArbre" data-ch="2" data-maison="stark" style="--coulA:#c6d6e6"><circle class="fondArbre" cx="210" cy="190" r="24"/><circle class="anneauArbre" cx="210" cy="190" r="24"/><text class="nomArbre" x="210" y="228">Lyanna †</text></g>
+            <g class="noeudArbre" data-ch="2" data-maison="stark" data-slug="rickard-stark" style="--coulA:#c6d6e6"><circle class="fondArbre" cx="355" cy="70" r="24"/><circle class="anneauArbre" cx="355" cy="70" r="24"/><text class="nomArbre" x="355" y="108">Rickard Stark †</text></g>
+            <g class="noeudArbre" data-ch="2" data-maison="stark" data-slug="brandon-stark" style="--coulA:#c6d6e6"><circle class="fondArbre" cx="80" cy="190" r="24"/><circle class="anneauArbre" cx="80" cy="190" r="24"/><text class="nomArbre" x="80" y="228">Brandon †</text></g>
+            <g class="noeudArbre" data-ch="2" data-maison="stark" data-slug="lyanna-stark" style="--coulA:#c6d6e6"><circle class="fondArbre" cx="210" cy="190" r="24"/><circle class="anneauArbre" cx="210" cy="190" r="24"/><text class="nomArbre" x="210" y="228">Lyanna †</text></g>
             <g class="noeudArbre" data-ch="2" data-maison="stark" data-slug="eddard-stark" style="--coulA:#c6d6e6"><circle class="fondArbre" cx="370" cy="190" r="24"/><circle class="anneauArbre" cx="370" cy="190" r="24"/><text class="nomArbre" x="370" y="228">Eddard Stark</text></g>
             <g class="noeudArbre" data-ch="3" data-maison="tully" data-slug="catelyn-stark" style="--coulA:#ef6a6a"><circle class="fondArbre" cx="500" cy="190" r="24"/><circle class="anneauArbre" cx="500" cy="190" r="24"/><text class="nomArbre" x="500" y="228">Catelyn Tully</text><text class="lienArbre" x="500" y="239" text-anchor="middle" onclick="choisirArbreGroupe('tully')">↗ née Tully</text></g>
             <g class="noeudArbre" data-ch="6" data-maison="stark" data-slug="benjen-stark" style="--coulA:#c6d6e6"><circle class="fondArbre" cx="630" cy="190" r="24"/><circle class="anneauArbre" cx="630" cy="190" r="24"/><text class="nomArbre" x="630" y="228">Benjen</text></g>
@@ -727,43 +746,47 @@
             <g class="noeudArbre" data-ch="2" data-maison="stark" data-slug="bran-stark" style="--coulA:#c6d6e6"><circle class="fondArbre" cx="420" cy="348" r="24"/><circle class="anneauArbre" cx="420" cy="348" r="24"/><text class="nomArbre" x="420" y="386">Bran</text></g>
             <g class="noeudArbre" data-ch="2" data-maison="stark" data-slug="rickon-stark" style="--coulA:#c6d6e6"><circle class="fondArbre" cx="540" cy="348" r="24"/><circle class="anneauArbre" cx="540" cy="348" r="24"/><text class="nomArbre" x="540" y="386">Rickon</text></g>
             <g class="noeudArbre" data-ch="2" data-maison="stark" data-slug="jon-snow" style="--coulA:#c6d6e6"><circle class="fondArbre" cx="660" cy="348" r="24"/><circle class="anneauArbre" cx="660" cy="348" r="24"/><text class="nomArbre" x="660" y="386">Jon Snow</text></g>
+            <g class="noeudArbre" data-ch="2" data-maison="stark" data-slug="bran-le-batisseur" style="--coulA:#c6d6e6"><circle class="fondArbre" cx="380" cy="470" r="22"/><circle class="anneauArbre legendaire" cx="380" cy="470" r="22"/><text class="nomArbre" x="380" y="506">Bran le Bâtisseur</text><text class="mini" x="380" y="520" text-anchor="middle">légende fondatrice, des milliers d'années avant</text></g>
           </svg>
-          <svg class="arbreSvg" data-groupe="greyjoy" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre de la maison Greyjoy">
+          <svg class="arbreSvg" data-groupe="greyjoy" viewBox="0 0 400 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre de la maison Greyjoy">
             <text class="sect" x="12" y="24" data-ch="2">MAISON GREYJOY</text>
             <path class="parente" d="M200 94 V130 H100 M200 130 H300 M100 130 V166 M300 130 V166" data-tome="3" data-ch="12"/>
             <g class="noeudArbre" data-tome="3" data-ch="12" data-maison="greyjoy" data-slug="balon-greyjoy" style="--coulA:#d6b55c"><circle class="fondArbre" cx="200" cy="70" r="24"/><circle class="anneauArbre" cx="200" cy="70" r="24"/><text class="nomArbre" x="200" y="108">Balon Greyjoy</text></g>
             <g class="noeudArbre" data-ch="2" data-maison="greyjoy" data-slug="theon-greyjoy" style="--coulA:#d6b55c"><circle class="fondArbre" cx="100" cy="190" r="24"/><circle class="anneauArbre" cx="100" cy="190" r="24"/><text class="nomArbre" x="100" y="228">Theon</text><text class="lienArbre" x="100" y="239" text-anchor="middle" onclick="choisirArbreGroupe('stark')">↗ pupille des Stark</text></g>
             <g class="noeudArbre" data-tome="3" data-ch="12" data-maison="greyjoy" data-slug="asha-greyjoy" style="--coulA:#d6b55c"><circle class="fondArbre" cx="300" cy="190" r="24"/><circle class="anneauArbre" cx="300" cy="190" r="24"/><text class="nomArbre" x="300" y="228">Asha</text></g>
+            <g class="noeudArbre" data-ch="2" data-maison="greyjoy" data-slug="roi-gris" style="--coulA:#d6b55c"><circle class="fondArbre" cx="200" cy="290" r="22"/><circle class="anneauArbre legendaire" cx="200" cy="290" r="22"/><text class="nomArbre" x="200" y="326">Le Roi Gris</text><text class="mini" x="200" y="340" text-anchor="middle">légende fondatrice des Îles de Fer</text></g>
           </svg>
           <svg class="arbreSvg" data-groupe="tully" viewBox="0 0 500 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre de la maison Tully">
             <text class="sect" x="12" y="24" data-ch="3">MAISON TULLY</text>
             <line class="parente" x1="244" y1="70" x2="396" y2="70" data-tome="3" data-ch="8"/>
             <text class="mini" x="320" y="55" text-anchor="middle" data-tome="3" data-ch="8">frères</text>
             <path class="parente" d="M220 94 V130 H140 M220 130 H300 M140 130 V166 M300 130 V166" data-ch="3"/>
-            <g class="noeudArbre" data-ch="3" data-maison="tully" style="--coulA:#ef6a6a"><circle class="fondArbre" cx="220" cy="70" r="24"/><circle class="anneauArbre" cx="220" cy="70" r="24"/><text class="nomArbre" x="220" y="108">Hoster Tully</text></g>
+            <g class="noeudArbre" data-ch="3" data-maison="tully" data-slug="hoster-tully" style="--coulA:#ef6a6a"><circle class="fondArbre" cx="220" cy="70" r="24"/><circle class="anneauArbre" cx="220" cy="70" r="24"/><text class="nomArbre" x="220" y="108">Hoster Tully</text></g>
             <g class="noeudArbre" data-tome="3" data-ch="8" data-maison="tully" data-slug="brynden-tully" style="--coulA:#ef6a6a"><circle class="fondArbre" cx="420" cy="70" r="24"/><circle class="anneauArbre" cx="420" cy="70" r="24"/><text class="nomArbre" x="420" y="108">Brynden Tully</text></g>
             <g class="noeudArbre" data-ch="3" data-maison="tully" data-slug="catelyn-stark" style="--coulA:#ef6a6a"><circle class="fondArbre" cx="140" cy="190" r="24"/><circle class="anneauArbre" cx="140" cy="190" r="24"/><text class="nomArbre" x="140" y="228">Catelyn</text><text class="lienArbre" x="140" y="239" text-anchor="middle" onclick="choisirArbreGroupe('stark')">↗ épouse d'Eddard Stark</text></g>
             <g class="noeudArbre" data-ch="3" data-maison="tully" data-slug="lysa-arryn" style="--coulA:#ef6a6a"><circle class="fondArbre" cx="300" cy="190" r="24"/><circle class="anneauArbre" cx="300" cy="190" r="24"/><text class="nomArbre" x="300" y="228">Lysa</text><text class="lienArbre" x="300" y="239" text-anchor="middle" onclick="choisirArbreGroupe('arryn')">↗ épouse de Jon Arryn</text></g>
           </svg>
-          <svg class="arbreSvg" data-groupe="arryn" viewBox="0 0 460 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre de la maison Arryn">
+          <svg class="arbreSvg" data-groupe="arryn" viewBox="0 0 460 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre de la maison Arryn">
             <text class="sect" x="12" y="24" data-ch="3">MAISON ARRYN</text>
             <line class="mariage" x1="244" y1="70" x2="356" y2="70" data-ch="3"/>
             <path class="parente" d="M300 94 V166" data-ch="35"/>
-            <g class="noeudArbre" data-ch="3" data-maison="arryn" style="--coulA:#a3c6ea"><circle class="fondArbre" cx="220" cy="70" r="24"/><circle class="anneauArbre" cx="220" cy="70" r="24"/><text class="nomArbre" x="220" y="108">Jon Arryn †</text></g>
+            <g class="noeudArbre" data-ch="3" data-maison="arryn" data-slug="jon-arryn" style="--coulA:#a3c6ea"><circle class="fondArbre" cx="220" cy="70" r="24"/><circle class="anneauArbre" cx="220" cy="70" r="24"/><text class="nomArbre" x="220" y="108">Jon Arryn †</text></g>
             <g class="noeudArbre" data-ch="3" data-maison="tully" data-slug="lysa-arryn" style="--coulA:#ef6a6a"><circle class="fondArbre" cx="380" cy="70" r="24"/><circle class="anneauArbre" cx="380" cy="70" r="24"/><text class="nomArbre" x="380" y="108">Lysa</text><text class="lienArbre" x="380" y="119" text-anchor="middle" onclick="choisirArbreGroupe('tully')">↗ née Tully</text></g>
-            <g class="noeudArbre" data-ch="35" data-maison="arryn" style="--coulA:#a3c6ea"><circle class="fondArbre" cx="300" cy="190" r="24"/><circle class="anneauArbre" cx="300" cy="190" r="24"/><text class="nomArbre" x="300" y="228">Robin Arryn</text></g>
+            <g class="noeudArbre" data-ch="35" data-maison="arryn" data-slug="robin-arryn" style="--coulA:#a3c6ea"><circle class="fondArbre" cx="300" cy="190" r="24"/><circle class="anneauArbre" cx="300" cy="190" r="24"/><text class="nomArbre" x="300" y="228">Robin Arryn</text></g>
+            <g class="noeudArbre" data-ch="3" data-maison="arryn" data-slug="artys-arryn" style="--coulA:#a3c6ea"><circle class="fondArbre" cx="230" cy="290" r="22"/><circle class="anneauArbre legendaire" cx="230" cy="290" r="22"/><text class="nomArbre" x="230" y="326">Artys Arryn</text><text class="mini" x="230" y="340" text-anchor="middle">« le Chevalier Ailé », légende fondatrice du Val</text></g>
           </svg>
-          <svg class="arbreSvg" data-groupe="targaryen" viewBox="0 0 660 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre de la maison Targaryen">
+          <svg class="arbreSvg" data-groupe="targaryen" viewBox="0 0 660 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre de la maison Targaryen">
             <text class="sect" x="12" y="24" data-ch="4">MAISON TARGARYEN</text>
             <path class="parente" d="M300 94 V130 H100 M300 130 H420 M100 130 V166 M260 130 V166 M420 130 V166" data-ch="4"/>
             <line class="mariage" x1="444" y1="190" x2="556" y2="190" data-ch="4"/>
-            <g class="noeudArbre" data-ch="4" data-maison="targaryen" style="--coulA:#ff6a45"><circle class="fondArbre" cx="300" cy="70" r="24"/><circle class="anneauArbre" cx="300" cy="70" r="24"/><text class="nomArbre" x="300" y="108">Aerys II †</text></g>
-            <g class="noeudArbre" data-ch="4" data-maison="targaryen" style="--coulA:#ff6a45"><circle class="fondArbre" cx="100" cy="190" r="24"/><circle class="anneauArbre" cx="100" cy="190" r="24"/><text class="nomArbre" x="100" y="228">Rhaegar †</text></g>
+            <g class="noeudArbre" data-ch="4" data-maison="targaryen" data-slug="aerys-targaryen" style="--coulA:#ff6a45"><circle class="fondArbre" cx="300" cy="70" r="24"/><circle class="anneauArbre" cx="300" cy="70" r="24"/><text class="nomArbre" x="300" y="108">Aerys II †</text></g>
+            <g class="noeudArbre" data-ch="4" data-maison="targaryen" data-slug="rhaegar-targaryen" style="--coulA:#ff6a45"><circle class="fondArbre" cx="100" cy="190" r="24"/><circle class="anneauArbre" cx="100" cy="190" r="24"/><text class="nomArbre" x="100" y="228">Rhaegar †</text></g>
             <g class="noeudArbre" data-ch="4" data-maison="targaryen" data-slug="viserys-targaryen" style="--coulA:#ff6a45"><circle class="fondArbre" cx="260" cy="190" r="24"/><circle class="anneauArbre" cx="260" cy="190" r="24"/><text class="nomArbre" x="260" y="228">Viserys</text></g>
             <g class="noeudArbre" data-ch="4" data-maison="targaryen" data-slug="daenerys-targaryen" style="--coulA:#ff6a45"><circle class="fondArbre" cx="420" cy="190" r="24"/><circle class="anneauArbre" cx="420" cy="190" r="24"/><text class="nomArbre" x="420" y="228">Daenerys</text></g>
             <g class="noeudArbre" data-ch="4" data-slug="khal-drogo"><circle class="fondArbre" cx="580" cy="190" r="24"/><circle class="anneauArbre" cx="580" cy="190" r="24"/><text class="nomArbre" x="580" y="228">Khal Drogo</text></g>
+            <g class="noeudArbre" data-ch="4" data-maison="targaryen" data-slug="aegon-le-conquerant" style="--coulA:#ff6a45"><circle class="fondArbre" cx="330" cy="290" r="22"/><circle class="anneauArbre legendaire" cx="330" cy="290" r="22"/><text class="nomArbre" x="330" y="326">Aegon le Conquérant</text><text class="mini" x="330" y="340" text-anchor="middle">fondateur de la dynastie, ~300 ans avant</text></g>
           </svg>
-          <svg class="arbreSvg" data-groupe="baratheon" viewBox="0 0 640 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre de la maison Baratheon">
+          <svg class="arbreSvg" data-groupe="baratheon" viewBox="0 0 640 370" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre de la maison Baratheon">
             <text class="sect" x="12" y="24" data-ch="5">MAISON BARATHEON</text>
             <path class="parente" d="M100 66 V50 H560 V66" data-ch="21"/>
             <path class="parente" d="M400 50 V66" data-tome="3" data-ch="1"/>
@@ -774,16 +797,18 @@
             <g class="noeudArbre" data-ch="21" data-maison="baratheon" data-slug="renly-baratheon" style="--coulA:#f4cc3a"><circle class="fondArbre" cx="400" cy="90" r="24"/><circle class="anneauArbre" cx="400" cy="90" r="24"/><text class="nomArbre" x="400" y="128">Renly</text></g>
             <g class="noeudArbre" data-tome="3" data-ch="1" data-maison="baratheon" data-slug="stannis-baratheon" style="--coulA:#f4cc3a"><circle class="fondArbre" cx="560" cy="90" r="24"/><circle class="anneauArbre" cx="560" cy="90" r="24"/><text class="nomArbre" x="560" y="128">Stannis</text></g>
             <g class="noeudArbre" data-ch="5" data-maison="baratheon" data-slug="joffrey-baratheon" style="--coulA:#f4cc3a"><circle class="fondArbre" cx="165" cy="220" r="24"/><circle class="anneauArbre" cx="165" cy="220" r="24"/><text class="nomArbre" x="165" y="258">Joffrey</text></g>
+            <g class="noeudArbre" data-ch="5" data-maison="baratheon" data-slug="orys-baratheon" style="--coulA:#f4cc3a"><circle class="fondArbre" cx="320" cy="320" r="22"/><circle class="anneauArbre legendaire" cx="320" cy="320" r="22"/><text class="nomArbre" x="320" y="356">Orys Baratheon</text><text class="mini" x="320" y="358" text-anchor="middle">premier lord Baratheon, ~300 ans avant</text></g>
           </svg>
-          <svg class="arbreSvg" data-groupe="lannister" viewBox="0 0 580 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre de la maison Lannister">
+          <svg class="arbreSvg" data-groupe="lannister" viewBox="0 0 580 350" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre de la maison Lannister">
             <text class="sect" x="12" y="24" data-ch="5">MAISON LANNISTER</text>
             <path class="parente" d="M300 94 V130 H100 M300 130 H500 M100 130 V166 M300 130 V166 M500 130 V166" data-ch="6"/>
             <line class="parente" x1="124" y1="190" x2="276" y2="190" data-ch="5"/>
             <text class="mini" x="200" y="175" text-anchor="middle" data-ch="5">jumeaux</text>
-            <g class="noeudArbre" data-ch="6" data-maison="lannister" style="--coulA:#ecbf58"><circle class="fondArbre" cx="300" cy="70" r="24"/><circle class="anneauArbre" cx="300" cy="70" r="24"/><text class="nomArbre" x="300" y="108">Tywin Lannister</text></g>
+            <g class="noeudArbre" data-ch="6" data-maison="lannister" data-slug="tywin-lannister" style="--coulA:#ecbf58"><circle class="fondArbre" cx="300" cy="70" r="24"/><circle class="anneauArbre" cx="300" cy="70" r="24"/><text class="nomArbre" x="300" y="108">Tywin Lannister</text></g>
             <g class="noeudArbre" data-ch="5" data-maison="lannister" data-slug="cersei-lannister" style="--coulA:#ecbf58"><circle class="fondArbre" cx="100" cy="190" r="24"/><circle class="anneauArbre" cx="100" cy="190" r="24"/><text class="nomArbre" x="100" y="228">Cersei</text><text class="lienArbre" x="100" y="239" text-anchor="middle" onclick="choisirArbreGroupe('baratheon')">↗ épouse de Robert Baratheon</text></g>
             <g class="noeudArbre" data-ch="5" data-maison="lannister" data-slug="jaime-lannister" style="--coulA:#ecbf58"><circle class="fondArbre" cx="300" cy="190" r="24"/><circle class="anneauArbre" cx="300" cy="190" r="24"/><text class="nomArbre" x="300" y="228">Jaime</text></g>
             <g class="noeudArbre" data-ch="6" data-maison="lannister" data-slug="tyrion-lannister" style="--coulA:#ecbf58"><circle class="fondArbre" cx="500" cy="190" r="24"/><circle class="anneauArbre" cx="500" cy="190" r="24"/><text class="nomArbre" x="500" y="228">Tyrion</text></g>
+            <g class="noeudArbre" data-ch="6" data-maison="lannister" data-slug="lann-le-ruse" style="--coulA:#ecbf58"><circle class="fondArbre" cx="290" cy="290" r="22"/><circle class="anneauArbre legendaire" cx="290" cy="290" r="22"/><text class="nomArbre" x="290" y="326">Lann le Rusé</text><text class="mini" x="290" y="340" text-anchor="middle">légende fondatrice, conquit Castral Roc par la ruse</text></g>
           </svg>
         </div>
         <div class="arbreLegende">
@@ -1261,7 +1286,7 @@ const PERSONNAGES = [
   {nom:"Joffrey Baratheon", slug:"joffrey-baratheon", maison:"baratheon", ch:5, desc:"Le prince héritier, douze ans. Beau visage — caractère à découvrir."},
   {nom:"Sansa Stark", slug:"sansa-stark", maison:"stark", ch:5, desc:"Onze ans, parfaite demoiselle éprise de chansons et de chevaliers. Sa louve : Lady."},
   {nom:"Arya Stark", slug:"arya-stark", maison:"stark", ch:5, desc:"Neuf ans, aussi indomptée que sa sœur est sage. Sa louve : Nymeria."},
-  {nom:"Sandor Clegane", slug:"sandor-clegane", maison:"autre", ch:5, desc:"« Le Limier », garde du corps de Joffrey. Une moitié de visage brûlée, aucune illusion."},
+  {nom:"Sandor Clegane", slug:"sandor-clegane", maison:"clegane", ch:5, desc:"« Le Limier », garde du corps de Joffrey. Une moitié de visage brûlée, aucune illusion."},
   {nom:"Tyrion Lannister", slug:"tyrion-lannister", maison:"lannister", ch:6, desc:"Le nain de la famille Lannister. Compense sa taille par un esprit redoutable — et une soif solide."},
   {nom:"Benjen Stark", slug:"benjen-stark", maison:"garde", ch:6, desc:"Frère cadet de Ned, Premier Patrouilleur de la Garde de Nuit."},
   {nom:"Jorah Mormont", slug:"jorah-mormont", maison:"autre", ch:12, desc:"Chevalier exilé de Westeros, rallié aux Targaryen. Connaît les deux mondes."},
@@ -1276,7 +1301,7 @@ const PERSONNAGES = [
   {nom:"Gendry", slug:"gendry", maison:"autre", ch:28, desc:"Apprenti forgeron de la rue de l'Acier, têtu et costaud. Ce regard rappelle quelqu'un…"},
   {nom:"Bronn", slug:"bronn", maison:"autre", ch:29, desc:"Mercenaire croisé à l'auberge du carrefour. Son épée va au plus offrant."},
   {nom:"Loras Tyrell", slug:"loras-tyrell", maison:"tyrell", ch:30, desc:"« Le chevalier aux Fleurs », prodige du tournoi, idole de Sansa."},
-  {nom:"Gregor Clegane", slug:"gregor-clegane", maison:"autre", ch:30, desc:"« La Montagne », frère aîné du Limier. Immense, brutal, redouté de tous."},
+  {nom:"Gregor Clegane", slug:"gregor-clegane", maison:"clegane", ch:30, desc:"« La Montagne », frère aîné du Limier. Immense, brutal, redouté de tous."},
   {nom:"Lysa Arryn", slug:"lysa-arryn", maison:"arryn", ch:35, desc:"Sœur de Catelyn, veuve de la Main du Roi. Le deuil ne lui a pas réussi.", tome:1},
 
   {nom:"Yoren", slug:"yoren", maison:"garde", ch:30, desc:"Recruteur de la Garde de Nuit, rugueux et taciturne. Ramène au Mur tout ce que le royaume ne veut plus.", tome:2},
@@ -1296,13 +1321,13 @@ const PERSONNAGES = [
   {nom:"Ser Amory Lorch", slug:"amory-lorch", maison:"lannister", ch:15, desc:"Chevalier aux ordres de Tywin Lannister, chargé de ratisser les terres autour de l'Œil de Dieu. N'a pas pour habitude de faire des prisonniers.", tome:3},
   {nom:"Dontos Hollard", slug:"dontos-hollard", maison:"autre", ch:3, desc:"Chevalier déchu, trop ivre pour jouter. Sansa lui sauve la vie — il compte bien le lui rendre, à sa manière.", tome:3},
   {nom:"Ser Brynden « Poisson-Noir » Tully", slug:"brynden-tully", maison:"tully", ch:8, desc:"Oncle de Catelyn, vieux guerrier aussi rusé que loyal. Son surnom dit tout de son caractère.", tome:3},
-  {nom:"Lady Donella Hornwood", slug:"donella-hornwood", maison:"autre", ch:17, desc:"Veuve nordienne dont le mari et le fils sont morts à la guerre. Ses terres attirent soudain beaucoup de prétendants.", tome:3},
-  {nom:"Jojen Reed", slug:"jojen-reed", maison:"autre", ch:22, desc:"Jeune garçon des marais du Neck, sujet à des rêves verts qui se réalisent toujours. Vient renouveler le serment de sa maison.", tome:3},
-  {nom:"Meera Reed", slug:"meera-reed", maison:"autre", ch:22, desc:"Sœur de Jojen, chasseuse au filet et au trident. Aussi vive à l'extérieur que son frère l'est en rêve.", tome:3}
+  {nom:"Lady Donella Hornwood", slug:"donella-hornwood", maison:"hornwood", ch:17, desc:"Veuve nordienne dont le mari et le fils sont morts à la guerre. Ses terres attirent soudain beaucoup de prétendants.", tome:3},
+  {nom:"Jojen Reed", slug:"jojen-reed", maison:"reed", ch:22, desc:"Jeune garçon des marais du Neck, sujet à des rêves verts qui se réalisent toujours. Vient renouveler le serment de sa maison.", tome:3},
+  {nom:"Meera Reed", slug:"meera-reed", maison:"reed", ch:22, desc:"Sœur de Jojen, chasseuse au filet et au trident. Aussi vive à l'extérieur que son frère l'est en rêve.", tome:3}
 ];
 
 const BLASON_AUTRE = `<svg class="miniB" viewBox="0 0 34 34"><circle cx="17" cy="17" r="15.5" fill="#242b36" stroke="#4a5460" stroke-width="1.4"/><path d="M17 8 L17 25 M12 13 L22 13" stroke="#93a0b2" stroke-width="2" stroke-linecap="round"/></svg>`;
-const MAISONS_FICHIERS = ["stark","targaryen","lannister","baratheon","arryn","tully","greyjoy","tyrell","frey","bolton","martell","garde"];
+const MAISONS_FICHIERS = ["stark","targaryen","lannister","baratheon","arryn","tully","greyjoy","tyrell","frey","bolton","martell","garde","mormont","karstark","umber","manderly","bracken","blackwood","glover","cerwyn","hornwood","reed","royce","mallister","piper","darry","mooton","clegane","marbrand","tarly","redwyne","hightower","selmy","dayne"];
 
 /* Blasons de maison : si "martell.png" ne charge pas, on tente d'autres casses/extensions
    (martell.PNG, martell.jpg...) avant de retomber sur une icône générique — évite les faux
@@ -1383,6 +1408,66 @@ function majPersonnages(maxCh){
   liste.querySelectorAll('.perso').forEach(el=>{
     const slug = el.dataset.slug;
     chargerPortraitPerso(slug).then(src=>{
+      if(!src) return;
+      const slot = el.querySelector('.portraitSlot');
+      if(slot) slot.innerHTML = `<img class="portrait" src="${src}" alt="Portrait de ${el.querySelector('.persoNom').textContent}">`;
+    });
+  });
+}
+
+/* =====================================================
+   CRÉATURES — loups-garous et dragons, à part des personnages humains.
+   Même mécanique de révélation progressive et de portraits optionnels,
+   mais dans leur propre dossier (creatures/) pour ne pas mélanger
+   les deux types d'images.
+===================================================== */
+const CREATURES = [
+  {nom:"Vent Gris", slug:"vent-gris", type:"loup-garou", maison:"stark", ch:2, desc:"Loup-garou de Robb Stark, le plus grand de la portée trouvée dans le bois-aux-loups."},
+  {nom:"Dame", slug:"dame-loup", type:"loup-garou", maison:"stark", ch:2, desc:"Louve-garou de Sansa Stark, la plus docile et la plus discrète de la portée."},
+  {nom:"Nymeria", slug:"nymeria", type:"loup-garou", maison:"stark", ch:2, desc:"Louve-garou d'Arya Stark, aussi vive et indisciplinée que sa maîtresse."},
+  {nom:"Été", slug:"ete-loup", type:"loup-garou", maison:"stark", ch:2, desc:"Loup-garou de Bran Stark, calme et observateur."},
+  {nom:"Broussaille", slug:"broussaille", type:"loup-garou", maison:"stark", ch:2, desc:"Loup-garou de Rickon Stark, le plus sauvage et le moins apprivoisé de la portée."},
+  {nom:"Fantôme", slug:"fantome-loup", type:"loup-garou", maison:"stark", ch:2, desc:"Loup-garou albinos de Jon Snow, trouvé à l'écart des autres — blanc comme neige, silencieux, aux yeux rouges."},
+  {nom:"Drogon", slug:"drogon", type:"dragon", maison:"targaryen", ch:37, desc:"Le plus grand et le plus féroce des trois dragons nouveau-nés de Daenerys, aux écailles noires et rouge sang."},
+  {nom:"Viserion", slug:"viserion", type:"dragon", maison:"targaryen", ch:37, desc:"Dragon de Daenerys aux écailles crème et aux yeux dorés, né aux côtés de ses deux frères."},
+  {nom:"Rhaegal", slug:"rhaegal", type:"dragon", maison:"targaryen", ch:37, desc:"Dragon de Daenerys aux écailles vertes et bronze, né aux côtés de ses deux frères."},
+  {nom:"Balerion la Terreur Noire", slug:"balerion", type:"dragon", maison:"targaryen", ch:4, desc:"Le plus grand dragon qu'aient jamais connu les Sept Couronnes, monture d'Aegon le Conquérant puis de plusieurs rois targaryens après lui — mort depuis plus d'un siècle."}
+];
+const LIBELLE_TYPE_CREATURE = {"loup-garou":"Loups-garous", "dragon":"Dragons"};
+
+async function chargerPortraitCreature(slug){
+  const variantes = await detecterVariantesImage('creatures', slug, EXT_PORTRAIT, VARIANTES_PORTRAIT);
+  if(variantes.length === 0) return null;
+  return variantes[Math.floor(Math.random() * variantes.length)];
+}
+
+function majCreatures(maxCh){
+  const liste = document.getElementById('creaListe');
+  const compte = document.getElementById('creaCompte');
+  if(!liste) return;
+  const visibles = CREATURES.filter(c=>(c.tome||1) < tomeActif || ((c.tome||1)===tomeActif && c.ch<=maxCh));
+  compte.textContent = visibles.length + ' révélées';
+  let dernierType = null;
+  const morceaux = [];
+  visibles.forEach(c=>{
+    if(c.type !== dernierType){
+      morceaux.push(`<div class="typeTitre">${LIBELLE_TYPE_CREATURE[c.type] || c.type}</div>`);
+      dernierType = c.type;
+    }
+    const nouveau = (c.tome||1)===tomeActif && c.ch===(idx+1);
+    const ring = ACCENT_PAR_MAISON[c.maison] || '';
+    morceaux.push(`<div class="perso" data-slug="${c.slug}" data-maison="${c.maison}" style="${ring?`--ringP:${ring}`:''}">
+      <span class="portraitSlot">${blasonReplifHTML(c.maison)}</span>
+      <div><div class="persoNom">${c.nom}${nouveau?' <span class="badgeNouveau">Nouveau</span>':''}</div><div class="persoDesc">${c.desc}</div></div>
+    </div>`);
+  });
+  liste.innerHTML = morceaux.join('');
+  liste.querySelectorAll('img.blasonRepli').forEach(im=>{
+    attacherBlasonFallback(im, im.dataset.maison, BLASONS[im.dataset.maison] || BLASON_AUTRE);
+  });
+  liste.querySelectorAll('.perso').forEach(el=>{
+    const slug = el.dataset.slug;
+    chargerPortraitCreature(slug).then(src=>{
       if(!src) return;
       const slot = el.querySelector('.portraitSlot');
       if(slot) slot.innerHTML = `<img class="portrait" src="${src}" alt="Portrait de ${el.querySelector('.persoNom').textContent}">`;
@@ -1567,6 +1652,7 @@ function dessinerTrajets(svg, carte, maxCh){
 function majProgressif(){
   const maxCh = revealed.size ? Math.max(...revealed)+1 : 1;
   majPersonnages(maxCh);
+  majCreatures(maxCh);
   majLexique(maxCh);
   document.querySelectorAll('.arbreSvg [data-ch]').forEach(el=>{
     const tome = Number(el.dataset.tome || 1);
@@ -2054,26 +2140,70 @@ if(!reduced){tick();}
 const MAISONS_INFO = [
   {id:"garde", nom:"La Garde de Nuit", devise:"Je suis l'épée dans les ténèbres…", siege:"Châteaunoir", region:"Le Mur", coul:"#a9c4dc", field:"#1a1e25", t:.02,
    desc:"Pas une maison mais un ordre fraternel juré : on y sert à vie, en renonçant à ses terres et à sa famille, pour garder le royaume des périls du Nord."},
-  {id:"bolton", nom:"Maison Bolton", devise:"Nos lames sont acérées", siege:"Fort-Terreur", region:"Le Nord", coul:"#c98fa0", field:"#2a1620", t:.08,
-   desc:"Vassaux des Stark à la réputation sinistre, anciens rivaux historiques de Winterfell avant leur soumission. Leur emblème : un homme écorché."},
   {id:"stark", nom:"Maison Stark", devise:"L'Hiver vient", siege:"Winterfell", region:"Le Nord", coul:"#c6d6e6", field:"#2a3542", t:.12,
    desc:"La plus ancienne lignée du Nord, descendante des Rois de l'Hiver. Réputée pour son sens de l'honneur, sa rigueur et son endurance face au froid."},
-  {id:"arryn", nom:"Maison Arryn", devise:"Aussi haut que l'honneur", siege:"Les Eyrié", region:"Le Val", coul:"#a3c6ea", field:"#1d3756", t:.25,
-   desc:"Très ancienne maison régnant sur le Val depuis les Premiers Hommes, connue pour sa forteresse imprenable perchée dans les montagnes."},
+  {id:"bolton", nom:"Maison Bolton", devise:"Nos lames sont acérées", siege:"Fort-Terreur", region:"Le Nord", coul:"#c98fa0", field:"#2a1620", t:.08, vassalDe:"stark",
+   desc:"Vassaux des Stark à la réputation sinistre, anciens rivaux historiques de Winterfell avant leur soumission. Leur emblème : un homme écorché."},
+  {id:"mormont", nom:"Maison Mormont", devise:"Ici, nous résistons", siege:"L'Île aux Ours", region:"Le Nord", coul:"#6f9e6a", field:"#162015", t:.10, vassalDe:"stark",
+   desc:"Vassaux des Stark gouvernés de mère en fille depuis des générations. Guerrières endurcies de l'Île aux Ours, aussi redoutées en mer que sur terre."},
+  {id:"karstark", nom:"Maison Karstark", devise:"Le Soleil de l'Hiver", siege:"Karhold", region:"Le Nord", coul:"#d8dce2", field:"#1a1c20", t:.14, vassalDe:"stark",
+   desc:"Vassaux des Stark descendant d'un cadet de cette même maison, établi loin au nord-est. Fiers, nombreux et parmi les premiers bannerets levés à Winterfell."},
+  {id:"umber", nom:"Maison Umber", devise:"Les vents d'hiver et la maison Umber hurlent à l'unisson", siege:"Dernier Foyer", region:"Le Nord", coul:"#c97a3d", field:"#2b1d12", t:.16, vassalDe:"stark",
+   desc:"Vassaux des Stark aux confins du Nord, tout près du Mur. Réputés pour leur stature, leur force peu commune et leur tempérament bien trempé."},
+  {id:"manderly", nom:"Maison Manderly", devise:"Fort comme la mer", siege:"Blancport", region:"Le Nord", coul:"#6fb3b8", field:"#0f2a2c", t:.18, vassalDe:"stark",
+   desc:"La plus riche maison du Nord, vassale des Stark, installée dans le grand port marchand de Blancport. Descend de seigneurs venus du Sud, jadis chassés par les Targaryen."},
+  {id:"glover", nom:"Maison Glover", siege:"Deepwood Motte", region:"Le Nord", coul:"#7a9b6a", field:"#1c2016", t:.19, vassalDe:"stark",
+   desc:"Vassaux des Stark au cœur de la forêt des Loups, gardiens loyaux du Nord occidental depuis des générations."},
+  {id:"cerwyn", nom:"Maison Cerwyn", siege:"Castle Cerwyn", region:"Le Nord", coul:"#c9a24a", field:"#241c0d", t:.20, vassalDe:"stark",
+   desc:"Petits vassaux des Stark, établis tout près de Winterfell, réputés pour leur fidélité sans faille envers la maison régnante du Nord."},
+  {id:"hornwood", nom:"Maison Hornwood", siege:"Hornwood", region:"Le Nord", coul:"#b5713a", field:"#231509", t:.21, vassalDe:"stark",
+   desc:"Vassaux des Stark dont les terres boisées bordent la Morsure. Une maison aujourd'hui fragilisée, ayant perdu ses héritiers directs à la guerre."},
+  {id:"reed", nom:"Maison Reed", siege:"Greywater Watch", region:"Le Nord", coul:"#5a7a4a", field:"#182015", t:.22, vassalDe:"stark",
+   desc:"Petite maison discrète du Neck, repliée dans les marécages mouvants. Ses membres se déplacent aussi silencieusement que les enfants de la forêt dont ils se disent proches."},
   {id:"greyjoy", nom:"Maison Greyjoy", devise:"Nous ne semons pas", siege:"Pyk", region:"Les Îles de Fer", coul:"#d6b55c", field:"#262c31", t:.32,
    desc:"Peuple de marins et de pillards attaché aux anciennes coutumes de la mer, où l'on paie le prix du fer plutôt que l'or."},
-  {id:"frey", nom:"Maison Frey", devise:"Nous tenons parole", siege:"Les Jumeaux", region:"Les Conflans", coul:"#a9c0cc", field:"#1c2f3a", t:.38,
-   desc:"Vassaux des Tully, contrôlant un pont stratégique sur le Trident. Maison nombreuse, prudente, et connue pour son sens aigu du calcul."},
   {id:"tully", nom:"Maison Tully", devise:"Famille, Devoir, Honneur", siege:"Vivesaigues", region:"Les Conflans", coul:"#ef6a6a", field:"#1b3b69", t:.40,
    desc:"Maison fluviale au confluent de trois rivières, ralliée très tôt à la cause Targaryen lors de la Conquête. Alliée aux Stark par mariage."},
-  {id:"tyrell", nom:"Maison Tyrell", devise:"Croissant en Force", siege:"Hautjardin", region:"Le Bief", coul:"#e2c65c", field:"#25452c", t:.55,
-   desc:"Maison la plus riche en terres agricoles du royaume, montée en puissance en tant qu'intendants avant de recevoir le titre de seigneurs du Bief."},
-  {id:"baratheon", nom:"Maison Baratheon", devise:"Nôtre est la Fureur", siege:"Accalmie", region:"Les Terres de l'Orage", coul:"#f4cc3a", field:"#3b3211", t:.65,
-   desc:"Maison régnante des Sept Couronnes depuis la fin de la dynastie Targaryen, née d'une lignée guerrière alliée par le sang aux anciens rois."},
+  {id:"frey", nom:"Maison Frey", devise:"Nous tenons parole", siege:"Les Jumeaux", region:"Les Conflans", coul:"#a9c0cc", field:"#1c2f3a", t:.38, vassalDe:"tully",
+   desc:"Vassaux des Tully, contrôlant un pont stratégique sur le Trident. Maison nombreuse, prudente, et connue pour son sens aigu du calcul."},
+  {id:"bracken", nom:"Maison Bracken", devise:"Nous régnons", siege:"Hayes-la-Pierre", region:"Les Conflans", coul:"#e2b33c", field:"#3a2a0d", t:.41, vassalDe:"tully",
+   desc:"Vassaux des Tully, en rivalité ancestrale avec la maison Blackwood depuis des siècles pour les terres du Sang-aux-Loups."},
+  {id:"blackwood", nom:"Maison Blackwood", devise:"Premiers en guerre, derniers en paix", siege:"Raventree Hall", region:"Les Conflans", coul:"#9c4b3f", field:"#1c0f0d", t:.42, vassalDe:"tully",
+   desc:"Vassaux des Tully, farouches rivaux des Bracken depuis des générations. Leur château abrite un arbre-cœur noirci, dernier vestige de l'ancienne religion dans la région."},
+  {id:"mallister", nom:"Maison Mallister", devise:"Par-dessus tout", siege:"Seagard", region:"Les Conflans", coul:"#c9d2e2", field:"#241c3a", t:.43, vassalDe:"tully",
+   desc:"Vassaux des Tully gardant l'embouchure du Trident face à la mer, depuis une forteresse bâtie pour repousser jadis les envahisseurs des Îles de Fer."},
+  {id:"piper", nom:"Maison Piper", siege:"Pinkmaiden", region:"Les Conflans", coul:"#d98fb0", field:"#2e1620", t:.44, vassalDe:"tully",
+   desc:"Petits vassaux des Tully, connus pour leur joyeuse réputation de bons vivants et de musiciens plus que de guerriers."},
+  {id:"darry", nom:"Maison Darry", siege:"Château de Darry", region:"Les Conflans", coul:"#a98a5a", field:"#231c10", t:.45, vassalDe:"tully",
+   desc:"Maison des Conflans restée longtemps fidèle aux Targaryen. Leur château, situé sur la route royale, a déjà vu passer bien des armées."},
+  {id:"mooton", nom:"Maison Mooton", siege:"Maidenpool", region:"Les Conflans", coul:"#d9647a", field:"#2e121a", t:.46, vassalDe:"tully",
+   desc:"Vassaux des Tully installés dans un port fluvial prospère, au bord d'un lac sacré pour l'ancienne religion."},
+  {id:"arryn", nom:"Maison Arryn", devise:"Aussi haut que l'honneur", siege:"Les Eyrié", region:"Le Val", coul:"#a3c6ea", field:"#1d3756", t:.25,
+   desc:"Très ancienne maison régnant sur le Val depuis les Premiers Hommes, connue pour sa forteresse imprenable perchée dans les montagnes."},
+  {id:"royce", nom:"Maison Royce", siege:"Runestone", region:"Le Val", coul:"#c9985a", field:"#15202e", t:.27, vassalDe:"arryn",
+   desc:"Très ancienne et fière maison vassale des Arryn, connue pour son armure de bronze runique transmise depuis l'Âge des Héros."},
   {id:"lannister", nom:"Maison Lannister", devise:"Un Lannister paie toujours ses dettes", siege:"Castral Roc", region:"L'Ouest", coul:"#ecbf58", field:"#5c1518", t:.76,
    desc:"La famille la plus riche du royaume, assise sur des mines d'or. Fière, redoutée, et connue pour ne jamais oublier un affront."},
+  {id:"clegane", nom:"Maison Clegane", siege:"un petit fief vassal des Lannister", region:"L'Ouest", coul:"#e2c23c", field:"#2e2810", t:.77, vassalDe:"lannister",
+   desc:"Petite maison récemment anoblie, au service direct des Lannister. Ses deux fils les plus connus sont devenus des guerriers redoutés bien au-delà de leurs terres."},
+  {id:"marbrand", nom:"Maison Marbrand", siege:"Ashemark", region:"L'Ouest", coul:"#c9703a", field:"#2a1810", t:.78, vassalDe:"lannister",
+   desc:"Vassaux des Lannister réputés pour la bravoure de leurs chevaliers, souvent choisis pour mener l'avant-garde des armées de l'Ouest."},
+  {id:"tyrell", nom:"Maison Tyrell", devise:"Croissant en Force", siege:"Hautjardin", region:"Le Bief", coul:"#e2c65c", field:"#25452c", t:.55,
+   desc:"Maison la plus riche en terres agricoles du royaume, montée en puissance en tant qu'intendants avant de recevoir le titre de seigneurs du Bief."},
+  {id:"tarly", nom:"Maison Tarly", devise:"Premiers au combat", siege:"Hornhill", region:"Le Bief", coul:"#8a9a5a", field:"#1c2010", t:.56, vassalDe:"tyrell",
+   desc:"Vassaux des Tyrell réputés pour produire certains des meilleurs soldats du royaume, et fiers détenteurs d'une épée ancestrale en acier valyrien."},
+  {id:"redwyne", nom:"Maison Redwyne", siege:"The Arbor", region:"Le Bief", coul:"#8a5ab0", field:"#1c1430", t:.57, vassalDe:"tyrell",
+   desc:"Vassaux des Tyrell régnant sur une île viticole réputée, et possédant l'une des flottes de guerre les plus puissantes des Sept Couronnes."},
+  {id:"hightower", nom:"Maison Hightower", devise:"Nous éclairons le chemin", siege:"Oldtown", region:"Le Bief", coul:"#e8e4d8", field:"#13261c", t:.58, vassalDe:"tyrell",
+   desc:"Très ancienne et très riche maison gardant la plus grande cité du royaume, dominée par un gigantesque phare visible à des lieues en mer."},
+  {id:"baratheon", nom:"Maison Baratheon", devise:"Nôtre est la Fureur", siege:"Accalmie", region:"Les Terres de l'Orage", coul:"#f4cc3a", field:"#3b3211", t:.65,
+   desc:"Maison régnante des Sept Couronnes depuis la fin de la dynastie Targaryen, née d'une lignée guerrière alliée par le sang aux anciens rois."},
+  {id:"selmy", nom:"Maison Selmy", siege:"Harvest Hall", region:"Les Terres de l'Orage", coul:"#e29a3c", field:"#2e2010", t:.66, vassalDe:"baratheon",
+   desc:"Petite maison des Terres de l'Orage, surtout connue pour avoir donné naissance à l'un des plus grands chevaliers vivants du royaume."},
   {id:"martell", nom:"Maison Martell", devise:"Jamais on ne se courbe, jamais on ne rompt", siege:"Lancehélion", region:"Dorne", coul:"#f6a04a", field:"#5c310d", t:.87,
    desc:"Seule région à avoir résisté à la conquête Targaryen par les armes. Dorne suit des coutumes et des lois qui lui sont propres."},
+  {id:"dayne", nom:"Maison Dayne", siege:"Starfall", region:"Dorne", coul:"#b0a8e2", field:"#201c38", t:.88, vassalDe:"martell",
+   desc:"Maison dornienne gardienne d'une épée ancestrale en acier valyrien, réputée pour produire des chevaliers d'exception."},
   {id:"targaryen", nom:"Maison Targaryen", devise:"Feu et Sang", siege:"Peyredragon (jadis Port-Réal)", region:"Sang valyrien", coul:"#ff6a45", field:"#420e12", t:.97,
    desc:"Dynastie de sang valyrien, seule lignée à avoir jadis dompté des dragons. A régné trois siècles sur les Sept Couronnes avant d'en être chassée."}
 ];
@@ -2086,21 +2216,45 @@ function appliquerAccent(maison){
 
 const BLASON_GENERIQUE = `<svg class="blasonM" viewBox="0 0 34 34"><circle cx="17" cy="17" r="15.5" fill="#242b36" stroke="#4a5460" stroke-width="1.4"/><path d="M17 6 L26 10 V17 C26 23 22 27 17 29 C12 27 8 23 8 17 V10 Z" fill="none" stroke="#93a0b2" stroke-width="1.6"/></svg>`;
 
+/* Tri de la grille des maisons : par région (ordre ci-dessous), puis
+   grandes maisons avant petites/vassales au sein d'une même région. */
+const ORDRE_REGIONS = ["Le Mur","Le Nord","Les Îles de Fer","Les Conflans","Le Val","L'Ouest","Le Bief","Les Terres de l'Orage","Dorne","Les Terres de la Couronne","Sang valyrien"];
+const GRANDES_MAISONS = new Set(["garde","stark","arryn","tully","baratheon","lannister","tyrell","martell","greyjoy","targaryen"]);
+function indexRegion(region){
+  const i = ORDRE_REGIONS.indexOf(region);
+  return i === -1 ? ORDRE_REGIONS.length : i;
+}
+
 function afficherMaisons(){
   const grille = document.getElementById('grilleMaisons');
-  const triees = [...MAISONS_INFO].sort((a,b)=>a.t-b.t);
+  const triees = [...MAISONS_INFO].sort((a,b)=>{
+    const ra = indexRegion(a.region), rb = indexRegion(b.region);
+    if(ra !== rb) return ra - rb;
+    const ga = GRANDES_MAISONS.has(a.id) ? 0 : 1;
+    const gb = GRANDES_MAISONS.has(b.id) ? 0 : 1;
+    if(ga !== gb) return ga - gb;
+    return a.t - b.t;
+  });
   const maisonCourante = (SCENES[idx] || {}).maison;
-  grille.innerHTML = triees.map(m=>{
+  let derniereRegion = null;
+  const morceaux = [];
+  triees.forEach(m=>{
+    if(m.region !== derniereRegion){
+      morceaux.push(`<div class="regionTitre">${m.region}</div>`);
+      derniereRegion = m.region;
+    }
     const img = MAISONS_FICHIERS.includes(m.id)
       ? `<img class="blasonM" src="blasons/${m.id}.png" data-id="${m.id}" alt="Blason ${m.nom}">`
       : BLASON_GENERIQUE;
     const actif = m.id === maisonCourante;
-    return `<div class="carteMaison" style="--coulM:${m.coul};--fieldM:${m.field};${actif?`--coulM-active:${m.coul}`:''}">
-      <div class="entete">${img}<div><div class="nomM">${m.nom}</div><div class="devise">« ${m.devise} »</div></div></div>
-      <div class="infosM"><span><b>Siège :</b> ${m.siege}</span><span><b>Région :</b> ${m.region}</span></div>
+    const suzerain = m.vassalDe ? MAISONS_INFO.find(x=>x.id===m.vassalDe) : null;
+    morceaux.push(`<div class="carteMaison" style="--coulM:${m.coul};--fieldM:${m.field};${actif?`--coulM-active:${m.coul}`:''}">
+      <div class="entete">${img}<div><div class="nomM">${m.nom}</div>${m.devise ? `<div class="devise">« ${m.devise} »</div>` : ''}</div></div>
+      <div class="infosM"><span><b>Siège :</b> ${m.siege}</span><span><b>Région :</b> ${m.region}</span>${suzerain ? `<span><b>Vassaux de :</b> ${suzerain.nom}</span>` : ''}</div>
       <div class="descM">${m.desc}</div>
-    </div>`;
-  }).join('');
+    </div>`);
+  });
+  grille.innerHTML = morceaux.join('');
   grille.querySelectorAll('img.blasonM').forEach(im=>{
     attacherBlasonFallback(im, im.dataset.id, BLASONS[im.dataset.id] || BLASON_GENERIQUE);
   });

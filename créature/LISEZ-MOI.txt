@@ -1,0 +1,46 @@
+DOSSIER CRÉATURES — loups-garous et dragons
+==============================================
+
+Dépose ici les portraits des créatures (loups-garous, dragons), à
+part des personnages humains qui restent dans le dossier
+« personnages/ ». Même principe exactement : un fichier par
+créature, nom de fichier EXACT (minuscules, tirets, sans accents),
+formats acceptés .jpg/.jpeg/.png/.webp (minuscules OU majuscules).
+
+Tant qu'une créature n'a pas encore d'image ici, le site affiche à
+la place le blason de la maison à laquelle elle est associée (très
+approprié : les Stark ont justement un loup-garou en blason, et les
+Targaryen un dragon). Rien ne casse, tu complètes à ton rythme.
+
+PLUSIEURS ILLUSTRATIONS POUR UNE MÊME CRÉATURE
+-----------------------------------------------------------
+Comme pour les personnages : ajoute " 2", " 3" ou " 4" avant
+l'extension pour proposer plusieurs images, piochées au hasard à
+chaque affichage. Il faut que le fichier de base (sans numéro)
+existe pour que les variantes soient prises en compte.
+
+-----------------------------------------------------------
+LOUPS-GAROUS (révélés au chapitre 2, tome 1 — la portée trouvée
+dans le bois-aux-loups)
+-----------------------------------------------------------
+  vent-gris.jpg       Vent Gris (loup-garou de Robb Stark)
+  dame-loup.jpg       Dame (louve-garou de Sansa Stark)
+  nymeria.jpg         Nymeria (louve-garou d'Arya Stark)
+  ete-loup.jpg        Été (loup-garou de Bran Stark)
+  broussaille.jpg     Broussaille (loup-garou de Rickon Stark)
+  fantome-loup.jpg    Fantôme (loup-garou albinos de Jon Snow)
+
+-----------------------------------------------------------
+DRAGONS
+-----------------------------------------------------------
+  drogon.jpg          Drogon (révélé au chapitre 37, tome 1 —
+                       naissance des trois dragons de Daenerys)
+  viserion.jpg        Viserion (idem)
+  rhaegal.jpg         Rhaegal (idem)
+  balerion.jpg        Balerion la Terreur Noire (révélé dès le
+                       chapitre 4, tome 1 — figure historique, le
+                       dragon d'Aegon le Conquérant)
+
+D'autres créatures pourront s'ajouter plus tard au même rythme que
+les personnages : dis-le-moi simplement quand l'occasion se
+présente dans les livres.
