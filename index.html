@@ -315,12 +315,19 @@
 
   /* ===== Widget carte ===== */
   #wCarte .widget-corps{padding-top:12px}
-  .carteWrap{position:relative;width:100%;height:220px;overflow:hidden;border-radius:12px;background:#0d1117}
-  .carteSlide{position:absolute;left:0;right:0;top:0;transition:top .6s ease}
+  .carteWrap{position:relative;width:100%;height:340px;overflow:hidden;border-radius:12px;background:#0d1117}
+  .carteSlide{position:absolute;left:0;top:0;transition:top .6s ease,left .6s ease;display:none}
+  .carteSlide.ok{display:block}
   #carteImg{
-    display:block;width:100%;height:auto;
+    display:block;
     filter:grayscale(.4) brightness(.82) contrast(1.08);
   }
+  .carte-vide{
+    display:none;position:absolute;inset:0;align-items:center;justify-content:center;
+    text-align:center;padding:16px;color:var(--discret);font-size:.78rem;line-height:1.5;
+    background:radial-gradient(80% 90% at 50% 30%,#151b25 0%,#0a0d12 100%);
+  }
+  .carte-vide.visible{display:flex}
   .pointCarte{position:absolute;transform:translate(-50%,-50%);width:0;height:0;pointer-events:none}
   .pointCarte .coeur{
     position:absolute;left:-5px;top:-5px;width:10px;height:10px;
@@ -362,6 +369,8 @@
   }
   #btnAgrandir:hover{border-color:var(--bougie);color:var(--bougie)}
   #btnAgrandir:focus-visible{outline:2px solid var(--bougie);outline-offset:2px}
+  #btnAgrandir:disabled{opacity:.4;cursor:not-allowed}
+  #btnAgrandir:disabled:hover{border-color:var(--bord);color:var(--acier)}
 
   /* ===== Modale carte agrandie ===== */
   #modaleCarte{
@@ -610,10 +619,11 @@
         <div class="widget-corps">
           <div class="carteWrap" id="carteWrap">
             <div class="carteSlide" id="carteSlide">
-              <img id="carteImg" src="cartes/westeros.png" alt="Carte de Westeros">
+              <img id="carteImg" alt="Carte de Westeros">
               <svg class="trajets" id="trajets1" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
               <div class="pointCarte" id="pointCarte"><span class="halo"></span><span class="coeur"></span></div>
             </div>
+            <div class="carte-vide" id="carteVide"><span id="carteVideTxt"></span></div>
           </div>
           <div class="lieuNom" id="lieuNom"></div>
           <div class="relationsMaison" id="relationsMaison"></div>
@@ -953,14 +963,64 @@ const carteWrap  = document.getElementById('carteWrap');
 const carteSlide = document.getElementById('carteSlide');
 const pointCarte = document.getElementById('pointCarte');
 const RATIO_CARTE = { westeros: 2, essos: 959/1200 };
-const CARTE_BOX_H = 220;
+const CARTE_BOX_H = 340; // doit rester synchronisé avec la hauteur CSS de .carteWrap
 let carteBoxW = carteWrap ? carteWrap.clientWidth : 300;
 function majPositionCarte(l){
-  if(!carteSlide || !l) return;
-  const ratio = RATIO_CARTE[l.carte] || 1;
-  const imgH = carteBoxW * ratio;
-  const top = Math.round(Math.max(CARTE_BOX_H - imgH, Math.min(0, CARTE_BOX_H/2 - imgH * l.y/100)));
-  carteSlide.style.top = top + 'px';
+  if(!carteSlide || !carteImg || !l) return;
+  const ratio = RATIO_CARTE[l.carte] || 1; // hauteur/largeur de l'image source
+  const imgHPleineLargeur = carteBoxW * ratio;
+  if(imgHPleineLargeur >= CARTE_BOX_H){
+    /* L'image est assez haute une fois à pleine largeur (ex. Westeros, portrait) :
+       elle remplit toute la largeur de la vignette et on glisse verticalement. */
+    carteImg.style.width = '100%';
+    carteImg.style.height = 'auto';
+    carteSlide.style.left = '0px';
+    const top = Math.round(Math.max(CARTE_BOX_H - imgHPleineLargeur, Math.min(0, CARTE_BOX_H/2 - imgHPleineLargeur * l.y/100)));
+    carteSlide.style.top = top + 'px';
+  }else{
+    /* L'image est trop large/courte pour remplir la hauteur à pleine largeur (ex. Essos, paysage) :
+       elle remplit toute la hauteur de la vignette et on glisse horizontalement à la place. */
+    const imgWPleineHauteur = CARTE_BOX_H / ratio;
+    carteImg.style.height = CARTE_BOX_H + 'px';
+    carteImg.style.width = imgWPleineHauteur + 'px';
+    carteSlide.style.top = '0px';
+    const left = Math.round(Math.max(carteBoxW - imgWPleineHauteur, Math.min(0, carteBoxW/2 - imgWPleineHauteur * l.x/100)));
+    carteSlide.style.left = left + 'px';
+  }
+}
+
+/* Teste cartes/<nom>.jpg, .png, .webp... dans l'ordre (toutes casses), renvoie la 1ère trouvée ou null.
+   Évite l'icône d'image cassée quand le fichier attendu n'existe pas ou a une autre extension/casse. */
+async function resoudreCarte(carteKey){
+  for(const ext of EXTS){
+    const src = `cartes/${carteKey}.${ext}`;
+    if(await testerImage(src)) return src;
+  }
+  return null;
+}
+
+let carteJeton = 0;
+async function majCarteImage(l){
+  const jeton = ++carteJeton;
+  const btn = document.getElementById('btnAgrandir');
+  const vide = document.getElementById('carteVide');
+  const videTxt = document.getElementById('carteVideTxt');
+  const src = await resoudreCarte(l.carte);
+  if(jeton !== carteJeton) return; // le chapitre a changé entre-temps
+  if(src){
+    carteImg.src = src;
+    modaleImg.src = src;
+    carteSlide.classList.add('ok');
+    if(vide) vide.classList.remove('visible');
+    if(btn) btn.disabled = false;
+  }else{
+    carteSlide.classList.remove('ok');
+    if(vide){
+      vide.classList.add('visible');
+      if(videTxt) videTxt.textContent = `Carte manquante · cartes/${l.carte}.png`;
+    }
+    if(btn) btn.disabled = true;
+  }
 }
 if(carteWrap && window.ResizeObserver){
   new ResizeObserver(entries=>{
@@ -1053,9 +1113,6 @@ function render(){
   const l = LIEUX[s.lieu];
   lieuNom.textContent = l.nom;
   modaleLieu.textContent = l.nom;
-  const srcCarte = `cartes/${l.carte}.png`;
-  carteImg.src = srcCarte;
-  modaleImg.src = srcCarte;
   const alt = l.carte==="essos" ? "Carte d'Essos" : "Carte de Westeros";
   carteImg.alt = alt; modaleImg.alt = alt;
   for(const p of [pointCarte, modalePoint]){
@@ -1063,6 +1120,7 @@ function render(){
     p.style.top  = l.y + "%";
   }
   majPositionCarte(l);
+  majCarteImage(l);
 
   /* Notes */
   notesTa.value = etat.notes[idx] || '';
