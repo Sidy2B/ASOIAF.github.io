@@ -68,14 +68,29 @@
   }
   .selecteurTome button.actif{background:var(--neige);color:var(--pilltxt)}
   .selecteurTome button:focus-visible{outline:2px solid var(--bougie);outline-offset:2px}
-  #btnPleinEcran,#btnNuit{
+  #btnPleinEcran,#btnNuit,#btnMusique{
     width:34px;height:34px;border-radius:50%;flex:none;
     border:1px solid var(--bord);
     background:rgba(0,0,0,.2);color:var(--acier);
     font-size:.92rem;cursor:pointer;transition:all .25s;
   }
-  #btnPleinEcran.actif,#btnNuit.actif{border-color:var(--bougie);color:var(--bougie)}
-  #btnPleinEcran:focus-visible,#btnNuit:focus-visible{outline:2px solid var(--bougie);outline-offset:2px}
+  #btnPleinEcran.actif,#btnNuit.actif,#btnMusique.actif{border-color:var(--bougie);color:var(--bougie)}
+  #btnMusique.joue{border-color:var(--braise);color:var(--braiseTxt)}
+  #btnPleinEcran:focus-visible,#btnNuit:focus-visible,#btnMusique:focus-visible{outline:2px solid var(--bougie);outline-offset:2px}
+
+  /* ===== Musique d'ambiance déplacée dans l'en-tête (popover) ===== */
+  .musiqueEntete{position:relative;flex:none}
+  .panneauMusique{
+    display:none;position:fixed;z-index:60;
+    width:min(320px,calc(100vw - 24px));
+    background:linear-gradient(180deg,rgba(22,27,36,.98),rgba(9,12,17,.98));
+    border:1px solid var(--bord);border-radius:16px;
+    box-shadow:0 18px 40px rgba(0,0,0,.55);
+    overflow:hidden;
+  }
+  .panneauMusique.ouvert{display:block;animation:fadeIn .18s ease}
+  .panneauMusique .widget-titre{padding:14px 16px 0}
+  .panneauMusique .widget-corps{padding:10px 16px 16px}
 
   /* ===== Colonne unique ===== */
   .flow{display:flex;flex-direction:column;gap:22px}
@@ -436,7 +451,7 @@
   }
   #wNotes textarea:focus-visible,#marquePage:focus-visible{outline:2px solid var(--bougie);outline-offset:1px}
 
-  /* ===== Widget personnages ===== */
+  /* ===== Widget personnages / créatures : vignettes ===== */
   #persoListe,#creaListe{max-height:340px;overflow-y:auto;padding-right:4px}
   .typeTitre{
     font-family:'Unbounded',sans-serif;font-size:.72rem;font-weight:600;
@@ -452,11 +467,12 @@
   .miniB{width:30px;height:30px;flex:none;border-radius:50%;object-fit:cover;
     border:none;box-shadow:0 0 0 2px var(--ringP, var(--bord));margin-top:2px}
   .portrait{
-    width:44px;height:44px;flex:none;border-radius:10px;object-fit:cover;
+    width:46px;height:46px;flex:none;border-radius:10px;object-fit:cover;
     border:none;margin-top:1px;
     box-shadow:0 0 0 2px var(--ringP, var(--bord)), 0 3px 10px rgba(0,0,0,.4);
   }
   .portrait.blasonRepli{border-radius:50%;object-fit:contain;background:rgba(255,255,255,.03);padding:4px}
+  .persoCorps{min-width:0;flex:1}
   .persoNom{font-size:.98rem;color:var(--neige);font-weight:600}
   .persoDesc{font-size:.87rem;color:var(--acier);line-height:1.45;margin-top:1px}
   .persoCompte{margin-left:auto;font-size:.7rem;letter-spacing:.1em;color:var(--acier)}
@@ -645,6 +661,29 @@
           <div class="entete-icones">
             <button id="btnPleinEcran" aria-label="Passer en plein écran" title="Plein écran">⛶</button>
             <button id="btnNuit" aria-label="Activer le mode nuit" title="Mode nuit d'écoute">☾</button>
+            <div class="musiqueEntete">
+              <button type="button" id="btnMusique" aria-haspopup="true" aria-expanded="false" aria-label="Musique d'ambiance" title="Musique d'ambiance">♫</button>
+              <div class="panneauMusique" id="wMusique">
+                <div class="widget-titre">
+                  Musique d'ambiance
+                  <label class="toggleAuto"><input type="checkbox" id="autoMusique"><span class="toggleTrack"></span>Auto</label>
+                </div>
+                <div class="widget-corps" id="corpsMusique">
+                  <div class="ligneLecture">
+                    <button id="lecture" aria-label="Lancer ou couper la musique">▶</button>
+                    <div class="infoPiste">
+                      <select id="choixTheme" aria-label="Choisir le thème musical"></select>
+                      <div class="sousPiste" id="sousPiste">Change automatiquement avec le chapitre</div>
+                    </div>
+                  </div>
+                  <div class="ctrl-label"><span>Position</span></div>
+                  <input type="range" id="progression" min="0" max="1000" value="0">
+                  <div id="temps"><span id="tempsActuel">0:00</span><span id="tempsTotal">0:00</span></div>
+                  <div class="ctrl-label"><span>Volume</span><span id="volAffiche">20%</span></div>
+                  <input type="range" id="volume" min="0" max="100" value="20">
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </header>
@@ -680,38 +719,18 @@
 
       <section class="widget" id="wPersos">
         <div class="widget-titre">Personnages <span class="persoCompte" id="persoCompte"></span></div>
-        <div class="widget-corps"><div id="persoListe"></div></div>
+        <div class="widget-corps"><div class="arbreOnglets" id="filtrePerso" role="tablist" aria-label="Filtrer les personnages"></div><div id="persoListe"></div></div>
       </section>
 
       <section class="widget" id="wCreatures">
         <div class="widget-titre">Créatures <span class="persoCompte" id="creaCompte"></span></div>
-        <div class="widget-corps"><div id="creaListe"></div></div>
-      </section>
-
-      <section class="widget" id="wMusique">
-      <div class="widget-titre">
-        Musique d'ambiance
-        <label class="toggleAuto"><input type="checkbox" id="autoMusique"><span class="toggleTrack"></span>Auto</label>
-      </div>
-      <div class="widget-corps" id="corpsMusique">
-        <div class="ligneLecture">
-          <button id="lecture" aria-label="Lancer ou couper la musique">▶</button>
-          <div class="infoPiste">
-            <select id="choixTheme" aria-label="Choisir le thème musical"></select>
-            <div class="sousPiste" id="sousPiste">Change automatiquement avec le chapitre</div>
-          </div>
-        </div>
-        <div class="ctrl-label"><span>Position</span></div>
-        <input type="range" id="progression" min="0" max="1000" value="0">
-        <div id="temps"><span id="tempsActuel">0:00</span><span id="tempsTotal">0:00</span></div>
-        <div class="ctrl-label"><span>Volume</span><span id="volAffiche">20%</span></div>
-        <input type="range" id="volume" min="0" max="100" value="20">
-      </div>
+        <div class="widget-corps"><div class="arbreOnglets" id="filtreCrea" role="tablist" aria-label="Filtrer les créatures"></div><div id="creaListe"></div></div>
       </section>
     </div>
 
     <section id="wMaisons">
       <div class="sectionTitre"><h2>Les grandes maisons</h2><span>Du Nord glacé au Sud brûlant</span></div>
+      <div class="arbreOnglets" id="ongletsMaisons" role="tablist" aria-label="Filtrer les maisons"></div>
       <div class="grilleMaisons" id="grilleMaisons"></div>
     </section>
 
@@ -1388,17 +1407,31 @@ function blasonReplifHTML(maison){
     : BLASON_AUTRE.replace('class="miniB"','class="portrait blasonRepli miniB"');
 }
 
+let filtrePerso = 'grandes';
+let filtreCrea = '';
 function majPersonnages(maxCh){
   const liste = document.getElementById('persoListe');
   const compte = document.getElementById('persoCompte');
   const visibles = PERSONNAGES.filter(p=>(p.tome||1) < tomeActif || ((p.tome||1)===tomeActif && p.ch<=maxCh));
   compte.textContent = visibles.length + ' révélés';
-  liste.innerHTML = visibles.map(p=>{
+  /* Onglets : Grandes maisons, une par grande maison croisée, puis Petites maisons */
+  const filtre = document.getElementById('filtrePerso');
+  const estGrande = p=>GRANDES_MAISONS.has(p.maison);
+  const grandesVues = [];
+  visibles.forEach(p=>{ if(estGrande(p) && !grandesVues.includes(p.maison)) grandesVues.push(p.maison); });
+  const onglets = [['grandes','Grandes maisons']]
+    .concat(grandesVues.map(id=>[id, (MAISONS_INFO.find(m=>m.id===id)||{nom:id}).nom.replace(/^Maison /,'')]));
+  if(visibles.some(p=>!estGrande(p))) onglets.push(['petites','Petites maisons']);
+  if(!onglets.some(o=>o[0]===filtrePerso)) filtrePerso = 'grandes';
+  filtre.innerHTML = onglets.map(o=>`<button type="button" data-f="${o[0]}" class="${o[0]===filtrePerso?'actif':''}">${o[1]}</button>`).join('');
+  filtre.querySelectorAll('button').forEach(bt=>{ bt.onclick = ()=>{ filtrePerso = bt.dataset.f; majPersonnages(maxCh); }; });
+  const passe = p=> filtrePerso==='grandes' ? estGrande(p) : filtrePerso==='petites' ? !estGrande(p) : p.maison===filtrePerso;
+  liste.innerHTML = visibles.filter(passe).map(p=>{
     const nouveau = (p.tome||1)===tomeActif && p.ch===(idx+1);
     const ring = ACCENT_PAR_MAISON[p.maison] || '';
     return `<div class="perso" data-slug="${p.slug}" data-maison="${p.maison}" style="${ring?`--ringP:${ring}`:''}">
       <span class="portraitSlot">${blasonReplifHTML(p.maison)}</span>
-      <div><div class="persoNom">${p.nom}${nouveau?' <span class="badgeNouveau">Nouveau</span>':''}</div><div class="persoDesc">${p.desc}</div></div>
+      <div class="persoCorps"><div class="persoNom">${p.nom}${nouveau?' <span class="badgeNouveau">Nouveau</span>':''}</div><div class="persoDesc">${p.desc}</div></div>
     </div>`;
   }).join('');
   liste.querySelectorAll('img.blasonRepli').forEach(im=>{
@@ -1447,10 +1480,18 @@ function majCreatures(maxCh){
   if(!liste) return;
   const visibles = CREATURES.filter(c=>(c.tome||1) < tomeActif || ((c.tome||1)===tomeActif && c.ch<=maxCh));
   compte.textContent = visibles.length + ' révélées';
+  /* Onglets par type */
+  const filtre = document.getElementById('filtreCrea');
+  const typesVus = [];
+  visibles.forEach(c=>{ if(!typesVus.includes(c.type)) typesVus.push(c.type); });
+  if(filtreCrea && !typesVus.includes(filtreCrea)) filtreCrea = '';
+  filtre.innerHTML = [['','Toutes']].concat(typesVus.map(t=>[t, LIBELLE_TYPE_CREATURE[t]||t]))
+    .map(o=>`<button type="button" data-f="${o[0]}" class="${o[0]===filtreCrea?'actif':''}">${o[1]}</button>`).join('');
+  filtre.querySelectorAll('button').forEach(bt=>{ bt.onclick = ()=>{ filtreCrea = bt.dataset.f; majCreatures(maxCh); }; });
   let dernierType = null;
   const morceaux = [];
-  visibles.forEach(c=>{
-    if(c.type !== dernierType){
+  visibles.filter(c=>!filtreCrea || c.type===filtreCrea).forEach(c=>{
+    if(!filtreCrea && c.type !== dernierType){
       morceaux.push(`<div class="typeTitre">${LIBELLE_TYPE_CREATURE[c.type] || c.type}</div>`);
       dernierType = c.type;
     }
@@ -1458,7 +1499,7 @@ function majCreatures(maxCh){
     const ring = ACCENT_PAR_MAISON[c.maison] || '';
     morceaux.push(`<div class="perso" data-slug="${c.slug}" data-maison="${c.maison}" style="${ring?`--ringP:${ring}`:''}">
       <span class="portraitSlot">${blasonReplifHTML(c.maison)}</span>
-      <div><div class="persoNom">${c.nom}${nouveau?' <span class="badgeNouveau">Nouveau</span>':''}</div><div class="persoDesc">${c.desc}</div></div>
+      <div class="persoCorps"><div class="persoNom">${c.nom}${nouveau?' <span class="badgeNouveau">Nouveau</span>':''}</div><div class="persoDesc">${c.desc}</div></div>
     </div>`);
   });
   liste.innerHTML = morceaux.join('');
@@ -1859,6 +1900,43 @@ const tempsActuel = document.getElementById('tempsActuel');
 const tempsTotal  = document.getElementById('tempsTotal');
 const lecture  = document.getElementById('lecture');
 
+/* ===== Popover musique dans l'en-tête ===== */
+const btnMusique = document.getElementById('btnMusique');
+const panneauMusique = document.getElementById('wMusique');
+function placerPanneauMusique(){
+  const r = btnMusique.getBoundingClientRect();
+  const largeur = panneauMusique.offsetWidth || 320;
+  let gauche = r.right - largeur;
+  gauche = Math.max(12, Math.min(gauche, innerWidth - largeur - 12));
+  panneauMusique.style.left = gauche + 'px';
+  panneauMusique.style.top = (r.bottom + 10) + 'px';
+}
+function ouvrirPanneauMusique(){
+  panneauMusique.classList.add('ouvert');
+  btnMusique.classList.add('actif');
+  btnMusique.setAttribute('aria-expanded','true');
+  placerPanneauMusique();
+}
+function fermerPanneauMusique(){
+  panneauMusique.classList.remove('ouvert');
+  btnMusique.classList.remove('actif');
+  btnMusique.setAttribute('aria-expanded','false');
+}
+btnMusique.onclick = (e)=>{
+  e.stopPropagation();
+  if(panneauMusique.classList.contains('ouvert')) fermerPanneauMusique();
+  else ouvrirPanneauMusique();
+};
+document.addEventListener('click', (e)=>{
+  if(!panneauMusique.classList.contains('ouvert')) return;
+  if(panneauMusique.contains(e.target) || btnMusique.contains(e.target)) return;
+  fermerPanneauMusique();
+});
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape') fermerPanneauMusique();
+});
+addEventListener('resize', ()=>{ if(panneauMusique.classList.contains('ouvert')) placerPanneauMusique(); });
+
 let actif = new Audio();
 actif.loop = true;
 let volCible = (etat.volume ?? 20)/100;
@@ -2027,10 +2105,12 @@ lecture.onclick = ()=>{
     actif.play().catch(()=>{});
     lecture.textContent = '❚❚';
     lecture.classList.add('joue');
+    btnMusique.classList.add('joue');
   }else{
     actif.pause();
     lecture.textContent = '▶';
     lecture.classList.remove('joue');
+    btnMusique.classList.remove('joue');
   }
 };
 
@@ -2225,24 +2305,27 @@ function indexRegion(region){
   return i === -1 ? ORDRE_REGIONS.length : i;
 }
 
+let filtreMaison = 'grandes';
 function afficherMaisons(){
   const grille = document.getElementById('grilleMaisons');
-  const triees = [...MAISONS_INFO].sort((a,b)=>{
-    const ra = indexRegion(a.region), rb = indexRegion(b.region);
-    if(ra !== rb) return ra - rb;
-    const ga = GRANDES_MAISONS.has(a.id) ? 0 : 1;
-    const gb = GRANDES_MAISONS.has(b.id) ? 0 : 1;
-    if(ga !== gb) return ga - gb;
-    return a.t - b.t;
-  });
+  const onglets = [['grandes','Grandes maisons']].concat(
+    ORDRE_REGIONS.filter(r=>MAISONS_INFO.some(m=>m.region===r)).map(r=>[r,r]));
+  if(!onglets.some(o=>o[0]===filtreMaison)) filtreMaison = 'grandes';
+  const barre = document.getElementById('ongletsMaisons');
+  barre.innerHTML = onglets.map(o=>`<button type="button" data-f="${o[0]}" class="${o[0]===filtreMaison?'actif':''}">${o[1]}</button>`).join('');
+  barre.querySelectorAll('button').forEach(bt=>{ bt.onclick = ()=>{ filtreMaison = bt.dataset.f; afficherMaisons(); }; });
+  const triees = MAISONS_INFO.filter(m=> filtreMaison==='grandes' ? GRANDES_MAISONS.has(m.id) : m.region===filtreMaison)
+    .sort((a,b)=>{
+      const ra = indexRegion(a.region), rb = indexRegion(b.region);
+      if(ra !== rb) return ra - rb;
+      const ga = GRANDES_MAISONS.has(a.id) ? 0 : 1;
+      const gb = GRANDES_MAISONS.has(b.id) ? 0 : 1;
+      if(ga !== gb) return ga - gb;
+      return a.t - b.t;
+    });
   const maisonCourante = (SCENES[idx] || {}).maison;
-  let derniereRegion = null;
   const morceaux = [];
   triees.forEach(m=>{
-    if(m.region !== derniereRegion){
-      morceaux.push(`<div class="regionTitre">${m.region}</div>`);
-      derniereRegion = m.region;
-    }
     const img = MAISONS_FICHIERS.includes(m.id)
       ? `<img class="blasonM" src="blasons/${m.id}.png" data-id="${m.id}" alt="Blason ${m.nom}">`
       : BLASON_GENERIQUE;
