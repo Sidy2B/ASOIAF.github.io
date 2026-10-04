@@ -83,7 +83,7 @@
   .panneauMusique{
     display:none;position:fixed;z-index:60;
     width:min(320px,calc(100vw - 24px));
-    background:linear-gradient(180deg,rgba(22,27,36,.98),rgba(9,12,17,.98));
+    background:linear-gradient(180deg,#161b24,#0b0e13);
     border:1px solid var(--bord);border-radius:16px;
     box-shadow:0 18px 40px rgba(0,0,0,.55);
     overflow:hidden;
@@ -151,7 +151,7 @@
     transition:background .6s;pointer-events:none;
   }
   .hero-entete{
-    position:relative;z-index:2;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
+    position:relative;z-index:5;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
     gap:10px 14px;padding:18px 20px 0;
   }
   .hero-persos{
@@ -1455,12 +1455,12 @@ function majPersonnages(maxCh){
    les deux types d'images.
 ===================================================== */
 const CREATURES = [
-  {nom:"Vent Gris", slug:"vent-gris", type:"loup-garou", maison:"stark", ch:2, desc:"Loup-garou de Robb Stark, le plus grand de la portée trouvée dans le bois-aux-loups."},
-  {nom:"Dame", slug:"dame-loup", type:"loup-garou", maison:"stark", ch:2, desc:"Louve-garou de Sansa Stark, la plus docile et la plus discrète de la portée."},
+  {nom:"Grey Wind", slug:"grey-wind", type:"loup-garou", maison:"stark", ch:2, desc:"Loup-garou de Robb Stark, le plus grand de la portée trouvée dans le bois-aux-loups."},
+  {nom:"Lady", slug:"lady", type:"loup-garou", maison:"stark", ch:2, desc:"Louve-garou de Sansa Stark, la plus docile et la plus discrète de la portée."},
   {nom:"Nymeria", slug:"nymeria", type:"loup-garou", maison:"stark", ch:2, desc:"Louve-garou d'Arya Stark, aussi vive et indisciplinée que sa maîtresse."},
-  {nom:"Été", slug:"ete-loup", type:"loup-garou", maison:"stark", ch:2, desc:"Loup-garou de Bran Stark, calme et observateur."},
-  {nom:"Broussaille", slug:"broussaille", type:"loup-garou", maison:"stark", ch:2, desc:"Loup-garou de Rickon Stark, le plus sauvage et le moins apprivoisé de la portée."},
-  {nom:"Fantôme", slug:"fantome-loup", type:"loup-garou", maison:"stark", ch:2, desc:"Loup-garou albinos de Jon Snow, trouvé à l'écart des autres — blanc comme neige, silencieux, aux yeux rouges."},
+  {nom:"Summer", slug:"summer", type:"loup-garou", maison:"stark", ch:2, desc:"Loup-garou de Bran Stark, calme et observateur."},
+  {nom:"Shaggydog", slug:"shaggydog", type:"loup-garou", maison:"stark", ch:2, desc:"Loup-garou de Rickon Stark, le plus sauvage et le moins apprivoisé de la portée."},
+  {nom:"Ghost", slug:"ghost", type:"loup-garou", maison:"stark", ch:2, desc:"Loup-garou albinos de Jon Snow, trouvé à l'écart des autres — blanc comme neige, silencieux, aux yeux rouges."},
   {nom:"Drogon", slug:"drogon", type:"dragon", maison:"targaryen", ch:37, desc:"Le plus grand et le plus féroce des trois dragons nouveau-nés de Daenerys, aux écailles noires et rouge sang."},
   {nom:"Viserion", slug:"viserion", type:"dragon", maison:"targaryen", ch:37, desc:"Dragon de Daenerys aux écailles crème et aux yeux dorés, né aux côtés de ses deux frères."},
   {nom:"Rhaegal", slug:"rhaegal", type:"dragon", maison:"targaryen", ch:37, desc:"Dragon de Daenerys aux écailles vertes et bronze, né aux côtés de ses deux frères."},
@@ -1469,7 +1469,7 @@ const CREATURES = [
 const LIBELLE_TYPE_CREATURE = {"loup-garou":"Loups-garous", "dragon":"Dragons"};
 
 async function chargerPortraitCreature(slug){
-  const variantes = await detecterVariantesImage('creatures', slug, EXT_PORTRAIT, VARIANTES_PORTRAIT);
+  const variantes = await detecterVariantesImage('creatures', slug, EXT_PORTRAIT, ["", " 1", " 2", " 3", " 4"]);
   if(variantes.length === 0) return null;
   return variantes[Math.floor(Math.random() * variantes.length)];
 }
@@ -1906,7 +1906,8 @@ const panneauMusique = document.getElementById('wMusique');
 function placerPanneauMusique(){
   const r = btnMusique.getBoundingClientRect();
   const largeur = panneauMusique.offsetWidth || 320;
-  let gauche = r.right - largeur;
+  const bord = document.getElementById('wScene').getBoundingClientRect().right - 10;
+  let gauche = bord - largeur;
   gauche = Math.max(12, Math.min(gauche, innerWidth - largeur - 12));
   panneauMusique.style.left = gauche + 'px';
   panneauMusique.style.top = (r.bottom + 10) + 'px';
