@@ -1850,8 +1850,12 @@ const EXTS = ["jpg","jpeg","png","webp","JPG","JPEG","PNG","WEBP"];
 /* Plusieurs illustrations pour un même lieu : lieux/winterfell.jpg, "lieux/winterfell 2.jpg"... */
 const VARIANTES_LIEU = ["", " 2", " 3", " 4"];
 
+/* Tomes illustrés uniquement par les images de lieux (pas d'image propre à chaque chapitre) */
+const TOMES_LIEUX_SEULS = new Set([4]);
+
 /* Teste scene-01.jpg, scene-01.jpeg, ... dans l'ordre, renvoie la première trouvée ou null */
 async function trouverImageScene(num){
+  if(TOMES_LIEUX_SEULS.has(tomeActif)) return null;
   for(const ext of EXTS){
     const src = `${DOSSIER}/scene-${num}.${ext}`;
     if(await testerImage(src)) return src;
@@ -1893,7 +1897,9 @@ async function chargerImage(i){
     if(jeton !== chargerImageJeton) return;
     img.classList.remove('ok');
     if(vide) vide.classList.remove('cachee');
-    if(videTxt) videTxt.textContent = `Emplacement image · ${DOSSIER}/scene-${num}.jpg (ou lieux/${lieuKey||'...'}.jpg)`;
+    if(videTxt) videTxt.textContent = TOMES_LIEUX_SEULS.has(tomeActif)
+      ? `Emplacement image · lieux/${lieuKey||'...'}.jpg`
+      : `Emplacement image · ${DOSSIER}/scene-${num}.jpg (ou lieux/${lieuKey||'...'}.jpg)`;
     fond.classList.remove('ok');
   }
 

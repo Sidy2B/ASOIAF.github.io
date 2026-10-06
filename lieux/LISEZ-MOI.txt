@@ -1,0 +1,83 @@
+DOSSIER LIEUX — images de fond par lieu
+==========================================
+
+Plutôt que de devoir illustrer chacun des 132 chapitres un par un,
+le site affiche en fond une image du LIEU où se déroule le chapitre
+(Winterfell, Peyredragon, Port-Réal...). Une seule image par lieu
+suffit donc à couvrir tous les chapitres qui s'y déroulent.
+
+Dépose ici tes images en respectant EXACTEMENT ces noms de fichier
+(minuscules, sans accents). Formats acceptés : .jpg, .jpeg, .png,
+.webp (minuscules OU majuscules).
+
+TU PEUX EN AJOUTER UN SEUL À LA FOIS : tant qu'un lieu n'a pas encore
+d'image ici, le site affiche un espace réservé — rien ne casse, tu
+complètes à ton rythme. Les lieux les plus visités (Winterfell, Port-
+Réal, Peyredragon...) sont les plus rentables à illustrer en premier.
+
+PLUSIEURS ILLUSTRATIONS POUR UN MÊME LIEU
+-----------------------------------------------------------
+Comme pour les personnages, tu peux déposer plusieurs images pour un
+même lieu : le site en choisit une au hasard à chaque chapitre qui
+s'y déroule. Ajoute " 2", " 3" ou " 4" avant l'extension, ex. :
+
+  winterfell.jpg          (obligatoire, la première)
+  winterfell 2.jpg
+  winterfell 3.jpg
+
+PRIORITÉ SUR UNE IMAGE PROPRE À UN CHAPITRE
+-----------------------------------------------------------
+Si tu préfères illustrer un chapitre précis plutôt que son lieu, tu
+peux toujours déposer une image dans le dossier du tome concerné
+(ex. "le trone de fer 1/scene-05.jpg" pour le chapitre 5) : elle sera
+alors utilisée en priorité pour ce chapitre, à la place de l'image du
+lieu.
+
+TOME 4 : UNIQUEMENT LES LIEUX
+-----------------------------------------------------------
+Pour le tome 4 (L'Ombre maléfique), il n'y a plus d'images par
+chapitre : chaque chapitre affiche directement l'image de son lieu.
+Pas besoin de dossier "le trone de fer 4".
+
+-----------------------------------------------------------
+LES 29 LIEUX DU SITE (tomes 1 à 4)
+-----------------------------------------------------------
+  audela.jpg              Au-delà du Mur — la forêt hantée
+  mur.jpg                 Châteaunoir · le Mur
+  versmur.jpg             La route royale, vers le Mur
+  winterfell.jpg          Winterfell
+  routeroy.jpg            La route royale, vers le sud
+  trident.jpg             Le Trident
+  darry.jpg               Château de Darry
+  auberge.jpg             L'auberge du carrefour
+  eyrie.jpg               Les Eyrié · le Val d'Arryn
+  hauteroute.jpg          La haute route · montagnes de la Lune
+  portreal.jpg            Port-Réal
+  pentos.jpg              Pentos — en Essos
+  merdothrak.jpg          La mer Dothrak — en Essos
+  khalasar.jpg            Avec le khalasar, vers l'est — en Essos
+  vivesaigues.jpg         Vivesaigues
+  boisdesmurmures.jpg     Le Bois-aux-Murmures
+  lannisport.jpg          Lannisport · Castral Roc
+  routenord.jpg           Sur la route du Nord
+  vaesdothrak.jpg         Vaes Dothrak — en Essos
+  peyredragon.jpg         Peyredragon
+  pyke.jpg                Pyke · les îles de Fer
+  harrenhal.jpg           Près de l'Œil de Dieu · Harrenhal
+  routearya.jpg           Sur la route royale, au nord de Port-Réal
+  redwaste.jpg            La Désolation Rouge — en Essos
+
+  Nouveaux lieux du tome 4 :
+  pontamer.jpg            Pont-Amer · le camp de Renly
+  accalmie.jpg            Accalmie · les Terres de l'Orage
+  craster.jpg             Le donjon de Craster · au-delà du Mur
+  poing.jpg               Le Poing des Premiers Hommes · au-delà du Mur
+  qarth.jpg               Qarth — en Essos
+
+  Lieux du tome 4 déjà présents ci-dessus : pyke, portreal,
+  harrenhal, winterfell, vivesaigues.
+
+Conseil recherche : ajoute "asoiaf art" ou "game of thrones concept
+art" plutôt que des captures de la série, pour un rendu plus proche
+de l'ambiance des livres. "Westeros landscape art" fonctionne bien
+aussi pour les lieux extérieurs.
