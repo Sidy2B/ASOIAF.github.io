@@ -1993,7 +1993,19 @@ document.addEventListener('keydown', (e)=>{
 });
 addEventListener('resize', ()=>{ if(panneauMusique.classList.contains('ouvert')) placerPanneauMusique(); });
 
-let actif = new Audio();
+/* Chaque piste créée met à jour les boutons ▶/❚❚ et ♫ quand elle démarre ou s'arrête */
+function majBoutonsLecture(){
+  const enLecture = !actif.paused;
+  lecture.textContent = enLecture ? '❚❚' : '▶';
+  lecture.classList.toggle('joue', enLecture);
+  btnMusique.classList.toggle('joue', enLecture);
+}
+function brancherAudio(a){
+  a.addEventListener('play', ()=>majBoutonsLecture());
+  a.addEventListener('pause', ()=>majBoutonsLecture());
+  return a;
+}
+let actif = brancherAudio(new Audio());
 actif.loop = true;
 let volCible = (etat.volume ?? 20)/100;
 actif.volume = volCible;
@@ -2001,9 +2013,16 @@ volume.value = etat.volume ?? 20;
 volAffiche.textContent = (etat.volume ?? 20) + '%';
 autoChk.checked = !!etat.auto;
 
+/* Enchaînement automatique en cours (voir MUSIQUE AUTOMATIQUE plus bas) */
+const AUTRE_MORCEAU = '__autre__';
+let sequenceAuto = [];
+let positionAuto = 0;
 function majSousPiste(){
   const el = document.getElementById('sousPiste');
-  if(el) el.textContent = autoChk.checked ? 'Change automatiquement avec le chapitre' : 'Sélection manuelle';
+  if(!el) return;
+  if(!autoChk.checked){ el.textContent = 'Sélection manuelle'; return; }
+  const bases = sequenceAuto.filter(b=>b!==AUTRE_MORCEAU);
+  el.textContent = bases.length ? 'Auto : ' + bases.join(' → ') : 'Change automatiquement avec le chapitre';
 }
 majSousPiste();
 
@@ -2078,21 +2097,28 @@ async function testerFichier(src){
   }
   if(choix.selectedIndex < 0) choix.selectedIndex = 0;
   actif.src = choix.value;
+  if(autoChk.checked) musiqueAuto();
 })();
 
-function jouerTheme(src, fondu, boucle){
+function jouerTheme(src, fondu, boucle, lancer){
   if(boucle === undefined) boucle = true;
-  if(actif.src.endsWith(encodeURI(src)) || actif.src===src){ actif.loop = boucle; return; }
+  if(actif.src.endsWith(encodeURI(src)) || actif.src===src){
+    actif.loop = boucle;
+    if(lancer && actif.paused) actif.play().catch(()=>{});
+    return;
+  }
   etat.theme = src; sauver();
   if(!fondu || actif.paused){
     actif.pause();
-    actif = new Audio(src);
+    actif = brancherAudio(new Audio(src));
     actif.loop = boucle;
     actif.volume = volCible;
+    if(lancer) actif.play().catch(()=>{});
+    majBoutonsLecture();
     return;
   }
   const ancien = actif;
-  const nouveau = new Audio(src);
+  const nouveau = brancherAudio(new Audio(src));
   nouveau.loop = boucle;
   nouveau.volume = 0;
   nouveau.play().catch(()=>{});
@@ -2112,40 +2138,103 @@ function jouerTheme(src, fondu, boucle){
   }, pas);
 }
 
-function musiqueAuto(){
-  if(!autoChk.checked || themes.length===0) return;
-  const prefs = SCENES[idx].themes || [];
-  for(const p of prefs){
-    const th = themes.find(t=>t.base===p);
-    if(th){
-      choix.value = th.src;
-      /* Le thème de maison ne boucle plus sur lui-même en mode Auto : une fois
-         joué en entier, on enchaîne sur un morceau « autre » pris au hasard
-         (hors thèmes de maison), puis on revient au thème de la maison, et
-         ainsi de suite tant que le chapitre reste affiché. */
-      jouerTheme(th.src, true, false);
-      actif.onended = enchainerMusiqueAutre;
-      return;
-    }
-  }
+/* =====================================================
+   MUSIQUE AUTOMATIQUE
+   1) le thème de la maison à qui appartient le lieu du chapitre,
+   2) puis les thèmes des maisons des personnages présents dans le
+      chapitre, dans l'ordre où ils apparaissent dans le résumé,
+   3) puis un morceau « autre » au hasard, avant de recommencer.
+   Une maison sans musique installée est ignorée ; une petite maison
+   sans thème propre prend celui de son suzerain (Reed → Stark...).
+===================================================== */
+const MUSIQUE_PAR_MAISON = {
+  stark:"Stark", targaryen:"Targaryen", lannister:"Lannister", baratheon:"Baratheon",
+  greyjoy:"Greyjoy", tully:"Tully", arryn:"Arryn", martell:"Martell", tyrell:"Tyrell",
+  frey:"Frey", bolton:"Bolton", garde:"Garde de Nuit", dothraki:"Dothraki"
+};
+/* Maison à qui appartient chaque lieu (null = lieu sans maison de Westeros) */
+const MAISON_DU_LIEU = {
+  audela:"garde", mur:"garde", versmur:"stark", winterfell:"stark", routeroy:"baratheon",
+  trident:"tully", darry:"tully", auberge:"tully", eyrie:"arryn", hauteroute:"arryn",
+  portreal:"baratheon", pentos:null, merdothrak:"dothraki", khalasar:"dothraki",
+  vivesaigues:"tully", boisdesmurmures:"tully", lannisport:"lannister", routenord:"stark",
+  vaesdothrak:"dothraki", peyredragon:"baratheon", pyke:"greyjoy", harrenhal:"lannister",
+  routearya:"baratheon", redwaste:null, pontamer:"tyrell", accalmie:"baratheon",
+  craster:"garde", poing:"garde", qarth:null
+};
+
+function musiqueDeMaison(id){
+  if(!id) return null;
+  if(MUSIQUE_PAR_MAISON[id]) return MUSIQUE_PAR_MAISON[id];
+  const info = MAISONS_INFO.find(m=>m.id===id);
+  return (info && info.vassalDe && MUSIQUE_PAR_MAISON[info.vassalDe]) || null;
+}
+function pistesDeMaison(base){ return themes.filter(t=>t.base===base); }
+
+function sequenceDuChapitre(){
+  const s = SCENES[idx] || {};
+  const bases = [];
+  const ajouter = b=>{ if(b && !bases.includes(b) && pistesDeMaison(b).length) bases.push(b); };
+  /* 1) la maison du lieu */
+  ajouter(musiqueDeMaison(MAISON_DU_LIEU[s.lieu]));
+  /* 2) les maisons des personnages présents, dans l'ordre du résumé */
+  const texte = `${s.chap||''} ${s.titre||''} ${s.desc||''} ${s.mots||''}`;
+  const position = p=>{
+    let min = Infinity;
+    (PERSO_ALIAS[p.slug]||[]).forEach(al=>{
+      const m = new RegExp(`\\b${echapperRegex(al)}\\b`, 'i').exec(texte);
+      if(m && m.index < min) min = m.index;
+    });
+    return min;
+  };
+  personnagesDuChapitre(s).sort((x,y)=>position(x)-position(y)).forEach(p=>ajouter(musiqueDeMaison(p.maison)));
+  /* repli : thèmes prévus pour le chapitre, si rien n'a été trouvé */
+  if(bases.length === 0) (s.themes||[]).forEach(ajouter);
+  const autres = themes.filter(t=>t.base===null);
+  if(autres.length) bases.push(AUTRE_MORCEAU);
+  return bases;
 }
 
-function enchainerMusiqueAutre(){
-  if(!autoChk.checked) return;
-  const autres = themes.filter(t=>t.base===null);
-  if(autres.length===0){ musiqueAuto(); return; }
-  const choisi = autres[Math.floor(Math.random()*autres.length)];
-  choix.value = choisi.src;
-  jouerTheme(choisi.src, true, false);
-  actif.onended = musiqueAuto;
+function baseDePiste(src){
+  const th = themes.find(t=>src && (src.endsWith(encodeURI(t.src)) || src===t.src));
+  return th ? th.base : undefined;
+}
+
+function musiqueAuto(){
+  if(!autoChk.checked || themes.length===0) return;
+  sequenceAuto = sequenceDuChapitre();
+  positionAuto = 0;
+  majSousPiste();
+  if(sequenceAuto.length === 0) return;
+  /* Si la musique en cours est déjà celle de la maison du lieu, on la laisse finir */
+  if(!actif.paused && baseDePiste(actif.src) === sequenceAuto[0]){
+    positionAuto = 1;
+    actif.loop = false;
+    actif.onended = ()=>jouerProchainAuto(true);
+    return;
+  }
+  jouerProchainAuto(false);
+}
+
+function jouerProchainAuto(depuisFin){
+  if(!autoChk.checked || sequenceAuto.length===0) return;
+  const base = sequenceAuto[positionAuto % sequenceAuto.length];
+  positionAuto++;
+  const pistes = base === AUTRE_MORCEAU ? themes.filter(t=>t.base===null) : pistesDeMaison(base);
+  if(pistes.length === 0) return;
+  const th = pistes[Math.floor(Math.random()*pistes.length)];
+  choix.value = th.src;
+  jouerTheme(th.src, true, false, depuisFin);
+  actif.onended = ()=>jouerProchainAuto(true);
 }
 
 choix.onchange = ()=>{ jouerTheme(choix.value, true); };
 
 autoChk.onchange = ()=>{
   etat.auto = autoChk.checked; sauver();
-  majSousPiste();
   if(autoChk.checked) musiqueAuto();
+  else { actif.loop = true; actif.onended = null; }
+  majSousPiste();
 };
 
 volume.oninput = ()=>{
@@ -2159,15 +2248,10 @@ lecture.onclick = ()=>{
   if(actif.paused){
     if(!actif.src && choix.value) { actif.src = choix.value; }
     actif.play().catch(()=>{});
-    lecture.textContent = '❚❚';
-    lecture.classList.add('joue');
-    btnMusique.classList.add('joue');
   }else{
     actif.pause();
-    lecture.textContent = '▶';
-    lecture.classList.remove('joue');
-    btnMusique.classList.remove('joue');
   }
+  majBoutonsLecture();
 };
 
 let glisse = false;
