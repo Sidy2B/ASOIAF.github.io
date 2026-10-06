@@ -81,6 +81,34 @@
   #btnMusique.joue{border-color:var(--braise);color:var(--braiseTxt)}
   #btnPleinEcran:focus-visible,#btnNuit:focus-visible,#btnMusique:focus-visible{outline:2px solid var(--bougie);outline-offset:2px}
 
+  /* ===== Chrono synchronisé avec Audible ===== */
+  .syncBar{
+    position:relative;z-index:4;display:flex;align-items:center;flex-wrap:wrap;gap:8px;
+    margin:-8px 20px 20px;padding:8px 12px;max-width:min(640px, calc(100% - 210px));
+    background:rgba(7,9,13,.62);backdrop-filter:blur(6px);
+    border:1px solid var(--bord);border-radius:999px;
+  }
+  @media (max-width:640px){.syncBar{max-width:none;margin:-8px 12px 84px;border-radius:18px}}
+  .syncBar button,.syncBar select{
+    font-family:'Instrument Sans',sans-serif;cursor:pointer;color:var(--neige);
+    background:rgba(255,255,255,.06);border:1px solid var(--bord);transition:all .2s;
+  }
+  .syncBar button:hover,.syncBar select:hover{border-color:var(--bougie);color:var(--bougie)}
+  .syncBar button:focus-visible,.syncBar select:focus-visible{outline:2px solid var(--bougie);outline-offset:2px}
+  #syncLecture{width:34px;height:34px;border-radius:50%;flex:none;font-size:.85rem;background:var(--pill);color:var(--pilltxt);border:none}
+  #syncLecture.actif{background:var(--braise);color:var(--neige)}
+  .syncSaut{height:28px;padding:0 9px;border-radius:999px;font-size:.74rem;font-weight:600;flex:none}
+  .syncPiste{flex:1;min-width:150px;display:flex;flex-direction:column;gap:4px}
+  .syncRail{height:6px;border-radius:999px;background:rgba(255,255,255,.12);cursor:pointer;overflow:hidden}
+  .syncRail.inconnu{cursor:default}
+  .syncRempli{height:100%;width:0;background:var(--accent);border-radius:999px;transition:width .3s linear}
+  .syncTemps{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.74rem;color:var(--acier);font-variant-numeric:tabular-nums}
+  #syncPos{background:none;border:none;padding:0;font-size:.74rem;color:var(--neige);font-variant-numeric:tabular-nums;text-decoration:underline dotted;text-underline-offset:3px}
+  #syncInfo{font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;opacity:.8;text-align:center}
+  #syncVitesse{height:28px;padding:0 6px;border-radius:999px;font-size:.74rem;color-scheme:dark;flex:none}
+  #syncVitesse option{background:#161b24;color:var(--neige)}
+  #btnAudible{height:28px;padding:0 12px;border-radius:999px;font-size:.74rem;font-weight:600;flex:none}
+
   /* ===== Musique d'ambiance déplacée dans l'en-tête (popover) ===== */
   .musiqueEntete{position:relative;flex:none}
   .panneauMusique{
@@ -184,7 +212,7 @@
   .hero-persos .labelP{
     font-family:'Instrument Sans',sans-serif;font-size:.68rem;color:var(--neige);
     background:rgba(5,7,10,.6);padding:3px 10px;border-radius:999px;backdrop-filter:blur(4px);
-    white-space:nowrap;max-width:150px;overflow:hidden;text-overflow:ellipsis;
+    white-space:nowrap;max-width:190px;overflow:hidden;text-overflow:ellipsis;
     transition:opacity .4s ease;cursor:pointer;
   }
   .hero-persos .descP{
@@ -479,6 +507,7 @@
   .persoNom{font-size:.98rem;color:var(--neige);font-weight:600}
   .persoDesc{font-size:.87rem;color:var(--acier);line-height:1.45;margin-top:1px}
   .persoCompte{margin-left:auto;font-size:.7rem;letter-spacing:.1em;color:var(--acier)}
+  .persoAge{font-size:.76rem;font-weight:500;color:var(--acier);white-space:nowrap}
   .badgeNouveau{
     display:inline-block;margin-left:6px;padding:2px 8px;border-radius:999px;
     background:var(--ringP, var(--bougie));color:var(--pilltxt);
@@ -692,6 +721,24 @@
         </div>
       </header>
       <div class="hero-texte voile-zone" id="scene"></div>
+      <div class="syncBar" id="syncBar">
+        <button type="button" id="syncLecture" title="Lancer le chrono en même temps qu'Audible" aria-label="Lancer ou mettre en pause le chrono">▶</button>
+        <button type="button" class="syncSaut" id="syncMoins" title="Reculer de 30 secondes">−30</button>
+        <div class="syncPiste">
+          <div class="syncRail" id="syncRail" title="Cliquer pour se placer au même endroit qu'Audible"><div class="syncRempli" id="syncRempli"></div></div>
+          <div class="syncTemps">
+            <button type="button" id="syncPos" title="Cliquer pour taper la position affichée par Audible">0:00</button>
+            <span id="syncInfo">Chrono Audible</span>
+            <span id="syncReste"></span>
+          </div>
+        </div>
+        <button type="button" class="syncSaut" id="syncPlus" title="Avancer de 30 secondes">+30</button>
+        <select id="syncVitesse" title="Même vitesse que dans Audible" aria-label="Vitesse de lecture">
+          <option value="0.75">0.75x</option><option value="1" selected>1.0x</option><option value="1.1">1.1x</option>
+          <option value="1.25">1.25x</option><option value="1.5">1.5x</option><option value="1.75">1.75x</option><option value="2">2.0x</option>
+        </select>
+        <button type="button" id="btnAudible" title="Ouvrir Audible dans une petite fenêtre à côté du site">Audible ↗</button>
+      </div>
     </section>
 
     <section id="wChapitres" class="jauge">
@@ -1255,6 +1302,7 @@ function render(){
     };
   }
   chargerImage(idx);
+  syncSurRender();
 
   /* Portraits du chapitre (défilement auto) — jamais avant révélation, anti-spoiler */
   if(locked){
@@ -1395,6 +1443,49 @@ const PERSONNAGES = [
 ];
 
 const BLASON_AUTRE = `<svg class="miniB" viewBox="0 0 34 34"><circle cx="17" cy="17" r="15.5" fill="#242b36" stroke="#4a5460" stroke-width="1.4"/><path d="M17 8 L17 25 M12 13 L22 13" stroke="#93a0b2" stroke-width="2" stroke-linecap="round"/></svg>`;
+/* =====================================================
+   ÂGES DES PERSONNAGES (d'après les livres, via A Wiki of Ice and Fire)
+   - NAISSANCES : année de naissance (AC) ; true = année approximative
+   - AGE_DEBUT_T1 : âge donné par le texte au début du tome 1 (prime
+     sur le calcul, car les anniversaires ne sont presque jamais connus)
+   - ANNEE_TOME : année en cours dans chaque tome
+   - MORT_TOME : un personnage mort ne vieillit plus après son tome
+===================================================== */
+const NAISSANCES = {
+  "eddard-stark":[263], "robb-stark":[283], "jon-snow":[283], "bran-stark":[290], "rickon-stark":[295],
+  "theon-greyjoy":[278,true], "catelyn-stark":[264,true], "daenerys-targaryen":[284], "viserys-targaryen":[276],
+  "khal-drogo":[267,true], "robert-baratheon":[262], "cersei-lannister":[266], "jaime-lannister":[266],
+  "joffrey-baratheon":[286], "sansa-stark":[286], "arya-stark":[289], "sandor-clegane":[270,true],
+  "tyrion-lannister":[273], "benjen-stark":[267,true], "jorah-mormont":[254,true], "petyr-baelish":[268],
+  "jeor-mormont":[230], "alliser-thorne":[247,true], "grand-mestre-pycelle":[216], "renly-baratheon":[277],
+  "samwell-tarly":[283], "gendry":[284], "bronn":[264,true], "loras-tyrell":[282], "gregor-clegane":[265,true],
+  "lysa-arryn":[266,true], "mirri-maz-duur":[257,true], "ilyn-payne":[259,true], "mestre-cressen":[219,true],
+  "stannis-baratheon":[264], "davos-seaworth":[260,true], "balon-greyjoy":[255,true], "asha-greyjoy":[275,true],
+  "amory-lorch":[246,true], "dontos-hollard":[261,true], "brynden-tully":[243,true], "donella-hornwood":[257,true],
+  "jojen-reed":[286], "meera-reed":[283], "brienne-de-torth":[280], "gilly":[282,true], "victarion-greyjoy":[257,true],
+  "lancel-lannister":[282], "shae":[280,true], "rodrik-cassel":[248,true], "edmure-tully":[270,true]
+};
+const AGE_DEBUT_T1 = {
+  "eddard-stark":35, "robb-stark":14, "jon-snow":14, "sansa-stark":11, "arya-stark":9, "bran-stark":7,
+  "rickon-stark":3, "daenerys-targaryen":13, "joffrey-baratheon":12, "theon-greyjoy":19,
+  "viserys-targaryen":22, "robert-baratheon":36, "loras-tyrell":16, "renly-baratheon":21
+};
+const ANNEE_TOME = {1:298, 2:298, 3:299, 4:299};
+const MORT_TOME = {
+  "robert-baratheon":2, "eddard-stark":2, "viserys-targaryen":2, "khal-drogo":2, "mirri-maz-duur":2,
+  "yoren":3, "mestre-cressen":3, "renly-baratheon":4
+};
+function anneeDuTome(t){ return ANNEE_TOME[t] || (ANNEE_TOME[4] + Math.floor((t-3)/2)); }
+/* Renvoie « 14 ans », « ~40 ans » ou '' si l'âge n'est pas connu */
+function agePersonnage(slug){
+  const tome = MORT_TOME[slug] && MORT_TOME[slug] < tomeActif ? MORT_TOME[slug] : tomeActif;
+  const annee = anneeDuTome(tome);
+  if(AGE_DEBUT_T1[slug] !== undefined) return `${AGE_DEBUT_T1[slug] + (annee - ANNEE_TOME[1])} ans`;
+  const n = NAISSANCES[slug];
+  if(!n) return '';
+  return `${n[1] ? '~' : ''}${annee - n[0]} ans`;
+}
+
 const MAISONS_FICHIERS = ["stark","targaryen","lannister","baratheon","arryn","tully","greyjoy","tyrell","frey","bolton","martell","garde","mormont","karstark","umber","manderly","bracken","blackwood","glover","cerwyn","hornwood","reed","royce","mallister","piper","darry","mooton","clegane","marbrand","tarly","redwyne","hightower","selmy","dayne"];
 
 /* Blasons de maison : si "martell.png" ne charge pas, on tente d'autres casses/extensions
@@ -1480,7 +1571,7 @@ function majPersonnages(maxCh){
     const ring = ACCENT_PAR_MAISON[p.maison] || '';
     return `<div class="perso" data-slug="${p.slug}" data-maison="${p.maison}" style="${ring?`--ringP:${ring}`:''}">
       <span class="portraitSlot">${blasonReplifHTML(p.maison)}</span>
-      <div class="persoCorps"><div class="persoNom">${p.nom}${nouveau?' <span class="badgeNouveau">Nouveau</span>':''}</div><div class="persoDesc">${p.desc}</div></div>
+      <div class="persoCorps"><div class="persoNom">${p.nom}${agePersonnage(p.slug)?` <span class="persoAge">${agePersonnage(p.slug)}</span>`:''}${nouveau?' <span class="badgeNouveau">Nouveau</span>':''}</div><div class="persoDesc">${p.desc}</div></div>
     </div>`;
   }).join('');
   liste.querySelectorAll('img.blasonRepli').forEach(im=>{
@@ -1648,7 +1739,7 @@ function heroPersosAfficher(n){
   cadre.style.setProperty('--ringP', ACCENT_PAR_MAISON[p.maison] || 'var(--accent)');
   img.src = p.src;
   img.alt = `Portrait de ${p.nom}`;
-  label.textContent = p.nom;
+  label.textContent = p.age ? `${p.nom} · ${p.age}` : p.nom;
   if(descEl) descEl.textContent = p.desc || '';
   if(compteur){
     compteur.textContent = `${n+1}/${total}`;
@@ -1675,7 +1766,7 @@ async function majPortraitsChapitre(){
   for(const p of candidats){
     const src = await chargerPortraitPerso(p.slug);
     if(jeton !== heroPersosJeton) return; // le chapitre a changé entre-temps
-    if(src) trouves.push({nom:p.nom, maison:p.maison, src, desc:p.desc});
+    if(src) trouves.push({nom:p.nom, maison:p.maison, src, desc:p.desc, age:agePersonnage(p.slug)});
   }
   if(jeton !== heroPersosJeton || trouves.length === 0) return;
 
@@ -2274,6 +2365,144 @@ progression.addEventListener('change', ()=>{
   if(actif.duration) actif.currentTime = (progression.value/1000)*actif.duration;
   glisse = false;
 });
+
+/* =====================================================
+   CHRONO SYNCHRONISÉ AVEC AUDIBLE
+   Le site ne peut pas lire Audible : on lance ce chrono en même
+   temps que la lecture Audible. Il suit la durée de chaque chapitre
+   (relevée dans l'appli Audible) et passe tout seul au chapitre
+   suivant quand le chapitre est terminé.
+===================================================== */
+function hms(t){ const [h,m,s]=t.split(':').length===3 ? t.split(':').map(Number) : [0,...t.split(':').map(Number)]; return h*3600+m*60+s; }
+/* Durées des chapitres Audible, tome par tome (h:mm:ss ou mm:ss) */
+const DUREES_AUDIBLE = {
+  4:["52:11","1:03:14","52:09","42:13","22:09","28:47","28:02","27:44","37:56","39:12","24:12","30:25",
+     "28:16","20:21","24:13","23:38","24:12","44:59","32:27","41:43","53:16","23:58","41:59"].map(hms)
+};
+let syncEnCours = false;
+let syncPos = 0;            /* secondes écoulées dans le chapitre affiché */
+let syncCle = null;         /* "tome:chapitre" sur lequel tourne le chrono */
+let syncAvanceAuto = false;
+let syncDernier = 0;
+let syncTimer = null;
+let syncVitesse = 1;
+try{ const v = Number(localStorage.getItem('asoiaf-vitesse')); if(v) syncVitesse = v; }catch(e){}
+
+const syncLectureBtn = document.getElementById('syncLecture');
+const syncRail = document.getElementById('syncRail');
+const syncRempli = document.getElementById('syncRempli');
+const syncPosBtn = document.getElementById('syncPos');
+const syncReste = document.getElementById('syncReste');
+const syncInfo = document.getElementById('syncInfo');
+const syncVitesseSel = document.getElementById('syncVitesse');
+syncVitesseSel.value = String(syncVitesse);
+if(syncVitesseSel.value !== String(syncVitesse)){ syncVitesse = 1; syncVitesseSel.value = '1'; }
+
+function dureeChapitre(){ const d = DUREES_AUDIBLE[tomeActif]; return d ? d[idx] || 0 : 0; }
+function formatChrono(s){
+  s = Math.max(0, Math.floor(s));
+  const h = Math.floor(s/3600), m = Math.floor((s%3600)/60), sec = s%60;
+  return h ? `${h}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}` : `${m}:${String(sec).padStart(2,'0')}`;
+}
+function sauverSync(){ etat.syncIdx = idx; etat.syncPos = Math.floor(syncPos); sauver(); }
+
+function majSyncUI(){
+  const dur = dureeChapitre();
+  syncPosBtn.textContent = formatChrono(syncPos);
+  syncReste.textContent = dur ? '-' + formatChrono(dur - syncPos) : '';
+  syncRempli.style.width = dur ? Math.min(100, syncPos/dur*100) + '%' : '0%';
+  syncRail.classList.toggle('inconnu', !dur);
+  syncInfo.textContent = dur ? (syncEnCours ? 'Synchro en cours' : 'Chrono Audible')
+                             : 'Durées Audible non renseignées pour ce tome';
+  syncLectureBtn.textContent = syncEnCours ? '❚❚' : '▶';
+  syncLectureBtn.classList.toggle('actif', syncEnCours);
+}
+
+/* Appelé par render() à chaque affichage de chapitre */
+function syncSurRender(){
+  const cle = tomeActif + ':' + idx;
+  if(cle !== syncCle){
+    const memeTome = syncCle && syncCle.split(':')[0] === String(tomeActif);
+    if(!memeTome && syncEnCours) pauseSync();          /* changement de tome : on s'arrête */
+    if(syncAvanceAuto){ /* syncPos contient déjà le dépassement */ }
+    else if(!memeTome && etat.syncIdx === idx && typeof etat.syncPos === 'number') syncPos = etat.syncPos; /* reprise après rechargement ou changement de tome */
+    else syncPos = 0;
+    syncAvanceAuto = false;
+    syncCle = cle;
+    sauverSync();
+  }
+  majSyncUI();
+}
+
+function tickSync(){
+  const maintenant = performance.now();
+  syncPos += (maintenant - syncDernier) / 1000 * syncVitesse;
+  syncDernier = maintenant;
+  const dur = dureeChapitre();
+  if(dur && syncPos >= dur){
+    if(idx < SCENES.length - 1){
+      const reste = syncPos - dur;
+      revealed.add(idx + 1);
+      etat.revealed = [...revealed];
+      syncAvanceAuto = true;
+      syncPos = reste;
+      idx++;
+      render();
+    }else{
+      syncPos = dur;
+      pauseSync();
+    }
+  }
+  if(Math.floor(syncPos) % 5 === 0) sauverSync();
+  majSyncUI();
+}
+function lancerSync(){
+  if(syncEnCours) return;
+  syncEnCours = true;
+  syncDernier = performance.now();
+  syncTimer = setInterval(tickSync, 250);
+  majSyncUI();
+}
+function pauseSync(){
+  if(syncTimer){ clearInterval(syncTimer); syncTimer = null; }
+  syncEnCours = false;
+  sauverSync();
+  majSyncUI();
+}
+function deplacerSync(sec){
+  const dur = dureeChapitre();
+  syncPos = Math.max(0, dur ? Math.min(dur - 1, sec) : sec);
+  syncDernier = performance.now();
+  sauverSync();
+  majSyncUI();
+}
+
+syncLectureBtn.onclick = ()=>{ syncEnCours ? pauseSync() : lancerSync(); };
+document.getElementById('syncMoins').onclick = ()=> deplacerSync(syncPos - 30);
+document.getElementById('syncPlus').onclick  = ()=> deplacerSync(syncPos + 30);
+syncRail.onclick = (e)=>{
+  const dur = dureeChapitre();
+  if(!dur) return;
+  const r = syncRail.getBoundingClientRect();
+  deplacerSync((e.clientX - r.left) / r.width * dur);
+};
+syncPosBtn.onclick = ()=>{
+  const saisie = prompt("Position affichée par Audible dans ce chapitre (ex. 4:08 ou 1:02:30) :", formatChrono(syncPos));
+  if(!saisie) return;
+  const parties = saisie.trim().split(':').map(Number);
+  if(parties.some(isNaN) || parties.length < 2 || parties.length > 3) return;
+  deplacerSync(parties.length === 3 ? parties[0]*3600 + parties[1]*60 + parties[2] : parties[0]*60 + parties[1]);
+};
+syncVitesseSel.onchange = ()=>{
+  syncVitesse = Number(syncVitesseSel.value) || 1;
+  try{ localStorage.setItem('asoiaf-vitesse', String(syncVitesse)); }catch(e){}
+};
+document.getElementById('btnAudible').onclick = ()=>{
+  const largeur = 440, hauteur = Math.min(860, screen.availHeight || 860);
+  window.open('https://www.audible.fr/library/titles', 'lecteurAudible',
+    `popup,width=${largeur},height=${hauteur},left=0,top=0`);
+};
+addEventListener('beforeunload', ()=>{ if(syncCle) sauverSync(); });
 
 /* ===== Plein écran ===== */
 const btnPE = document.getElementById('btnPleinEcran');
