@@ -150,7 +150,7 @@ TOME 1 — Le Trône de Fer (A Game of Thrones) — 35 personnages
   lysa-arryn.jpg                  Lysa Arryn
 
 -----------------------------------------------------------
-TOME 2 — Le Trône de Fer (A Clash of Kings) — 5 personnages
+TOME 2 — Le Donjon rouge (A Game of Thrones, 2e partie) — 5 personnages
 (en plus de ceux du tome 1, toujours présents)
 -----------------------------------------------------------
   yoren.jpg                       Yoren
@@ -160,7 +160,7 @@ TOME 2 — Le Trône de Fer (A Clash of Kings) — 5 personnages
   osha.jpg                         Osha
 
 -----------------------------------------------------------
-TOME 3 — La Bataille des rois (A Storm of Swords, 1ère moitié) — 14 personnages
+TOME 3 — La Bataille des rois (A Clash of Kings, 1re partie) — 14 personnages
 -----------------------------------------------------------
   mestre-cressen.jpg               Mestre Cressen
   stannis-baratheon.jpg            Stannis Baratheon
@@ -176,6 +176,24 @@ TOME 3 — La Bataille des rois (A Storm of Swords, 1ère moitié) — 14 person
   donella-hornwood.jpg              Lady Donella Hornwood
   jojen-reed.jpg                    Jojen Reed
   meera-reed.jpg                    Meera Reed
+
+-----------------------------------------------------------
+TOME 4 — L'Ombre maléfique (A Clash of Kings, 2e partie) — 14 personnages
+-----------------------------------------------------------
+  brienne-de-torth.jpg              Brienne de Torth
+  craster.jpg                       Craster
+  gilly.jpg                         Gilly
+  victarion-greyjoy.jpg             Victarion Greyjoy
+  cleos-frey.jpg                    Ser Cleos Frey
+  pyat-pree.jpg                     Pyat Pree
+  xaro-xhoan-daxos.jpg              Xaro Xhoan Daxos
+  lancel-lannister.jpg              Lancel Lannister
+  shae.jpg                          Shae
+  qhorin-mimain.jpg                 Qhorin Mimain
+  rodrik-cassel.jpg                 Ser Rodrik Cassel
+  edmure-tully.jpg                  Edmure Tully
+  quaithe.jpg                       Quaithe
+  cortnay-penrose.jpg               Ser Cortnay Penrose
 
 Conseil recherche : ajoute "asoiaf art" plutôt que "game of thrones"
 pour trouver des fan arts fidèles aux livres plutôt que des captures

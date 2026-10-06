@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Le Trône de Fer — Guide d'écoute</title>
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -657,6 +660,7 @@
             <button data-tome="1" aria-label="Tome 1">I</button>
             <button data-tome="2" aria-label="Tome 2">II</button>
             <button data-tome="3" aria-label="Tome 3">III</button>
+            <button data-tome="4" aria-label="Tome 4">IV</button>
           </div>
           <div class="entete-icones">
             <button id="btnPleinEcran" aria-label="Passer en plein écran" title="Plein écran">⛶</button>
@@ -917,7 +921,12 @@ const LIEUX = {
   pyke:{nom:"Pyke · les îles de Fer", carte:"westeros", x:12.0, y:34.0},
   harrenhal:{nom:"Près de l'Œil de Dieu · Harrenhal", carte:"westeros", x:58.0, y:60.0},
   routearya:{nom:"Sur la route royale, au nord de Port-Réal", carte:"westeros", x:61.0, y:62.0},
-  redwaste:{nom:"La Désolation Rouge — en Essos", carte:"essos", x:68.0, y:50.0}
+  redwaste:{nom:"La Désolation Rouge — en Essos", carte:"essos", x:68.0, y:50.0},
+  pontamer:{nom:"Pont-Amer · le camp de Renly", carte:"westeros", x:53.0, y:81.0},
+  accalmie:{nom:"Accalmie · les Terres de l'Orage", carte:"westeros", x:74.0, y:82.0},
+  craster:{nom:"Le donjon de Craster · au-delà du Mur", carte:"westeros", x:56.0, y:4.4},
+  poing:{nom:"Le Poing des Premiers Hommes · au-delà du Mur", carte:"westeros", x:60.5, y:2.6},
+  qarth:{nom:"Qarth — en Essos", carte:"essos", x:82.0, y:62.0}
 };
 
 const TH_NORD   = ["Stark","Main theme"];
@@ -1034,6 +1043,32 @@ const CHAPITRES_T3 = [
   {chap:"Chapitre 22 · Bran",titre:"Le serment des Reed",desc:"Jojen et Meera Reed, venus des marais du Neck, arrivent à Winterfell pour renouveler le serment de leur maison aux Stark. Cette nuit-là, Bran rêve qu'il les voit approcher Été dans le bois sacré — jusqu'à ce que le contact de Jojen avec le loup ne le fasse brutalement retomber dans son propre corps.",mots:"un serment de terre et d'eau · des visiteurs du marais · un rêve interrompu",atmo:"linear-gradient(180deg,#0c1220 0%,#1c2640 55%,#334366 100%)",part:"neige",maison:"stark",lieu:"winterfell",themes:TH_NORD}
 ];
 
+const CHAPITRES_T4 = [
+  {chap:"Chapitre 1 · Catelyn",titre:"Le camp de Renly",desc:"Envoyée par Robb auprès de Renly Baratheon, Catelyn découvre à Pont-Amer un camp de soie et de bannières à perte de vue, où l'on joute en pleine guerre. Une chevalière inconnue, Brienne de Torth, y désarçonne Loras Tyrell et gagne une place dans la garde arc-en-ciel du prétendant. Renly lui expose sans détour ce qui fait sa force — des alliés nombreux plutôt qu'un droit —, puis un messager apporte la nouvelle : Stannis assiège Accalmie.",mots:"une joute sans fin · une chevalière victorieuse · un prétendant sûr de lui",atmo:"linear-gradient(180deg,#14201a 0%,#27402e 50%,#4d6b3c 100%)",part:"braises",maison:"baratheon",lieu:"pontamer",themes:TH_SUD},
+  {chap:"Chapitre 2 · Jon",titre:"Le donjon de Craster",desc:"Au-delà du Mur, la Garde de Nuit fait halte chez Craster, un sauvageon brutal qui règne en maître sur ses filles-épouses. Il ne sait rien de Benjen Stark, mais assure que Mance Rayder rassemble les peuples libres. Gilly, enceinte, supplie Jon de l'aider : si l'enfant est un garçon, il sera offert aux dieux froids.",mots:"un hôte répugnant · une épouse enceinte · des dieux froids",atmo:"linear-gradient(180deg,#0a0f16 0%,#14202e 55%,#233648 100%)",part:"neige",maison:"garde",lieu:"craster",themes:TH_GARDE},
+  {chap:"Chapitre 3 · Theon",titre:"La sœur inconnue",desc:"À Pyke, Theon fait du charme à une cavalière rencontrée sur le port — avant de comprendre que c'est sa sœur Asha, qui s'amuse de le voir si peu à sa place. Au conseil de Balon, le plan est dévoilé : pendant que le sud s'entre-déchire, les hommes de fer s'abattront sur le Nord. Theon aura la côte, Asha une forteresse, leur oncle Victarion la grande route.",mots:"une sœur déguisée · un banquet moqueur · une invasion annoncée",atmo:"linear-gradient(180deg,#0e1420 0%,#1e2c38 50%,#334a52 100%)",part:"neige",maison:"greyjoy",lieu:"pyke",themes:TH_FER},
+  {chap:"Chapitre 4 · Tyrion",titre:"Le grand mestre démasqué",desc:"Stannis a fait voile vers Accalmie plutôt que vers Port-Réal : Tyrion et Cersei respirent un instant. À l'audience, Tyrion remet à ser Cleos Frey les conditions de paix destinées à Robb. La nuit, il fait irruption avec Shagga chez le grand mestre Pycelle, dont il révèle les trahisons au profit de Tywin, avant de le jeter au cachot.",mots:"un siège évité · des conditions de paix · un vieux mestre au cachot",atmo:"linear-gradient(180deg,#1c1610 0%,#332618 50%,#584023 100%)",part:"braises",maison:"lannister",lieu:"portreal",themes:TH_LANN},
+  {chap:"Chapitre 5 · Arya",titre:"Le nom de Belette",desc:"Prisonnière des hommes de la Montagne, Arya traverse les terres du fleuve jusqu'à Harrenhal. Pour cacher qui elle est, elle se fait appeler Belette, et récite chaque nuit les noms de ceux qu'elle voudrait voir morts. À la forteresse maudite, elle est confiée à Weese, un intendant qui règne par la peur.",mots:"un nom d'emprunt · une liste murmurée · une forteresse maudite",atmo:"linear-gradient(180deg,#100d0f 0%,#221a1e 55%,#3a2e33 100%)",part:"braises",maison:"stark",lieu:"harrenhal",themes:TH_SUD},
+  {chap:"Chapitre 6 · Daenerys",titre:"Qarth, la cité des cités",desc:"Daenerys et ses derniers fidèles atteignent enfin Qarth, où le marchand Xaro Xhoan Daxos et le mage Pyat Pree leur font un accueil somptueux. Elle y cherche des navires pour Westeros. Jorah lui rapporte ce qu'a appris un capitaine : Robert est mort, et les Sept Couronnes se déchirent.",mots:"un port immense · des hôtes empressés · un roi qui n'est plus",atmo:"linear-gradient(180deg,#1a1410 0%,#3a2a14 50%,#7a5a24 100%)",part:"braises",maison:"targaryen",lieu:"qarth",themes:TH_TARG},
+  {chap:"Chapitre 7 · Bran",titre:"Les yeux verts",desc:"Jojen Reed confie à Bran qu'il a la vue verte : ses rêves se réalisent. Tous deux rêvent d'une corneille à trois yeux. Quand la colère de Bran passe dans son loup Été, les Reed doivent grimper dans un arbre pour échapper à ses crocs. Mestre Luwin, lui, répète que la magie n'existe pas.",mots:"un rêve partagé · un loup en colère · un mestre sceptique",atmo:"linear-gradient(180deg,#0c1220 0%,#1c2640 55%,#334366 100%)",part:"neige",maison:"stark",lieu:"winterfell",themes:TH_NORD},
+  {chap:"Chapitre 8 · Tyrion",titre:"Lancel retourné",desc:"Ser Lancel réclame au nom de Cersei la libération de Pycelle. Tyrion lui rappelle que c'est son vin trop fort qui a mal servi le roi Robert, et en fait son informateur. Incapable de dormir, il s'échappe la nuit par un passage secret pour retrouver Shae.",mots:"un cousin pris au piège · un vin accusateur · une nuit chez Shae",atmo:"linear-gradient(180deg,#1c1610 0%,#332618 50%,#584023 100%)",part:"braises",maison:"lannister",lieu:"portreal",themes:TH_LANN},
+  {chap:"Chapitre 9 · Arya",titre:"Trois morts pour trois vies",desc:"À Harrenhal, la servitude d'Arya devient presque supportable. Puis Jaqen H'ghar, celui du chariot en flammes, lui apprend qu'elle lui doit trois vies sauvées au Dieu Rouge : à elle de désigner trois morts. Elle donne un premier nom, Chiswyck, et l'homme est retrouvé mort peu après.",mots:"une dette étrange · un premier nom · un mort à l'aube",atmo:"linear-gradient(180deg,#100d0f 0%,#221a1e 55%,#3a2e33 100%)",part:"braises",maison:"stark",lieu:"harrenhal",themes:TH_SUD},
+  {chap:"Chapitre 10 · Catelyn",titre:"Deux frères face à face",desc:"Catelyn parvient à réunir Stannis et Renly pour une entrevue. Stannis exige que Renly lui prête serment comme héritier légitime ; Renly, goguenard, refuse et tourne son frère en ridicule. Le ton monte jusqu'aux menaces, et Catelyn s'en va sans accord, sachant la bataille décidée pour l'aube.",mots:"un parlement tendu · un serment refusé · une bataille à l'aube",atmo:"linear-gradient(180deg,#171f2a 0%,#2c3a4e 50%,#4c6178 100%)",part:"braises",maison:"baratheon",lieu:"accalmie",themes:TH_TULLY},
+  {chap:"Chapitre 11 · Sansa",titre:"Les coups de Joffrey",desc:"Joffrey, furieux de la victoire de Robb, ordonne à des chevaliers de sa garde de battre Sansa devant toute la cour. Tyrion intervient, la fait soigner dans la Tour de la Main, et lui explique que Robb n'a pas utilisé de sorcellerie. Sansa le remercie, mais garde ses distances avec un Lannister.",mots:"une punition injuste · un nain qui s'interpose · une méfiance tenace",atmo:"linear-gradient(180deg,#151013 0%,#291f24 55%,#453640 100%)",part:"braises",maison:"stark",lieu:"portreal",themes:TH_SUD},
+  {chap:"Chapitre 12 · Catelyn",titre:"La tente en flammes",desc:"À la veille de la bataille, Catelyn tente une dernière fois de ramener Renly à la raison, en vain. Une silhouette d'ombre se glisse alors dans la tente, et le roi s'effondre, la gorge ouverte. On accuse Brienne ; un chandelier renversé met le feu à la toile, et Catelyn s'enfuit avec elle dans le chaos.",mots:"un dernier appel · une silhouette d'ombre · une fuite dans les flammes",atmo:"linear-gradient(180deg,#160d0a 0%,#3a1a12 45%,#6e2e12 75%,#a8521f 100%)",part:"braises",maison:"baratheon",lieu:"accalmie",themes:TH_STANNIS},
+  {chap:"Chapitre 13 · Jon",titre:"Le Poing des Premiers Hommes",desc:"La Garde établit son camp au Poing des Premiers Hommes, une colline fortifiée depuis des millénaires, en attendant Qhorin Mimain. Après le conseil de Mormont, Ghost s'éloigne et Jon le suit : le loup le mène à une cache de verre de dragon, près d'un manteau noir abandonné.",mots:"une colline antique · un loup qui guide · des lames de verre",atmo:"linear-gradient(180deg,#0a0f16 0%,#14202e 55%,#233648 100%)",part:"neige",maison:"garde",lieu:"poing",themes:TH_GARDE},
+  {chap:"Chapitre 14 · Bran",titre:"Le prisonnier de ser Rodrik",desc:"À Winterfell, on célèbre la victoire de Robb, même si elle coûte un oncle aux Frey. Jojen insiste : ses rêves ne se discutent pas, ils arrivent. Ser Rodrik rentre au château avec un prisonnier, accusé d'avoir pris part à la mort de lady Hornwood, qui attendra le retour de Robb pour être jugé.",mots:"une victoire célébrée · un rêve inéluctable · un captif dans les geôles",atmo:"linear-gradient(180deg,#0c1220 0%,#1c2640 55%,#334366 100%)",part:"neige",maison:"stark",lieu:"winterfell",themes:TH_NORD},
+  {chap:"Chapitre 15 · Tyrion",titre:"Une rose pour le roi",desc:"Varys annonce la mort de Renly, sans en connaître l'auteur. Le plan de Tyrion — laisser les Baratheon se détruire entre eux — vient de s'effondrer. Le conseil décide de proposer à Margaery Tyrell d'épouser Joffrey, et Littlefinger se propose pour porter l'offre à Hautjardin.",mots:"un frère mort · un plan ruiné · une alliance à acheter",atmo:"linear-gradient(180deg,#1c1610 0%,#332618 50%,#584023 100%)",part:"braises",maison:"lannister",lieu:"portreal",themes:TH_LANN},
+  {chap:"Chapitre 16 · Theon",titre:"Un nom à faire",desc:"Sur son navire, Theon fait exécuter un homme pour avoir désobéi, tout en sachant que ses raids sur la côte ne ressemblent guère à de la gloire. Dagmer, vieux capitaine expérimenté, doute. Theon le convainc de viser plus haut que ne l'a ordonné Balon, en s'en prenant à un château du Nord.",mots:"un équipage à mater · un vieux capitaine sceptique · un orgueil qui s'emballe",atmo:"linear-gradient(180deg,#0e1420 0%,#1e2c38 50%,#334a52 100%)",part:"neige",maison:"greyjoy",lieu:"pyke",themes:TH_FER},
+  {chap:"Chapitre 17 · Arya",titre:"Le deuxième nom",desc:"Harrenhal se vide : Tywin Lannister s'apprête à partir au combat. Quand Weese la maltraite une fois de trop, Arya donne son deuxième nom à Jaqen. Elle regrette aussitôt de n'avoir pas murmuré celui de Tywin, qui aurait peut-être changé le cours de la guerre.",mots:"un seigneur qui part · un tyran de cuisine · un nom murmuré trop tôt",atmo:"linear-gradient(180deg,#100d0f 0%,#221a1e 55%,#3a2e33 100%)",part:"braises",maison:"stark",lieu:"harrenhal",themes:TH_SUD},
+  {chap:"Chapitre 18 · Catelyn",titre:"Les os de Ned",desc:"Catelyn atteint Vivesaigues, où son frère Edmure commande l'armée. Brienne, convaincue que leurs ennemis sont les mêmes, lui prête serment. Alors qu'ils discutent de défense, la dépouille de Ned arrive au château, et Catelyn s'effondre.",mots:"un frère aux armes · une chevalière fidèle · un retour de cendres",atmo:"linear-gradient(180deg,#171f2a 0%,#2c3a4e 50%,#4c6178 100%)",part:"neige",maison:"tully",lieu:"vivesaigues",themes:TH_TULLY},
+  {chap:"Chapitre 19 · Daenerys",titre:"Les Purs et les Immortels",desc:"Les nobles de Qarth ne s'intéressent qu'aux dragons de Daenerys. Xaro lui propose de renoncer à Westeros et de l'épouser — en réalité pour réclamer un dragon en gage d'amour. Une inconnue masquée, Quaithe, lui souffle un conseil énigmatique, et Daenerys se résout à rendre visite à Pyat Pree.",mots:"une cité avide · une proposition piégée · une énigme à l'est",atmo:"linear-gradient(180deg,#1a1410 0%,#3a2a14 50%,#7a5a24 100%)",part:"braises",maison:"targaryen",lieu:"qarth",themes:TH_TARG},
+  {chap:"Chapitre 20 · Tyrion",titre:"L'émeute",desc:"Myrcella quitte Port-Réal pour Dorne. Au retour du cortège, des affamés en colère s'en prennent au roi : on lui jette des immondices, Joffrey ordonne de charger la foule, et l'émeute embrase la ville. Le Limier sauve Sansa, et Tyrion compte les morts, dont le Grand Septon.",mots:"un départ solennel · un roi qui fait charger · une ville qui brûle",atmo:"linear-gradient(180deg,#160d0a 0%,#3a1a12 45%,#6e2e12 75%,#a8521f 100%)",part:"braises",maison:"lannister",lieu:"portreal",themes:TH_LANN},
+  {chap:"Chapitre 21 · Davos",titre:"L'ombre sous la roche",desc:"Au pied d'Accalmie, ser Cortnay Penrose refuse de rendre le château à Stannis et lui propose un combat singulier, que le roi décline. La nuit, Davos fait passer en barque Mélisandre sous le rocher, jusqu'à une caverne. Ce qu'elle y accomplit n'a rien d'humain.",mots:"un défi refusé · une barque dans la nuit · une naissance dans le noir",atmo:"linear-gradient(180deg,#170d0a 0%,#3d1c12 45%,#7a3b1a 75%,#c46a1f 100%)",part:"braises",maison:"baratheon",lieu:"accalmie",themes:TH_STANNIS},
+  {chap:"Chapitre 22 · Jon",titre:"Qhorin Mimain",desc:"Un cor annonce le retour de Qhorin Mimain, qui a tué un sauvageon en chemin. Il révèle à Mormont que Mance Rayder ne cherche pas à contourner le Mur, mais à le détruire, et rassemble ses forces aux Frostfangs. Mormont envoie trois groupes en reconnaissance ; Qhorin choisit Jon pour le sien.",mots:"un cor dans la nuit · un ennemi qui veut le Mur · un choix risqué",atmo:"linear-gradient(180deg,#0a0f16 0%,#14202e 55%,#233648 100%)",part:"neige",maison:"garde",lieu:"poing",themes:TH_GARDE},
+  {chap:"Chapitre 23 · Tyrion",titre:"L'araignée et le nain",desc:"Tyrion apprend que Cersei veut éloigner le prince Tommen de Port-Réal, et s'arrange avec Bronn pour le protéger. Chez Shae, il reçoit une nouvelle : ser Cortnay Penrose est mort, et Stannis se prépare à marcher. Varys lui confie alors comment il est devenu eunuque, et Tyrion comprend qu'il est peut-être la seule défense de la ville.",mots:"un prince à protéger · un siège qui approche · un eunuque qui se confie",atmo:"linear-gradient(180deg,#1c1610 0%,#332618 50%,#584023 100%)",part:"braises",maison:"lannister",lieu:"portreal",themes:TH_LANN}
+];
+
 const BLASONS = {
   stark:`<svg viewBox="0 0 34 34" aria-label="Maison Stark"><circle cx="17" cy="17" r="15.5" fill="#3d454f" stroke="#8a97a8" stroke-width="1.4"/><path d="M10 8 L14 14 L8 15 Z" fill="#e8ecf1"/><path d="M24 8 L20 14 L26 15 Z" fill="#e8ecf1"/><path d="M9.5 14.5 L24.5 14.5 L21 24 L17 28 L13 24 Z" fill="#e8ecf1"/><circle cx="13.8" cy="18" r="1.2" fill="#3d454f"/><circle cx="20.2" cy="18" r="1.2" fill="#3d454f"/><path d="M15.6 22.6 L18.4 22.6 L17 25 Z" fill="#3d454f"/></svg>`,
   targaryen:`<svg viewBox="0 0 34 34" aria-label="Maison Targaryen"><circle cx="17" cy="17" r="15.5" fill="#16090b" stroke="#a32c2c" stroke-width="1.4"/><path d="M17 27 C17 20 17 15 17 9" stroke="#a32c2c" stroke-width="2.3" fill="none" stroke-linecap="round"/><path d="M17 26 C15 20 10 19 9 12" stroke="#a32c2c" stroke-width="2.3" fill="none" stroke-linecap="round"/><path d="M17 26 C19 20 24 19 25 12" stroke="#a32c2c" stroke-width="2.3" fill="none" stroke-linecap="round"/><circle cx="17" cy="8" r="2" fill="#a32c2c"/><circle cx="8.6" cy="11" r="2" fill="#a32c2c"/><circle cx="25.4" cy="11" r="2" fill="#a32c2c"/></svg>`,
@@ -1042,13 +1077,13 @@ const BLASONS = {
 };
 
 /* ===== État & sauvegarde ===== */
-const CLES = {1:'asoiaf-tome1', 2:'asoiaf-tome2', 3:'asoiaf-tome3'};
-const DOSSIERS = {1:"le trone de fer 1", 2:"le trone de fer 2", 3:"le trone de fer 3"};
+const CLES = {1:'asoiaf-tome1', 2:'asoiaf-tome2', 3:'asoiaf-tome3', 4:'asoiaf-tome4'};
+const DOSSIERS = {1:"le trone de fer 1", 2:"le trone de fer 2", 3:"le trone de fer 3", 4:"le trone de fer 4"};
 
 let tomeActif = 1;
 try{ const dernier = localStorage.getItem('asoiaf-tome-actif'); if(dernier) tomeActif = Number(dernier); }catch(e){}
 
-function scenesDuTome(n){ return n===3 ? CHAPITRES_T3 : (n===2 ? CHAPITRES_T2 : CHAPITRES_T1); }
+function scenesDuTome(n){ return n===4 ? CHAPITRES_T4 : (n===3 ? CHAPITRES_T3 : (n===2 ? CHAPITRES_T2 : CHAPITRES_T1)); }
 let SCENES = scenesDuTome(tomeActif);
 let CLE = CLES[tomeActif];
 let DOSSIER = DOSSIERS[tomeActif];
@@ -1342,7 +1377,21 @@ const PERSONNAGES = [
   {nom:"Ser Brynden « Poisson-Noir » Tully", slug:"brynden-tully", maison:"tully", ch:8, desc:"Oncle de Catelyn, vieux guerrier aussi rusé que loyal. Son surnom dit tout de son caractère.", tome:3},
   {nom:"Lady Donella Hornwood", slug:"donella-hornwood", maison:"hornwood", ch:17, desc:"Veuve nordienne dont le mari et le fils sont morts à la guerre. Ses terres attirent soudain beaucoup de prétendants.", tome:3},
   {nom:"Jojen Reed", slug:"jojen-reed", maison:"reed", ch:22, desc:"Jeune garçon des marais du Neck, sujet à des rêves verts qui se réalisent toujours. Vient renouveler le serment de sa maison.", tome:3},
-  {nom:"Meera Reed", slug:"meera-reed", maison:"reed", ch:22, desc:"Sœur de Jojen, chasseuse au filet et au trident. Aussi vive à l'extérieur que son frère l'est en rêve.", tome:3}
+  {nom:"Meera Reed", slug:"meera-reed", maison:"reed", ch:22, desc:"Sœur de Jojen, chasseuse au filet et au trident. Aussi vive à l'extérieur que son frère l'est en rêve.", tome:3},
+  {nom:"Brienne de Torth", slug:"brienne-de-torth", maison:"autre", ch:1, desc:"Chevalière hors norme, aussi grande et robuste que bien des hommes. Défait Loras Tyrell en joute et entre au service de Renly.", tome:4},
+  {nom:"Craster", slug:"craster", maison:"autre", ch:2, desc:"Sauvageon qui vit au-delà du Mur, entouré de ses filles-épouses. Reçoit la Garde de Nuit sans jamais lui témoigner la moindre gratitude.", tome:4},
+  {nom:"Gilly", slug:"gilly", maison:"autre", ch:2, desc:"Fille et épouse de Craster, enceinte. Supplie Jon d'épargner à son enfant le sort que son père réserve aux garçons.", tome:4},
+  {nom:"Victarion Greyjoy", slug:"victarion-greyjoy", maison:"greyjoy", ch:3, desc:"Frère de Balon et capitaine de la flotte de fer. Commande les navires qui doivent attaquer la grande route du Nord.", tome:4},
+  {nom:"Ser Cleos Frey", slug:"cleos-frey", maison:"frey", ch:4, desc:"Cousin de Jaime et de Tyrion par alliance. Chargé de porter à Robb les conditions de paix de Port-Réal.", tome:4},
+  {nom:"Pyat Pree", slug:"pyat-pree", maison:"autre", ch:6, desc:"Mage de Qarth, accueille Daenerys avec de grandes politesses. Sa sorcellerie inspire autant de crainte que d'admiration.", tome:4},
+  {nom:"Xaro Xhoan Daxos", slug:"xaro-xhoan-daxos", maison:"autre", ch:6, desc:"Riche marchand de Qarth, hôte généreux de Daenerys. Sa générosité cache des intentions moins nobles.", tome:4},
+  {nom:"Lancel Lannister", slug:"lancel-lannister", maison:"lannister", ch:8, desc:"Cousin de Cersei et écuyer de feu Robert. Sert la reine sans avoir conscience de tout ce que Tyrion sait de lui.", tome:4},
+  {nom:"Shae", slug:"shae", maison:"autre", ch:8, desc:"Fille de joie qui partage les nuits de Tyrion. Sait garder un secret, mais pas toujours ses ambitions.", tome:4},
+  {nom:"Ser Rodrik Cassel", slug:"rodrik-cassel", maison:"stark", ch:14, desc:"Maître d'armes de Winterfell, fidèle serviteur des Stark. Garde le château en l'absence de Robb.", tome:4},
+  {nom:"Qhorin Mimain", slug:"qhorin-mimain", maison:"garde", ch:13, desc:"Grand patrouilleur de la Garde de Nuit, amputé de plusieurs doigts. Ses rangers sont réputés les plus redoutables du Mur.", tome:4},
+  {nom:"Edmure Tully", slug:"edmure-tully", maison:"tully", ch:18, desc:"Frère de Catelyn et Lysa, héritier de Vivesaigues. Tient le château en l'absence de son père, parfois avec trop d'assurance.", tome:4},
+  {nom:"Ser Cortnay Penrose", slug:"cortnay-penrose", maison:"autre", ch:21, desc:"Castelan d'Accalmie, fidèle à la mémoire de Robert. Refuse de rendre le château, quelles que soient les menaces.", tome:4},
+  {nom:"Quaithe", slug:"quaithe", maison:"autre", ch:19, desc:"Femme masquée de Qarth aux avis énigmatiques. Parle à Daenerys par sentences, jamais directement.", tome:4}
 ];
 
 const BLASON_AUTRE = `<svg class="miniB" viewBox="0 0 34 34"><circle cx="17" cy="17" r="15.5" fill="#242b36" stroke="#4a5460" stroke-width="1.4"/><path d="M17 8 L17 25 M12 13 L22 13" stroke="#93a0b2" stroke-width="2" stroke-linecap="round"/></svg>`;
@@ -2437,7 +2486,11 @@ const LEXIQUE = [
   {t:"R'hllor, le Seigneur de Lumière", ch:1, d:"Dieu du feu vénéré en Essos, servi par des prêtres rouges comme Mélisandre. Prophétise le retour d'Azor Ahaï pour repousser les ténèbres.", tome:3},
   {t:"Illuminateur", ch:11, d:"Épée légendaire d'Azor Ahaï, forgée dans le feu et le sacrifice. Mélisandre affirme l'avoir fait renaître dans les mains de Stannis.", tome:3},
   {t:"Payer le prix du fer", ch:12, d:"Coutume des îles de Fer : on ne tient que ce qu'on a pris soi-même par la force. S'opposer au « prix d'or », jugé indigne d'un homme de fer.", tome:3},
-  {t:"Feu grégeois", ch:21, d:"Substance incendiaire verte et instable, produite par la Guilde des Alchimistes de Port-Réal. Brûle même sur l'eau, et ne s'éteint pas facilement.", tome:3}
+  {t:"Feu grégeois", ch:21, d:"Substance incendiaire verte et instable, produite par la Guilde des Alchimistes de Port-Réal. Brûle même sur l'eau, et ne s'éteint pas facilement.", tome:3},
+  {t:"Garde arc-en-ciel", ch:1, d:"Garde rapprochée de sept chevaliers choisis par Renly Baratheon, chacun portant une couleur de l'arc-en-ciel sur son manteau.", tome:4},
+  {t:"Vue verte", ch:7, d:"Don prophétique de certains rêveurs, qui voient en songe des événements à venir. Jojen Reed dit le posséder.", tome:4},
+  {t:"Verre de dragon", ch:13, d:"Obsidienne noire, formée dans le feu des volcans. Dans le Nord, on la dit capable de tuer ce que l'acier ne peut pas.", tome:4},
+  {t:"Maison des Immortels", ch:19, d:"Demeure légendaire de mages de Qarth, aussi crainte qu'admirée. Peu de visiteurs en reviennent.", tome:4}
 ];
 
 function majLexique(maxCh){
@@ -2464,8 +2517,8 @@ btnNuit.onclick = ()=>{
 appliquerNuit();
 
 /* ===== Tomes : sélecteur + bascule ===== */
-const NOMS_TOMES = {1:"Tome 1", 2:"Tome 2", 3:"Tome 3"};
-const SOUS_TITRES_TOMES = {1:"Tome 1 · d'après A Game of Thrones", 2:"Tome 2 · Le Donjon Rouge", 3:"Tome 3 · La Bataille des rois"};
+const NOMS_TOMES = {1:"Tome 1", 2:"Tome 2", 3:"Tome 3", 4:"Tome 4"};
+const SOUS_TITRES_TOMES = {1:"Tome 1 · d'après A Game of Thrones", 2:"Tome 2 · Le Donjon Rouge", 3:"Tome 3 · La Bataille des rois", 4:"Tome 4 · L'Ombre maléfique"};
 
 function majSelecteurTome(){
   document.querySelectorAll('.selecteurTome button').forEach(b=>{
