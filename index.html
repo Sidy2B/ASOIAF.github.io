@@ -7,6 +7,12 @@
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#07090d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Trône de Fer">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -71,15 +77,96 @@
   }
   .selecteurTome button.actif{background:var(--neige);color:var(--pilltxt)}
   .selecteurTome button:focus-visible{outline:2px solid var(--bougie);outline-offset:2px}
-  #btnPleinEcran,#btnNuit,#btnMusique{
+  #btnPleinEcran,#btnNuit,#btnMusique,#btnRecherche{
     width:34px;height:34px;border-radius:50%;flex:none;
     border:1px solid var(--bord);
     background:rgba(0,0,0,.2);color:var(--acier);
     font-size:.92rem;cursor:pointer;transition:all .25s;
   }
-  #btnPleinEcran.actif,#btnNuit.actif,#btnMusique.actif{border-color:var(--bougie);color:var(--bougie)}
+  #btnPleinEcran.actif,#btnNuit.actif,#btnMusique.actif,#btnRecherche.actif{border-color:var(--bougie);color:var(--bougie)}
   #btnMusique.joue{border-color:var(--braise);color:var(--braiseTxt)}
-  #btnPleinEcran:focus-visible,#btnNuit:focus-visible,#btnMusique:focus-visible{outline:2px solid var(--bougie);outline-offset:2px}
+  #btnPleinEcran:focus-visible,#btnNuit:focus-visible,#btnMusique:focus-visible,#btnRecherche:focus-visible{outline:2px solid var(--bougie);outline-offset:2px}
+
+  /* ===== Recherche ===== */
+  #btnRecherche{font-size:1.1rem;line-height:1}
+  .panneauRecherche{
+    display:none;position:fixed;z-index:60;width:min(380px,calc(100vw - 24px));
+    background:linear-gradient(180deg,#161b24,#0b0e13);border:1px solid var(--bord);border-radius:16px;
+    box-shadow:0 18px 40px rgba(0,0,0,.55);padding:12px;
+  }
+  .panneauRecherche.ouvert{display:block;animation:fadeIn .18s ease}
+  #champRecherche{
+    width:100%;padding:10px 14px;border-radius:999px;border:1px solid var(--bord);
+    background:rgba(255,255,255,.05);color:var(--neige);font-family:'Instrument Sans',sans-serif;font-size:.92rem;
+  }
+  #champRecherche:focus-visible{outline:2px solid var(--bougie);outline-offset:1px}
+  #resultatsRecherche{max-height:min(60vh,460px);overflow-y:auto;margin-top:8px}
+  .rechGroupe{font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--bougie);font-weight:600;margin:10px 4px 4px}
+  .rechItem{display:block;width:100%;text-align:left;padding:7px 10px;border-radius:10px;border:none;background:none;color:var(--neige);
+    font-family:'Instrument Sans',sans-serif;font-size:.88rem;cursor:pointer}
+  .rechItem:hover,.rechItem:focus-visible{background:rgba(255,255,255,.07);outline:none}
+  .rechItem small{display:block;color:var(--acier);font-size:.76rem;margin-top:1px}
+  .rechVide{color:var(--acier);font-size:.84rem;padding:8px 6px}
+
+  /* ===== Fiche personnage ===== */
+  .fiche{display:none;position:fixed;inset:0;z-index:70;background:rgba(3,5,9,.78);backdrop-filter:blur(6px);
+    align-items:center;justify-content:center;padding:16px}
+  .fiche.ouverte{display:flex}
+  .ficheCarte{position:relative;width:min(540px,100%);max-height:88vh;overflow-y:auto;
+    background:linear-gradient(180deg,#161b24,#0b0e13);border:1px solid var(--bord);border-top:3px solid var(--ringP,var(--accent));
+    border-radius:20px;padding:20px;box-shadow:0 24px 60px rgba(0,0,0,.6);animation:fadeIn .2s ease}
+  .ficheFermer{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;cursor:pointer;
+    border:1px solid var(--bord);background:rgba(255,255,255,.05);color:var(--acier)}
+  .ficheFermer:hover{color:var(--bougie);border-color:var(--bougie)}
+  .ficheEntete{display:flex;gap:16px;align-items:center;margin-bottom:14px;padding-right:36px}
+  .fichePortrait .portrait{width:84px;height:84px;border-radius:16px}
+  .fichePortrait .portrait.blasonRepli{border-radius:50%}
+  .ficheNom{font-family:'Unbounded',sans-serif;font-size:1.15rem;font-weight:500;color:var(--neige)}
+  .ficheSous{font-size:.82rem;color:var(--ringP,var(--acier));margin-top:3px;font-weight:600}
+  .ficheDesc{font-size:.92rem;line-height:1.55;color:#c8d2e0;margin-bottom:12px}
+  .ficheLabel{font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--bougie);font-weight:600;margin:14px 0 6px}
+  .ficheInfo{font-size:.84rem;color:var(--acier)}
+  .ficheChips{display:flex;flex-wrap:wrap;gap:6px}
+  .ficheChips button{font-family:'Instrument Sans',sans-serif;font-size:.78rem;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--bord);background:rgba(255,255,255,.05);color:var(--neige);text-align:left}
+  .ficheChips button:hover{border-color:var(--bougie);color:var(--bougie)}
+  #persoListe .perso,#creaListe .perso{cursor:pointer;border-radius:10px;transition:background .2s}
+  #persoListe .perso:hover,#creaListe .perso:hover{background:rgba(255,255,255,.04)}
+  .arbreSvg .noeudArbre.cliquable{cursor:pointer}
+  .arbreSvg .ageArbre{fill:var(--acier);font-size:9.5px}
+
+  /* ===== Récap sur l'écran d'accueil ===== */
+  .accueilRecap{max-width:560px;width:100%;text-align:left;max-height:38vh;overflow-y:auto;margin:-4px 0 8px}
+  .accueilRecap:empty{display:none}
+  .recapTitre{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--bougie);font-weight:600;margin-bottom:8px;text-align:center}
+  .recapChap{background:rgba(255,255,255,.04);border:1px solid var(--bord);border-radius:14px;padding:12px 14px;margin-bottom:8px}
+  .recapChap b{font-size:.86rem;color:var(--neige)}
+  .recapChap p{font-size:.86rem;line-height:1.5;color:var(--acier);margin-top:4px}
+
+  /* ===== Quiz ===== */
+  .btnPetit{font-family:'Instrument Sans',sans-serif;font-size:.72rem;letter-spacing:.04em;text-transform:none;font-weight:600;
+    padding:6px 12px;border-radius:999px;cursor:pointer;border:1px solid var(--bord);background:rgba(255,255,255,.05);color:var(--neige)}
+  .btnPetit:hover{border-color:var(--bougie);color:var(--bougie)}
+  .quizQ{padding:10px 0;border-bottom:1px solid var(--bord)}
+  .quizQ:last-of-type{border-bottom:none}
+  .quizQ p{font-size:.9rem;color:var(--neige);margin-bottom:8px;line-height:1.45}
+  .quizOpts{display:grid;gap:6px}
+  .quizOpts button{text-align:left;font-family:'Instrument Sans',sans-serif;font-size:.84rem;padding:8px 12px;border-radius:10px;cursor:pointer;
+    border:1px solid var(--bord);background:rgba(255,255,255,.04);color:var(--neige)}
+  .quizOpts button:hover:not(:disabled){border-color:var(--bougie)}
+  .quizOpts button:disabled{cursor:default}
+  .quizOpts button.bonne{border-color:#6fbf73;background:rgba(111,191,115,.16)}
+  .quizOpts button.mauvaise{border-color:var(--sang);background:rgba(158,27,27,.2)}
+  .quizInfo{font-size:.76rem;color:var(--acier);margin-top:6px}
+  .quizScore{font-family:'Unbounded',sans-serif;font-size:.9rem;color:var(--bougie);margin-top:12px}
+
+  /* ===== Statistiques ===== */
+  .statsGrille{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .statTuile{background:rgba(255,255,255,.04);border:1px solid var(--bord);border-radius:14px;padding:12px}
+  .statVal{font-family:'Unbounded',sans-serif;font-size:1.15rem;color:var(--neige)}
+  .statLab{font-size:.72rem;color:var(--acier);margin-top:3px;line-height:1.35}
+  .statBarre{height:5px;border-radius:999px;background:rgba(255,255,255,.1);margin-top:8px;overflow:hidden}
+  .statBarre i{display:block;height:100%;background:var(--accent)}
 
   /* ===== Chrono synchronisé avec Audible ===== */
   .syncBar{
@@ -694,6 +781,7 @@
           <div class="entete-icones">
             <button id="btnPleinEcran" aria-label="Passer en plein écran" title="Plein écran">⛶</button>
             <button id="btnNuit" aria-label="Activer le mode nuit" title="Mode nuit d'écoute">☾</button>
+            <button type="button" id="btnRecherche" aria-haspopup="true" aria-expanded="false" aria-label="Rechercher un personnage, un lieu, un mot" title="Rechercher (touche F)">⌕</button>
             <div class="musiqueEntete">
               <button type="button" id="btnMusique" aria-haspopup="true" aria-expanded="false" aria-label="Musique d'ambiance" title="Musique d'ambiance">♫</button>
               <div class="panneauMusique" id="wMusique">
@@ -824,6 +912,9 @@
             <g class="noeudArbre" data-tome="3" data-ch="12" data-maison="greyjoy" data-slug="balon-greyjoy" style="--coulA:#d6b55c"><circle class="fondArbre" cx="200" cy="70" r="24"/><circle class="anneauArbre" cx="200" cy="70" r="24"/><text class="nomArbre" x="200" y="108">Balon Greyjoy</text></g>
             <g class="noeudArbre" data-ch="2" data-maison="greyjoy" data-slug="theon-greyjoy" style="--coulA:#d6b55c"><circle class="fondArbre" cx="100" cy="190" r="24"/><circle class="anneauArbre" cx="100" cy="190" r="24"/><text class="nomArbre" x="100" y="228">Theon</text><text class="lienArbre" x="100" y="239" text-anchor="middle" onclick="choisirArbreGroupe('stark')">↗ pupille des Stark</text></g>
             <g class="noeudArbre" data-tome="3" data-ch="12" data-maison="greyjoy" data-slug="asha-greyjoy" style="--coulA:#d6b55c"><circle class="fondArbre" cx="300" cy="190" r="24"/><circle class="anneauArbre" cx="300" cy="190" r="24"/><text class="nomArbre" x="300" y="228">Asha</text></g>
+            <line class="parente" x1="224" y1="70" x2="316" y2="70" data-tome="4" data-ch="3"/>
+            <text class="mini" x="270" y="55" text-anchor="middle" data-tome="4" data-ch="3">frères</text>
+            <g class="noeudArbre" data-tome="4" data-ch="3" data-maison="greyjoy" data-slug="victarion-greyjoy" style="--coulA:#d6b55c"><circle class="fondArbre" cx="340" cy="70" r="24"/><circle class="anneauArbre" cx="340" cy="70" r="24"/><text class="nomArbre" x="340" y="108">Victarion</text></g>
             <g class="noeudArbre" data-ch="2" data-maison="greyjoy" data-slug="roi-gris" style="--coulA:#d6b55c"><circle class="fondArbre" cx="200" cy="290" r="22"/><circle class="anneauArbre legendaire" cx="200" cy="290" r="22"/><text class="nomArbre" x="200" y="326">Le Roi Gris</text><text class="mini" x="200" y="340" text-anchor="middle">légende fondatrice des Îles de Fer</text></g>
           </svg>
           <svg class="arbreSvg" data-groupe="tully" viewBox="0 0 500 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre de la maison Tully">
@@ -831,6 +922,8 @@
             <line class="parente" x1="244" y1="70" x2="396" y2="70" data-tome="3" data-ch="8"/>
             <text class="mini" x="320" y="55" text-anchor="middle" data-tome="3" data-ch="8">frères</text>
             <path class="parente" d="M220 94 V130 H140 M220 130 H300 M140 130 V166 M300 130 V166" data-ch="3"/>
+            <path class="parente" d="M300 130 H440 V166" data-tome="4" data-ch="18"/>
+            <g class="noeudArbre" data-tome="4" data-ch="18" data-maison="tully" data-slug="edmure-tully" style="--coulA:#ef6a6a"><circle class="fondArbre" cx="440" cy="190" r="24"/><circle class="anneauArbre" cx="440" cy="190" r="24"/><text class="nomArbre" x="440" y="228">Edmure</text></g>
             <g class="noeudArbre" data-ch="3" data-maison="tully" data-slug="hoster-tully" style="--coulA:#ef6a6a"><circle class="fondArbre" cx="220" cy="70" r="24"/><circle class="anneauArbre" cx="220" cy="70" r="24"/><text class="nomArbre" x="220" y="108">Hoster Tully</text></g>
             <g class="noeudArbre" data-tome="3" data-ch="8" data-maison="tully" data-slug="brynden-tully" style="--coulA:#ef6a6a"><circle class="fondArbre" cx="420" cy="70" r="24"/><circle class="anneauArbre" cx="420" cy="70" r="24"/><text class="nomArbre" x="420" y="108">Brynden Tully</text></g>
             <g class="noeudArbre" data-ch="3" data-maison="tully" data-slug="catelyn-stark" style="--coulA:#ef6a6a"><circle class="fondArbre" cx="140" cy="190" r="24"/><circle class="anneauArbre" cx="140" cy="190" r="24"/><text class="nomArbre" x="140" y="228">Catelyn</text><text class="lienArbre" x="140" y="239" text-anchor="middle" onclick="choisirArbreGroupe('stark')">↗ épouse d'Eddard Stark</text></g>
@@ -878,6 +971,9 @@
             <g class="noeudArbre" data-ch="5" data-maison="lannister" data-slug="cersei-lannister" style="--coulA:#ecbf58"><circle class="fondArbre" cx="100" cy="190" r="24"/><circle class="anneauArbre" cx="100" cy="190" r="24"/><text class="nomArbre" x="100" y="228">Cersei</text><text class="lienArbre" x="100" y="239" text-anchor="middle" onclick="choisirArbreGroupe('baratheon')">↗ épouse de Robert Baratheon</text></g>
             <g class="noeudArbre" data-ch="5" data-maison="lannister" data-slug="jaime-lannister" style="--coulA:#ecbf58"><circle class="fondArbre" cx="300" cy="190" r="24"/><circle class="anneauArbre" cx="300" cy="190" r="24"/><text class="nomArbre" x="300" y="228">Jaime</text></g>
             <g class="noeudArbre" data-ch="6" data-maison="lannister" data-slug="tyrion-lannister" style="--coulA:#ecbf58"><circle class="fondArbre" cx="500" cy="190" r="24"/><circle class="anneauArbre" cx="500" cy="190" r="24"/><text class="nomArbre" x="500" y="228">Tyrion</text></g>
+            <line class="parente" x1="324" y1="70" x2="446" y2="70" data-tome="4" data-ch="8"/>
+            <text class="mini" x="385" y="55" text-anchor="middle" data-tome="4" data-ch="8">neveu (fils de Kevan)</text>
+            <g class="noeudArbre" data-tome="4" data-ch="8" data-maison="lannister" data-slug="lancel-lannister" style="--coulA:#ecbf58"><circle class="fondArbre" cx="470" cy="70" r="24"/><circle class="anneauArbre" cx="470" cy="70" r="24"/><text class="nomArbre" x="470" y="108">Lancel</text></g>
             <g class="noeudArbre" data-ch="6" data-maison="lannister" data-slug="lann-le-ruse" style="--coulA:#ecbf58"><circle class="fondArbre" cx="290" cy="290" r="22"/><circle class="anneauArbre legendaire" cx="290" cy="290" r="22"/><text class="nomArbre" x="290" y="326">Lann le Rusé</text><text class="mini" x="290" y="340" text-anchor="middle">légende fondatrice, conquit Castral Roc par la ruse</text></g>
           </svg>
         </div>
@@ -906,11 +1002,41 @@
         </div>
       </section>
     </div>
+
+    <div class="pairRow">
+      <section class="widget" id="wQuiz">
+        <div class="widget-titre">Révision <button type="button" id="btnQuiz" class="btnPetit">Nouveau quiz</button></div>
+        <div class="widget-corps"><div id="quizZone"><p class="vide">5 questions tirées des chapitres que tu as déjà écoutés — rien sur la suite.</p></div></div>
+      </section>
+
+      <section class="widget" id="wStats">
+        <div class="widget-titre">Statistiques d'écoute</div>
+        <div class="widget-corps"><div id="statsZone"></div></div>
+      </section>
+    </div>
   </div>
   <footer class="piedPage">
     <span>Le Trône de Fer · Guide d'écoute — d'après George R. R. Martin</span>
-    <span>← → pour changer de chapitre</span>
+    <span>Raccourcis : ← → chapitre · Espace chrono · M musique · F recherche · N mode nuit · Échap fermer</span>
   </footer>
+</div>
+
+<!-- ===== Panneau de recherche ===== -->
+<div class="panneauRecherche" id="panneauRecherche" role="dialog" aria-label="Recherche">
+  <input type="search" id="champRecherche" placeholder="Personnage, lieu, mot du lexique, chapitre…" autocomplete="off">
+  <div id="resultatsRecherche"></div>
+</div>
+
+<!-- ===== Fiche personnage ===== -->
+<div id="fichePerso" class="fiche" role="dialog" aria-modal="true" aria-label="Fiche personnage">
+  <div class="ficheCarte">
+    <button type="button" class="ficheFermer" aria-label="Fermer la fiche">✕</button>
+    <div class="ficheEntete">
+      <span class="fichePortrait" id="fichePortrait"></span>
+      <div><div class="ficheNom" id="ficheNom"></div><div class="ficheSous" id="ficheSous"></div></div>
+    </div>
+    <div id="ficheContenu"></div>
+  </div>
 </div>
 
 <!-- ===== Écran d'accueil ===== -->
@@ -918,6 +1044,7 @@
   <div class="eyebrow">Guide d'écoute</div>
   <h2>Le Trône de Fer</h2>
   <div class="tome" id="accueilSousTitre">Tome 1 · d'après A Game of Thrones</div>
+  <div class="accueilRecap" id="accueilRecap"></div>
   <button id="btnReprendre">Commencer la lecture</button>
   <button id="btnRecommencer">Recommencer le tome (efface la progression)</button>
 </div>
@@ -1426,7 +1553,7 @@ const PERSONNAGES = [
   {nom:"Lady Donella Hornwood", slug:"donella-hornwood", maison:"hornwood", ch:17, desc:"Veuve nordienne dont le mari et le fils sont morts à la guerre. Ses terres attirent soudain beaucoup de prétendants.", tome:3},
   {nom:"Jojen Reed", slug:"jojen-reed", maison:"reed", ch:22, desc:"Jeune garçon des marais du Neck, sujet à des rêves verts qui se réalisent toujours. Vient renouveler le serment de sa maison.", tome:3},
   {nom:"Meera Reed", slug:"meera-reed", maison:"reed", ch:22, desc:"Sœur de Jojen, chasseuse au filet et au trident. Aussi vive à l'extérieur que son frère l'est en rêve.", tome:3},
-  {nom:"Brienne de Torth", slug:"brienne-de-torth", maison:"autre", ch:1, desc:"Chevalière hors norme, aussi grande et robuste que bien des hommes. Défait Loras Tyrell en joute et entre au service de Renly.", tome:4},
+  {nom:"Brienne de Torth", slug:"brienne-de-torth", maison:"torth", ch:1, desc:"Chevalière hors norme, aussi grande et robuste que bien des hommes. Défait Loras Tyrell en joute et entre au service de Renly.", tome:4},
   {nom:"Craster", slug:"craster", maison:"autre", ch:2, desc:"Sauvageon qui vit au-delà du Mur, entouré de ses filles-épouses. Reçoit la Garde de Nuit sans jamais lui témoigner la moindre gratitude.", tome:4},
   {nom:"Gilly", slug:"gilly", maison:"autre", ch:2, desc:"Fille et épouse de Craster, enceinte. Supplie Jon d'épargner à son enfant le sort que son père réserve aux garçons.", tome:4},
   {nom:"Victarion Greyjoy", slug:"victarion-greyjoy", maison:"greyjoy", ch:3, desc:"Frère de Balon et capitaine de la flotte de fer. Commande les navires qui doivent attaquer la grande route du Nord.", tome:4},
@@ -1438,7 +1565,7 @@ const PERSONNAGES = [
   {nom:"Ser Rodrik Cassel", slug:"rodrik-cassel", maison:"stark", ch:14, desc:"Maître d'armes de Winterfell, fidèle serviteur des Stark. Garde le château en l'absence de Robb.", tome:4},
   {nom:"Qhorin Mimain", slug:"qhorin-mimain", maison:"garde", ch:13, desc:"Grand patrouilleur de la Garde de Nuit, amputé de plusieurs doigts. Ses rangers sont réputés les plus redoutables du Mur.", tome:4},
   {nom:"Edmure Tully", slug:"edmure-tully", maison:"tully", ch:18, desc:"Frère de Catelyn et Lysa, héritier de Vivesaigues. Tient le château en l'absence de son père, parfois avec trop d'assurance.", tome:4},
-  {nom:"Ser Cortnay Penrose", slug:"cortnay-penrose", maison:"autre", ch:21, desc:"Castelan d'Accalmie, fidèle à la mémoire de Robert. Refuse de rendre le château, quelles que soient les menaces.", tome:4},
+  {nom:"Ser Cortnay Penrose", slug:"cortnay-penrose", maison:"penrose", ch:21, desc:"Castelan d'Accalmie, fidèle à la mémoire de Robert. Refuse de rendre le château, quelles que soient les menaces.", tome:4},
   {nom:"Quaithe", slug:"quaithe", maison:"autre", ch:19, desc:"Femme masquée de Qarth aux avis énigmatiques. Parle à Daenerys par sentences, jamais directement.", tome:4}
 ];
 
@@ -1453,7 +1580,7 @@ const BLASON_AUTRE = `<svg class="miniB" viewBox="0 0 34 34"><circle cx="17" cy=
 ===================================================== */
 const NAISSANCES = {
   "eddard-stark":[263], "robb-stark":[283], "jon-snow":[283], "bran-stark":[290], "rickon-stark":[295],
-  "theon-greyjoy":[278,true], "catelyn-stark":[264,true], "daenerys-targaryen":[284], "viserys-targaryen":[276],
+  "theon-greyjoy":[278,true], "catelyn-stark":[265,true], "daenerys-targaryen":[284], "viserys-targaryen":[276],
   "khal-drogo":[267,true], "robert-baratheon":[262], "cersei-lannister":[266], "jaime-lannister":[266],
   "joffrey-baratheon":[286], "sansa-stark":[286], "arya-stark":[289], "sandor-clegane":[270,true],
   "tyrion-lannister":[273], "benjen-stark":[267,true], "jorah-mormont":[254,true], "petyr-baelish":[268],
@@ -1463,7 +1590,8 @@ const NAISSANCES = {
   "stannis-baratheon":[264], "davos-seaworth":[260,true], "balon-greyjoy":[255,true], "asha-greyjoy":[275,true],
   "amory-lorch":[246,true], "dontos-hollard":[261,true], "brynden-tully":[243,true], "donella-hornwood":[257,true],
   "jojen-reed":[286], "meera-reed":[283], "brienne-de-torth":[280], "gilly":[282,true], "victarion-greyjoy":[257,true],
-  "lancel-lannister":[282], "shae":[280,true], "rodrik-cassel":[248,true], "edmure-tully":[270,true]
+  "lancel-lannister":[282], "shae":[280,true], "rodrik-cassel":[248,true], "edmure-tully":[270,true],
+  "tywin-lannister":[242], "robin-arryn":[292]
 };
 const AGE_DEBUT_T1 = {
   "eddard-stark":35, "robb-stark":14, "jon-snow":14, "sansa-stark":11, "arya-stark":9, "bran-stark":7,
@@ -1486,7 +1614,7 @@ function agePersonnage(slug){
   return `${n[1] ? '~' : ''}${annee - n[0]} ans`;
 }
 
-const MAISONS_FICHIERS = ["stark","targaryen","lannister","baratheon","arryn","tully","greyjoy","tyrell","frey","bolton","martell","garde","mormont","karstark","umber","manderly","bracken","blackwood","glover","cerwyn","hornwood","reed","royce","mallister","piper","darry","mooton","clegane","marbrand","tarly","redwyne","hightower","selmy","dayne"];
+const MAISONS_FICHIERS = ["stark","targaryen","lannister","baratheon","arryn","tully","greyjoy","tyrell","frey","bolton","martell","garde","mormont","karstark","umber","manderly","bracken","blackwood","glover","cerwyn","hornwood","reed","royce","mallister","piper","darry","mooton","clegane","marbrand","tarly","redwyne","hightower","selmy","dayne","torth","penrose"];
 
 /* Blasons de maison : si "martell.png" ne charge pas, on tente d'autres casses/extensions
    (martell.PNG, martell.jpg...) avant de retomber sur une icône générique — évite les faux
@@ -1806,13 +1934,22 @@ const TRAJETS = {
 
     {pts:[[68,69.2],[61,62]],   ch:2,  tome:3, c:"#9fb4c7"},
     {pts:[[61,62],[58,60]],     ch:10, tome:3, c:"#9fb4c7"},
-    {pts:[[47,57],[12,34]],     ch:12, tome:3, c:"#4a90a4"}
+    {pts:[[47,57],[12,34]],     ch:12, tome:3, c:"#4a90a4"},
+
+    {pts:[[47,57],[53,81]],     ch:1,  tome:4, c:"#e07a7a"},
+    {pts:[[53,81],[74,82]],     ch:10, tome:4, c:"#e07a7a"},
+    {pts:[[74,82],[47,57]],     ch:18, tome:4, c:"#e07a7a"},
+    {pts:[[58.5,9],[56,4.4]],   ch:2,  tome:4, c:"#7fb3ff"},
+    {pts:[[56,4.4],[60.5,2.6]], ch:13, tome:4, c:"#7fb3ff"},
+    {pts:[[74,66],[74,82]],     ch:21, tome:4, c:"#e8b04a"}
   ],
   essos: [
     {pts:[[10.5,47],[33,50]],   ch:13, tome:1, c:"#c0392b"},
     {pts:[[33,50],[55.5,58.5]], ch:24, tome:1, c:"#c0392b"},
 
-    {pts:[[55.5,58.5],[68,50]], ch:13, tome:3, c:"#c0392b"}
+    {pts:[[55.5,58.5],[68,50]], ch:13, tome:3, c:"#c0392b"},
+
+    {pts:[[68,50],[82,62]],     ch:6,  tome:4, c:"#c0392b"}
   ]
 };
 
@@ -1847,6 +1984,29 @@ function majProgressif(){
   dessinerTrajets(document.getElementById('trajets1'), l.carte, maxCh);
   dessinerTrajets(document.getElementById('trajets2'), l.carte, maxCh);
   if(typeof afficherMaisons === 'function') afficherMaisons();
+  majAgesArbre();
+}
+
+/* Âge sous le nom de chaque membre de l'arbre (selon le tome affiché) */
+function majAgesArbre(){
+  document.querySelectorAll('.arbreSvg .noeudArbre[data-slug]').forEach(g=>{
+    const nom = g.querySelector('.nomArbre');
+    if(!nom) return;
+    const age = agePersonnage(g.dataset.slug);
+    let t = g.querySelector('.ageArbre');
+    if(!t){
+      if(!age) return;
+      t = document.createElementNS('http://www.w3.org/2000/svg','text');
+      t.setAttribute('class','ageArbre');
+      t.setAttribute('x', nom.getAttribute('x'));
+      t.setAttribute('y', Number(nom.getAttribute('y')) + 11);
+      t.setAttribute('text-anchor','middle');
+      nom.after(t);
+      const lien = g.querySelector('.lienArbre');
+      if(lien) lien.setAttribute('y', Number(lien.getAttribute('y')) + 10);
+    }
+    t.textContent = age;
+  });
 }
 
 /* ===== Arbre généalogique : familles sélectionnables, débloquées au fil de la lecture ===== */
@@ -2376,6 +2536,8 @@ progression.addEventListener('change', ()=>{
 function hms(t){ const [h,m,s]=t.split(':').length===3 ? t.split(':').map(Number) : [0,...t.split(':').map(Number)]; return h*3600+m*60+s; }
 /* Durées des chapitres Audible, tome par tome (h:mm:ss ou mm:ss) */
 const DUREES_AUDIBLE = {
+  3:["1:21:04","18:46","35:48","43:12","27:41","26:59","33:55","37:37","37:13","22:57","49:53",
+     "1:00:39","45:21","19:05","42:35","38:28","46:01","46:15","26:41","43:15","41:05","27:46"].map(hms),
   4:["52:11","1:03:14","52:09","42:13","22:09","28:47","28:02","27:44","37:56","39:12","24:12","30:25",
      "28:16","20:21","24:13","23:38","24:12","44:59","32:27","41:43","53:16","23:58","41:59"].map(hms)
 };
@@ -2404,7 +2566,7 @@ function formatChrono(s){
   const h = Math.floor(s/3600), m = Math.floor((s%3600)/60), sec = s%60;
   return h ? `${h}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}` : `${m}:${String(sec).padStart(2,'0')}`;
 }
-function sauverSync(){ etat.syncIdx = idx; etat.syncPos = Math.floor(syncPos); sauver(); }
+function sauverSync(){ etat.syncIdx = idx; etat.syncPos = Math.floor(syncPos); sauver(); sauverStats(); }
 
 function majSyncUI(){
   const dur = dureeChapitre();
@@ -2432,14 +2594,18 @@ function syncSurRender(){
     sauverSync();
   }
   majSyncUI();
+  if(typeof majStats === 'function') majStats();
 }
 
 function tickSync(){
   const maintenant = performance.now();
-  syncPos += (maintenant - syncDernier) / 1000 * syncVitesse;
+  const ecoule = (maintenant - syncDernier) / 1000 * syncVitesse;
+  syncPos += ecoule;
   syncDernier = maintenant;
-  const dur = dureeChapitre();
-  if(dur && syncPos >= dur){
+  ajouterEcoute(ecoule);
+  let dur = dureeChapitre();
+  while(dur && syncPos >= dur){
+    stats.finis++;
     if(idx < SCENES.length - 1){
       const reste = syncPos - dur;
       revealed.add(idx + 1);
@@ -2448,12 +2614,14 @@ function tickSync(){
       syncPos = reste;
       idx++;
       render();
+      dur = dureeChapitre();
     }else{
       syncPos = dur;
       pauseSync();
+      break;
     }
   }
-  if(Math.floor(syncPos) % 5 === 0) sauverSync();
+  if(Math.floor(syncPos) % 5 === 0){ sauverSync(); majStats(); }
   majSyncUI();
 }
 function lancerSync(){
@@ -2503,6 +2671,319 @@ document.getElementById('btnAudible').onclick = ()=>{
     `popup,width=${largeur},height=${hauteur},left=0,top=0`);
 };
 addEventListener('beforeunload', ()=>{ if(syncCle) sauverSync(); });
+
+/* =====================================================
+   STATISTIQUES D'ÉCOUTE (tirées du chrono Audible)
+===================================================== */
+const CLE_STATS = 'asoiaf-stats';
+let stats = {secondes:{}, jours:[], finis:0};
+try{ const b = JSON.parse(localStorage.getItem(CLE_STATS)); if(b) stats = Object.assign(stats, b); }catch(e){}
+function sauverStats(){ try{ localStorage.setItem(CLE_STATS, JSON.stringify(stats)); }catch(e){} }
+function dateCle(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function ajouterEcoute(sec){
+  if(!(sec > 0) || sec > 3600) return;
+  stats.secondes[tomeActif] = (stats.secondes[tomeActif] || 0) + sec;
+  const j = dateCle(new Date());
+  if(!stats.jours.includes(j)) stats.jours.push(j);
+}
+function serieJours(){
+  const jours = new Set(stats.jours);
+  const d = new Date();
+  if(!jours.has(dateCle(d))) d.setDate(d.getDate() - 1);
+  let n = 0;
+  while(jours.has(dateCle(d))){ n++; d.setDate(d.getDate() - 1); }
+  return n;
+}
+function formatDuree(sec){
+  sec = Math.floor(sec || 0);
+  const h = Math.floor(sec/3600), m = Math.floor(sec%3600/60);
+  return h ? `${h} h ${String(m).padStart(2,'0')}` : `${m} min`;
+}
+function majStats(){
+  const zone = document.getElementById('statsZone');
+  if(!zone) return;
+  const tSec = stats.secondes[tomeActif] || 0;
+  const total = Object.values(stats.secondes).reduce((a,b)=>a+b, 0);
+  const durees = DUREES_AUDIBLE[tomeActif];
+  const dureeTome = durees ? durees.reduce((a,b)=>a+b, 0) : 0;
+  const avance = durees ? durees.slice(0, idx).reduce((a,b)=>a+b, 0) + syncPos : 0;
+  let rev = 0, tot = 0;
+  TOMES.forEach(t=>{
+    tot += scenesDuTome(t).length;
+    if(t === tomeActif){ rev += revealed.size; return; }
+    try{ const e = JSON.parse(localStorage.getItem(CLES[t])); if(e && e.revealed) rev += e.revealed.length; }catch(e){}
+  });
+  const pct = dureeTome ? Math.min(100, Math.round(avance / dureeTome * 100)) : Math.round((idx+1) / SCENES.length * 100);
+  const serie = serieJours();
+  zone.innerHTML = `<div class="statsGrille">
+    <div class="statTuile"><div class="statVal">${pct} %</div><div class="statLab">du tome ${tomeActif} parcouru${dureeTome ? ` · reste ${formatDuree(dureeTome - avance)}` : ''}</div><div class="statBarre"><i style="width:${pct}%"></i></div></div>
+    <div class="statTuile"><div class="statVal">${formatDuree(tSec)}</div><div class="statLab">écoutées sur ce tome (chrono)</div></div>
+    <div class="statTuile"><div class="statVal">${formatDuree(total)}</div><div class="statLab">écoutées au total, tous tomes</div></div>
+    <div class="statTuile"><div class="statVal">${rev} / ${tot}</div><div class="statLab">chapitres révélés, tous tomes</div></div>
+    <div class="statTuile"><div class="statVal">${stats.jours.length}</div><div class="statLab">jour${stats.jours.length > 1 ? 's' : ''} d'écoute · série en cours : ${serie} jour${serie > 1 ? 's' : ''}</div></div>
+    <div class="statTuile"><div class="statVal">${stats.finis}</div><div class="statLab">chapitre${stats.finis > 1 ? 's' : ''} terminé${stats.finis > 1 ? 's' : ''} avec le chrono</div></div>
+  </div>`;
+}
+
+/* =====================================================
+   OUTILS COMMUNS — uniquement ce qui a déjà été écouté
+===================================================== */
+const TOMES = Object.keys(CLES).map(Number);
+function maxChRevele(){ return revealed.size ? Math.max(...revealed) + 1 : 1; }
+function chapitresConnus(){
+  const liste = [], maxCh = maxChRevele();
+  TOMES.forEach(t=>{
+    if(t > tomeActif) return;
+    scenesDuTome(t).forEach((s,i)=>{ if(estRevele(t, i+1, maxCh)) liste.push({tome:t, i, s}); });
+  });
+  return liste;
+}
+function persoConnu(p){ const t = p.tome || 1; return t < tomeActif || (t === tomeActif && p.ch <= maxChRevele()); }
+function texteChapitre(s){ return `${s.chap||''} ${s.titre||''} ${s.desc||''} ${s.mots||''}`; }
+function mentionne(p, s){
+  const texte = texteChapitre(s);
+  return (PERSO_ALIAS[p.slug] || []).some(a=>new RegExp(`\\b${echapperRegex(a)}\\b`, 'i').test(texte));
+}
+function normaliser(t){ return (t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase(); }
+function nomMaison(id){ const m = MAISONS_INFO.find(x=>x.id===id); return m ? m.nom : ''; }
+function allerAuChapitre(tome, i){
+  fermerFiche(); fermerRecherche();
+  if(tome !== tomeActif) chargerTome(tome);
+  idx = i;
+  render();
+  const hero = document.getElementById('wScene');
+  if(hero && hero.scrollIntoView) hero.scrollIntoView({behavior:'smooth', block:'start'});
+}
+function placerSousBouton(btn, panneau){
+  const r = btn.getBoundingClientRect();
+  const bord = document.getElementById('wScene').getBoundingClientRect().right - 10;
+  const largeur = panneau.offsetWidth || 360;
+  const gauche = Math.max(12, Math.min(bord - largeur, innerWidth - largeur - 12));
+  panneau.style.left = gauche + 'px';
+  panneau.style.top = (r.bottom + 10) + 'px';
+}
+
+/* =====================================================
+   FICHE PERSONNAGE (clic sur un personnage, une créature
+   ou un membre de l'arbre)
+===================================================== */
+const fiche = document.getElementById('fichePerso');
+function creatureConnue(c){ const t = c.tome || 1; return t < tomeActif || (t === tomeActif && c.ch <= maxChRevele()); }
+function ouvrirFiche(slug){
+  const p = PERSONNAGES.find(x=>x.slug===slug);
+  const c = p ? null : CREATURES.find(x=>x.slug===slug);
+  const e = p || c;
+  if(!e || (p && !persoConnu(p)) || (c && !creatureConnue(c))) return;
+  fiche.dataset.slug = slug;
+  fiche.querySelector('.ficheCarte').style.setProperty('--ringP', ACCENT_PAR_MAISON[e.maison] || 'var(--accent)');
+  const age = p ? agePersonnage(slug) : '';
+  const maison = nomMaison(e.maison);
+  document.getElementById('ficheNom').textContent = e.nom;
+  document.getElementById('ficheSous').textContent = [maison, age].filter(Boolean).join(' · ') || (c ? LIBELLE_TYPE_CREATURE[c.type] : '');
+  const premier = scenesDuTome(e.tome || 1)[e.ch - 1];
+  let html = `<div class="ficheDesc">${e.desc}</div>
+    <div class="ficheLabel">Première apparition</div>
+    <div class="ficheChips"><button type="button" data-tome="${e.tome||1}" data-i="${e.ch-1}">Tome ${e.tome||1} · ch. ${e.ch}${premier ? ' — ' + premier.titre : ''}</button></div>`;
+  if(p){
+    const chapitres = chapitresConnus().filter(x=>mentionne(p, x.s));
+    html += `<div class="ficheLabel">Cité dans ${chapitres.length} chapitre${chapitres.length > 1 ? 's' : ''} écouté${chapitres.length > 1 ? 's' : ''}</div>`;
+    html += chapitres.length
+      ? `<div class="ficheChips">${chapitres.map(x=>`<button type="button" data-tome="${x.tome}" data-i="${x.i}">T${x.tome} · ch. ${x.i+1} — ${x.s.titre}</button>`).join('')}</div>`
+      : `<div class="ficheInfo">Pas encore cité nommément dans un résumé de chapitre.</div>`;
+    const proches = p.maison !== 'autre' ? PERSONNAGES.filter(x=>x.slug!==slug && x.maison===p.maison && persoConnu(x)) : [];
+    if(proches.length){
+      html += `<div class="ficheLabel">Même maison</div><div class="ficheChips">${proches.map(x=>`<button type="button" data-slug="${x.slug}">${x.nom}</button>`).join('')}</div>`;
+    }
+  }
+  document.getElementById('ficheContenu').innerHTML = html;
+  const slot = document.getElementById('fichePortrait');
+  slot.innerHTML = blasonReplifHTML(e.maison);
+  slot.querySelectorAll('img.blasonRepli').forEach(im=>attacherBlasonFallback(im, im.dataset.maison, BLASONS[im.dataset.maison] || BLASON_AUTRE));
+  (p ? chargerPortraitPerso(slug) : chargerPortraitCreature(slug)).then(src=>{
+    if(src && fiche.dataset.slug === slug) slot.innerHTML = `<img class="portrait" src="${src}" alt="Portrait de ${e.nom}">`;
+  });
+  fiche.classList.add('ouverte');
+}
+function fermerFiche(){ fiche.classList.remove('ouverte'); }
+fiche.addEventListener('click', ev=>{
+  if(ev.target === fiche || ev.target.closest('.ficheFermer')){ fermerFiche(); return; }
+  const lien = ev.target.closest('button[data-slug]');
+  if(lien){ ouvrirFiche(lien.dataset.slug); return; }
+  const chap = ev.target.closest('button[data-tome]');
+  if(chap) allerAuChapitre(Number(chap.dataset.tome), Number(chap.dataset.i));
+});
+['persoListe','creaListe'].forEach(id=>{
+  document.getElementById(id).addEventListener('click', ev=>{
+    const el = ev.target.closest('.perso');
+    if(el) ouvrirFiche(el.dataset.slug);
+  });
+});
+document.getElementById('wFamille').addEventListener('click', ev=>{
+  if(ev.target.closest('.lienArbre')) return;
+  const g = ev.target.closest('.noeudArbre[data-slug]');
+  if(g) ouvrirFiche(g.dataset.slug);
+});
+document.querySelectorAll('.arbreSvg .noeudArbre[data-slug]').forEach(g=>{
+  if(PERSONNAGES.some(p=>p.slug===g.dataset.slug)) g.classList.add('cliquable');
+});
+
+/* =====================================================
+   RECHERCHE RAPIDE (seulement ce qui a déjà été croisé)
+===================================================== */
+const btnRecherche = document.getElementById('btnRecherche');
+const panneauRecherche = document.getElementById('panneauRecherche');
+const champRecherche = document.getElementById('champRecherche');
+const resultatsRecherche = document.getElementById('resultatsRecherche');
+function ouvrirRecherche(){
+  fermerPanneauMusique();
+  panneauRecherche.classList.add('ouvert');
+  btnRecherche.classList.add('actif');
+  btnRecherche.setAttribute('aria-expanded','true');
+  placerSousBouton(btnRecherche, panneauRecherche);
+  majRecherche();
+  champRecherche.focus();
+  champRecherche.select();
+}
+function fermerRecherche(){
+  panneauRecherche.classList.remove('ouvert');
+  btnRecherche.classList.remove('actif');
+  btnRecherche.setAttribute('aria-expanded','false');
+}
+function majRecherche(){
+  const q = normaliser(champRecherche.value.trim());
+  if(q.length < 2){ resultatsRecherche.innerHTML = '<p class="rechVide">Tape au moins 2 lettres. Seuls les personnages, lieux et mots déjà croisés apparaissent.</p>'; return; }
+  const maxCh = maxChRevele();
+  const connus = chapitresConnus();
+  const groupes = [];
+  const persos = PERSONNAGES.filter(p=>persoConnu(p) && normaliser(p.nom).includes(q)).slice(0, 8);
+  if(persos.length) groupes.push(['Personnages', persos.map(p=>`<button type="button" class="rechItem" data-slug="${p.slug}">${p.nom}<small>${[nomMaison(p.maison), agePersonnage(p.slug)].filter(Boolean).join(' · ')}</small></button>`)]);
+  const creas = CREATURES.filter(c=>creatureConnue(c) && normaliser(c.nom).includes(q)).slice(0, 6);
+  if(creas.length) groupes.push(['Créatures', creas.map(c=>`<button type="button" class="rechItem" data-slug="${c.slug}">${c.nom}<small>${LIBELLE_TYPE_CREATURE[c.type] || ''}</small></button>`)]);
+  const lieux = [...new Set(connus.map(x=>x.s.lieu))].filter(k=>LIEUX[k] && normaliser(LIEUX[k].nom).includes(q));
+  lieux.forEach(k=>{
+    const chs = connus.filter(x=>x.s.lieu===k);
+    groupes.push(['Lieu · ' + LIEUX[k].nom, chs.slice(-8).map(x=>`<button type="button" class="rechItem" data-tome="${x.tome}" data-i="${x.i}">T${x.tome} · ch. ${x.i+1} — ${x.s.titre}</button>`)]);
+  });
+  const chaps = connus.filter(x=>normaliser(x.s.titre).includes(q)).slice(0, 8);
+  if(chaps.length) groupes.push(['Chapitres', chaps.map(x=>`<button type="button" class="rechItem" data-tome="${x.tome}" data-i="${x.i}">${x.s.titre}<small>Tome ${x.tome} · ${x.s.chap}</small></button>`)]);
+  const lex = LEXIQUE.filter(l=>((l.tome||1) < tomeActif || ((l.tome||1)===tomeActif && l.ch<=maxCh)) && normaliser(l.t).includes(q)).slice(0, 6);
+  if(lex.length) groupes.push(['Lexique', lex.map(l=>`<div class="rechItem" style="cursor:default">${l.t}<small>${l.d}</small></div>`)]);
+  resultatsRecherche.innerHTML = groupes.length
+    ? groupes.map(([titre, items])=>`<div class="rechGroupe">${titre}</div>${items.join('')}`).join('')
+    : '<p class="rechVide">Rien trouvé parmi ce que tu as déjà écouté.</p>';
+}
+champRecherche.addEventListener('input', majRecherche);
+btnRecherche.onclick = (e)=>{
+  e.stopPropagation();
+  panneauRecherche.classList.contains('ouvert') ? fermerRecherche() : ouvrirRecherche();
+};
+resultatsRecherche.addEventListener('click', ev=>{
+  const p = ev.target.closest('[data-slug]');
+  if(p){ fermerRecherche(); ouvrirFiche(p.dataset.slug); return; }
+  const c = ev.target.closest('[data-tome]');
+  if(c) allerAuChapitre(Number(c.dataset.tome), Number(c.dataset.i));
+});
+document.addEventListener('click', ev=>{
+  if(!panneauRecherche.classList.contains('ouvert')) return;
+  if(panneauRecherche.contains(ev.target) || btnRecherche.contains(ev.target)) return;
+  fermerRecherche();
+});
+addEventListener('resize', ()=>{ if(panneauRecherche.classList.contains('ouvert')) placerSousBouton(btnRecherche, panneauRecherche); });
+
+/* =====================================================
+   QUIZ DE RÉVISION (uniquement sur les chapitres écoutés)
+===================================================== */
+function melanger(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function auHasard(a){ return a.length ? a[Math.floor(Math.random()*a.length)] : null; }
+function optionsAvec(bonne, pool){
+  const autres = melanger([...new Set(pool.filter(x=>x && x!==bonne))]).slice(0, 3);
+  return autres.length >= 2 ? melanger([bonne, ...autres]) : null;
+}
+function povDe(s){ const v = (s.chap.split('·')[1] || '').trim(); return /prologue|épilogue/i.test(v) ? '' : v; }
+function genererQuiz(){
+  const connus = chapitresConnus();
+  const persos = PERSONNAGES.filter(p=>persoConnu(p) && MAISONS_INFO.some(m=>m.id===p.maison));
+  const fabriques = [
+    ()=>{ const x = auHasard(connus); if(!x || !LIEUX[x.s.lieu]) return null;
+      const bonne = LIEUX[x.s.lieu].nom;
+      const opts = optionsAvec(bonne, connus.map(y=>LIEUX[y.s.lieu] && LIEUX[y.s.lieu].nom));
+      return opts && {q:`Où se déroule le chapitre « ${x.s.titre} » ?`, opts, bonne, info:`Tome ${x.tome} · ${x.s.chap}`}; },
+    ()=>{ const x = auHasard(connus.filter(y=>povDe(y.s))); if(!x) return null;
+      const bonne = povDe(x.s);
+      const opts = optionsAvec(bonne, connus.map(y=>povDe(y.s)));
+      return opts && {q:`Qui raconte le chapitre « ${x.s.titre} » ?`, opts, bonne, info:`Tome ${x.tome} · ${x.s.chap}`}; },
+    ()=>{ const p = auHasard(persos); if(!p) return null;
+      const bonne = nomMaison(p.maison);
+      const opts = optionsAvec(bonne, persos.map(y=>nomMaison(y.maison)));
+      return opts && {q:`À quelle maison appartient ${p.nom} ?`, opts, bonne, info:p.desc}; },
+    ()=>{ const x = auHasard(connus); if(!x) return null;
+      const bonne = x.s.titre;
+      const opts = optionsAvec(bonne, connus.map(y=>y.s.titre));
+      return opts && {q:`Quel chapitre évoque : ${x.s.mots} ?`, opts, bonne, info:`Tome ${x.tome} · ${x.s.chap}`}; }
+  ];
+  const questions = [], vues = new Set();
+  for(let essai = 0; essai < 60 && questions.length < 5; essai++){
+    const q = fabriques[essai % fabriques.length]();
+    if(q && !vues.has(q.q)){ vues.add(q.q); questions.push(q); }
+  }
+  return melanger(questions);
+}
+function lancerQuiz(){
+  const zone = document.getElementById('quizZone');
+  const questions = genererQuiz();
+  if(questions.length < 2){ zone.innerHTML = '<p class="vide">Écoute encore quelques chapitres : il n\'y a pas assez de matière pour un quiz.</p>'; return; }
+  let repondu = 0, bons = 0;
+  zone.innerHTML = questions.map((q,n)=>`<div class="quizQ" data-n="${n}"><p>${n+1}. ${q.q}</p><div class="quizOpts">${q.opts.map(o=>`<button type="button">${o}</button>`).join('')}</div><div class="quizInfo" hidden></div></div>`).join('') + '<div class="quizScore" id="quizScore"></div>';
+  zone.querySelectorAll('.quizQ').forEach(bloc=>{
+    const q = questions[Number(bloc.dataset.n)];
+    bloc.querySelectorAll('button').forEach(b=>{
+      b.onclick = ()=>{
+        bloc.querySelectorAll('button').forEach(x=>{ x.disabled = true; if(x.textContent === q.bonne) x.classList.add('bonne'); });
+        if(b.textContent === q.bonne) bons++; else b.classList.add('mauvaise');
+        repondu++;
+        const info = bloc.querySelector('.quizInfo'); info.textContent = q.info; info.hidden = false;
+        document.getElementById('quizScore').textContent = repondu === questions.length
+          ? `Score final : ${bons} / ${questions.length}` : `Score : ${bons} / ${repondu}`;
+      };
+    });
+  });
+}
+document.getElementById('btnQuiz').onclick = lancerQuiz;
+
+/* =====================================================
+   RACCOURCIS CLAVIER (en plus de ← →)
+===================================================== */
+document.addEventListener('keydown', e=>{
+  const cible = e.target.tagName;
+  if(e.key === 'Escape'){ fermerFiche(); fermerRecherche(); fermerPanneauMusique(); return; }
+  if(cible === 'INPUT' || cible === 'TEXTAREA' || cible === 'SELECT') return;
+  if(e.ctrlKey || e.metaKey || e.altKey) return;
+  if(e.key === ' '){
+    e.preventDefault();
+    if(cible === 'BUTTON') e.target.blur();
+    syncEnCours ? pauseSync() : lancerSync();
+  }else if(e.key === 'm' || e.key === 'M'){ lecture.click(); }
+  else if(e.key === 'f' || e.key === 'F' || e.key === '/'){ e.preventDefault(); ouvrirRecherche(); }
+  else if(e.key === 'n' || e.key === 'N'){ btnNuit.click(); }
+});
+
+/* =====================================================
+   « PRÉCÉDEMMENT… » sur l'écran d'accueil
+===================================================== */
+(function recapAccueil(){
+  const box = document.getElementById('accueilRecap');
+  if(!box || !(etat.idx > 0)) return;
+  const prec = [];
+  for(let i = etat.idx - 1; i >= 0 && prec.length < 2; i--) if(revealed.has(i)) prec.unshift(i);
+  if(!prec.length) return;
+  box.innerHTML = '<div class="recapTitre">Précédemment…</div>' + prec.map(i=>
+    `<div class="recapChap"><b>${SCENES[i].chap} — ${SCENES[i].titre}</b><p>${SCENES[i].desc}</p></div>`).join('');
+})();
+
+/* ===== Version installable (téléphone, hors connexion) — seulement en ligne (GitHub Pages) ===== */
+if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){
+  addEventListener('load', ()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); });
+}
 
 /* ===== Plein écran ===== */
 const btnPE = document.getElementById('btnPleinEcran');
@@ -2649,6 +3130,10 @@ const MAISONS_INFO = [
    desc:"Maison régnante des Sept Couronnes depuis la fin de la dynastie Targaryen, née d'une lignée guerrière alliée par le sang aux anciens rois."},
   {id:"selmy", nom:"Maison Selmy", siege:"Harvest Hall", region:"Les Terres de l'Orage", coul:"#e29a3c", field:"#2e2010", t:.66, vassalDe:"baratheon",
    desc:"Petite maison des Terres de l'Orage, surtout connue pour avoir donné naissance à l'un des plus grands chevaliers vivants du royaume."},
+  {id:"torth", nom:"Maison Torth", siege:"L'île de Torth", region:"Les Terres de l'Orage", coul:"#e8a0b8", field:"#1c2440", t:.67, vassalDe:"baratheon",
+   desc:"Maison de l'île de Torth, au large des Terres de l'Orage, surnommée l'île de Saphir pour le bleu de ses eaux. Sa seule héritière est une chevalière hors du commun."},
+  {id:"penrose", nom:"Maison Penrose", siege:"Parchemins", region:"Les Terres de l'Orage", coul:"#e8dcc0", field:"#2e2418", t:.68, vassalDe:"baratheon",
+   desc:"Petite maison des Terres de l'Orage, d'une fidélité sans faille envers les Baratheon. L'un des siens garde Accalmie au nom de la mémoire de Robert."},
   {id:"martell", nom:"Maison Martell", devise:"Jamais on ne se courbe, jamais on ne rompt", siege:"Lancehélion", region:"Dorne", coul:"#f6a04a", field:"#5c310d", t:.87,
    desc:"Seule région à avoir résisté à la conquête Targaryen par les armes. Dorne suit des coutumes et des lois qui lui sont propres."},
   {id:"dayne", nom:"Maison Dayne", siege:"Starfall", region:"Dorne", coul:"#b0a8e2", field:"#201c38", t:.88, vassalDe:"martell",
