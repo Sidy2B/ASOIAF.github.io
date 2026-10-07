@@ -1541,7 +1541,7 @@ const PERSONNAGES = [
   {nom:"Mirri Maz Duur", slug:"mirri-maz-duur", maison:"autre", ch:29, desc:"Guérisseuse et prêtresse sauvée d'un pillage par Daenerys. Son savoir a un prix que personne n'avait anticipé.", tome:2},
   {nom:"Shagga fils de Dolf", slug:"shagga", maison:"autre", ch:7, desc:"Chef d'un clan des montagnes de la Lune, hache toujours prête. Menace de trancher certaines parties de l'anatomie avec une belle constance.", tome:2},
   {nom:"Ilyn Payne", slug:"ilyn-payne", maison:"payne", ch:30, desc:"Bourreau royal, muet depuis qu'on lui a arraché la langue. Son épée ne pose jamais de questions.", tome:2},
-  {nom:"Osha", slug:"osha", maison:"autre", ch:2, desc:"Sauvageonne capturée près de Winterfell, devenue servante par nécessité. En sait plus sur le Nord sauvage que quiconque au château.", tome:2},
+  {nom:"Osha", slug:"osha", maison:"stark", ch:2, desc:"Sauvageonne capturée près de Winterfell, devenue servante par nécessité. En sait plus sur le Nord sauvage que quiconque au château.", tome:2},
 
   {nom:"Mestre Cressen", slug:"mestre-cressen", maison:"autre", ch:1, desc:"Vieux mestre de Peyredragon, au service de Stannis depuis toujours. Se méfie de la prêtresse rouge plus qu'il ne l'avoue.", tome:3},
   {nom:"Stannis Baratheon", slug:"stannis-baratheon", maison:"baratheon", ch:1, desc:"Frère cadet de Robert, seigneur de Peyredragon. Droit comme une épée, et à peu près aussi chaleureux.", tome:3},
@@ -1558,8 +1558,8 @@ const PERSONNAGES = [
   {nom:"Jojen Reed", slug:"jojen-reed", maison:"reed", ch:22, desc:"Jeune garçon des marais du Neck, sujet à des rêves verts qui se réalisent toujours. Vient renouveler le serment de sa maison.", tome:3},
   {nom:"Meera Reed", slug:"meera-reed", maison:"reed", ch:22, desc:"Sœur de Jojen, chasseuse au filet et au trident. Aussi vive à l'extérieur que son frère l'est en rêve.", tome:3},
   {nom:"Brienne de Torth", slug:"brienne-de-torth", maison:"torth", ch:1, desc:"Chevalière hors norme, aussi grande et robuste que bien des hommes. Défait Loras Tyrell en joute et entre au service de Renly.", tome:4},
-  {nom:"Craster", slug:"craster", maison:"autre", ch:2, desc:"Sauvageon qui vit au-delà du Mur, entouré de ses filles-épouses. Reçoit la Garde de Nuit sans jamais lui témoigner la moindre gratitude.", tome:4},
-  {nom:"Gilly", slug:"gilly", maison:"autre", ch:2, desc:"Fille et épouse de Craster, enceinte. Supplie Jon d'épargner à son enfant le sort que son père réserve aux garçons.", tome:4},
+  {nom:"Craster", slug:"craster", maison:"sauvageons", ch:2, desc:"Sauvageon qui vit au-delà du Mur, entouré de ses filles-épouses. Reçoit la Garde de Nuit sans jamais lui témoigner la moindre gratitude.", tome:4},
+  {nom:"Gilly", slug:"gilly", maison:"sauvageons", ch:2, desc:"Fille et épouse de Craster, enceinte. Supplie Jon d'épargner à son enfant le sort que son père réserve aux garçons.", tome:4},
   {nom:"Victarion Greyjoy", slug:"victarion-greyjoy", maison:"greyjoy", ch:3, desc:"Frère de Balon et capitaine de la flotte de fer. Commande les navires qui doivent attaquer la grande route du Nord.", tome:4},
   {nom:"Ser Cleos Frey", slug:"cleos-frey", maison:"frey", ch:4, desc:"Cousin de Jaime et de Tyrion par alliance. Chargé de porter à Robb les conditions de paix de Port-Réal.", tome:4},
   {nom:"Pyat Pree", slug:"pyat-pree", maison:"autre", ch:6, desc:"Mage de Qarth, accueille Daenerys avec de grandes politesses. Sa sorcellerie inspire autant de crainte que d'admiration.", tome:4},
@@ -1618,7 +1618,7 @@ function agePersonnage(slug){
   return `${n[1] ? '~' : ''}${annee - n[0]} ans`;
 }
 
-const MAISONS_FICHIERS = ["stark","targaryen","lannister","baratheon","arryn","tully","greyjoy","tyrell","frey","bolton","martell","garde","mormont","karstark","umber","manderly","bracken","blackwood","glover","cerwyn","hornwood","reed","royce","mallister","piper","darry","mooton","clegane","marbrand","tarly","redwyne","hightower","selmy","dayne","torth","penrose","payne","cassel","baelish","hollard","lorch","seaworth"];
+const MAISONS_FICHIERS = ["stark","targaryen","lannister","baratheon","arryn","tully","greyjoy","tyrell","frey","bolton","martell","garde","mormont","karstark","umber","manderly","bracken","blackwood","glover","cerwyn","hornwood","reed","royce","mallister","piper","darry","mooton","clegane","marbrand","tarly","redwyne","hightower","selmy","dayne","torth","penrose","payne","cassel","baelish","hollard","lorch","seaworth","sauvageons"];
 
 /* Blasons de maison : si "martell.png" ne charge pas, on tente d'autres casses/extensions
    (martell.PNG, martell.jpg...) avant de retomber sur une icône générique — évite les faux
@@ -2180,7 +2180,7 @@ async function chargerImage(i){
 const MAISONS_MUSIQUE = [
   "Stark","Targaryen","Lannister","Baratheon","Greyjoy",
   "Tully","Arryn","Martell","Tyrell","Frey","Bolton","Dothraki",
-  "Garde de Nuit","Main theme"
+  "Garde de Nuit","Sauvageons","Main theme"
 ];
 const EXT_AUDIO = ["mp3","ogg","m4a","MP3","OGG","M4A"];
 /* Liste de secours utilisée si musique/autres.json est inaccessible (voir detecterThemes) */
@@ -2407,17 +2407,17 @@ function jouerTheme(src, fondu, boucle, lancer){
 const MUSIQUE_PAR_MAISON = {
   stark:"Stark", targaryen:"Targaryen", lannister:"Lannister", baratheon:"Baratheon",
   greyjoy:"Greyjoy", tully:"Tully", arryn:"Arryn", martell:"Martell", tyrell:"Tyrell",
-  frey:"Frey", bolton:"Bolton", garde:"Garde de Nuit", dothraki:"Dothraki"
+  frey:"Frey", bolton:"Bolton", garde:"Garde de Nuit", sauvageons:"Sauvageons", dothraki:"Dothraki"
 };
 /* Maison à qui appartient chaque lieu (null = lieu sans maison de Westeros) */
 const MAISON_DU_LIEU = {
-  audela:"garde", mur:"garde", versmur:"stark", winterfell:"stark", routeroy:"baratheon",
+  audela:"sauvageons", mur:"garde", versmur:"stark", winterfell:"stark", routeroy:"baratheon",
   trident:"tully", darry:"tully", auberge:"tully", eyrie:"arryn", hauteroute:"arryn",
   portreal:"baratheon", pentos:null, merdothrak:"dothraki", khalasar:"dothraki",
   vivesaigues:"tully", boisdesmurmures:"tully", lannisport:"lannister", routenord:"stark",
   vaesdothrak:"dothraki", peyredragon:"baratheon", pyke:"greyjoy", harrenhal:"lannister",
   routearya:"baratheon", redwaste:null, pontamer:"tyrell", accalmie:"baratheon",
-  craster:"garde", poing:"garde", qarth:null
+  craster:"sauvageons", poing:"garde", qarth:null
 };
 
 function musiqueDeMaison(id){
@@ -3074,7 +3074,9 @@ if(!reduced){tick();}
    ce sont des informations générales, pas des spoilers de scène)
 ===================================================== */
 const MAISONS_INFO = [
-  {id:"garde", nom:"La Garde de Nuit", devise:"Je suis l'épée dans les ténèbres…", siege:"Châteaunoir", region:"Le Mur", coul:"#a9c4dc", field:"#1a1e25", t:.02,
+  {id:"sauvageons", nom:"Les Sauvageons", siege:"aucun — la forêt hantée et les terres glacées au-delà du Mur", region:"Le Mur et au-delà", coul:"#b9c7d3", field:"#0e161e", t:.03,
+   desc:"Pas une maison : c'est ainsi que les gens du Sud appellent les clans et tribus qui vivent au-delà du Mur. Eux se disent « le peuple libre », ne s'agenouillent devant aucun seigneur et ne suivent un roi que s'ils l'ont choisi."},
+  {id:"garde", nom:"La Garde de Nuit", devise:"Je suis l'épée dans les ténèbres…", siege:"Châteaunoir", region:"Le Mur et au-delà", coul:"#a9c4dc", field:"#1a1e25", t:.02,
    desc:"Pas une maison mais un ordre fraternel juré : on y sert à vie, en renonçant à ses terres et à sa famille, pour garder le royaume des périls du Nord."},
   {id:"stark", nom:"Maison Stark", devise:"L'Hiver vient", siege:"Winterfell", region:"Le Nord", coul:"#c6d6e6", field:"#2a3542", t:.12,
    desc:"La plus ancienne lignée du Nord, descendante des Rois de l'Hiver. Réputée pour son sens de l'honneur, sa rigueur et son endurance face au froid."},
@@ -3170,8 +3172,8 @@ const BLASON_GENERIQUE = `<svg class="blasonM" viewBox="0 0 34 34"><circle cx="1
 
 /* Tri de la grille des maisons : par région (ordre ci-dessous), puis
    grandes maisons avant petites/vassales au sein d'une même région. */
-const ORDRE_REGIONS = ["Le Mur","Le Nord","Les Îles de Fer","Les Conflans","Le Val","L'Ouest","Le Bief","Les Terres de l'Orage","Dorne","Les Terres de la Couronne","Sang valyrien"];
-const GRANDES_MAISONS = new Set(["garde","stark","arryn","tully","baratheon","lannister","tyrell","martell","greyjoy","targaryen"]);
+const ORDRE_REGIONS = ["Le Mur et au-delà","Le Nord","Les Îles de Fer","Les Conflans","Le Val","L'Ouest","Le Bief","Les Terres de l'Orage","Dorne","Les Terres de la Couronne","Sang valyrien"];
+const GRANDES_MAISONS = new Set(["sauvageons","garde","stark","arryn","tully","baratheon","lannister","tyrell","martell","greyjoy","targaryen"]);
 function indexRegion(region){
   const i = ORDRE_REGIONS.indexOf(region);
   return i === -1 ? ORDRE_REGIONS.length : i;
