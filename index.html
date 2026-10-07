@@ -625,7 +625,7 @@
   .arbreSvg[data-groupe="tully"]{min-width:500px}
   .arbreSvg[data-groupe="arryn"]{min-width:460px}
   .arbreSvg[data-groupe="targaryen"]{min-width:660px}
-  .arbreSvg[data-groupe="baratheon"]{min-width:640px}
+  .arbreSvg[data-groupe="baratheon"]{min-width:780px}
   .arbreSvg[data-groupe="lannister"]{min-width:580px}
   .arbreSvg text{font-family:'Instrument Sans',sans-serif;fill:var(--neige);font-size:12.5px}
   .arbreSvg .sect{fill:var(--bougie);font-size:10.5px;letter-spacing:.2em}
@@ -953,7 +953,7 @@
             <g class="noeudArbre" data-ch="4" data-slug="khal-drogo"><circle class="fondArbre" cx="580" cy="190" r="24"/><circle class="anneauArbre" cx="580" cy="190" r="24"/><text class="nomArbre" x="580" y="228">Khal Drogo</text></g>
             <g class="noeudArbre" data-ch="4" data-maison="targaryen" data-slug="aegon-le-conquerant" style="--coulA:#ff6a45"><circle class="fondArbre" cx="330" cy="290" r="22"/><circle class="anneauArbre legendaire" cx="330" cy="290" r="22"/><text class="nomArbre" x="330" y="326">Aegon le Conquérant</text><text class="mini" x="330" y="340" text-anchor="middle">fondateur de la dynastie, ~300 ans avant</text></g>
           </svg>
-          <svg class="arbreSvg" data-groupe="baratheon" viewBox="0 0 640 370" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre de la maison Baratheon">
+          <svg class="arbreSvg" data-groupe="baratheon" viewBox="0 0 780 390" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre de la maison Baratheon">
             <text class="sect" x="12" y="24" data-ch="5">MAISON BARATHEON</text>
             <path class="parente" d="M100 66 V50 H560 V66" data-ch="21"/>
             <path class="parente" d="M400 50 V66" data-tome="3" data-ch="1"/>
@@ -963,8 +963,12 @@
             <g class="noeudArbre" data-ch="5" data-maison="lannister" data-slug="cersei-lannister" style="--coulA:#ecbf58"><circle class="fondArbre" cx="230" cy="90" r="24"/><circle class="anneauArbre" cx="230" cy="90" r="24"/><text class="nomArbre" x="230" y="128">Cersei</text><text class="lienArbre" x="230" y="139" text-anchor="middle" onclick="choisirArbreGroupe('lannister')">↗ née Lannister</text></g>
             <g class="noeudArbre" data-ch="21" data-maison="baratheon" data-slug="renly-baratheon" style="--coulA:#f4cc3a"><circle class="fondArbre" cx="400" cy="90" r="24"/><circle class="anneauArbre" cx="400" cy="90" r="24"/><text class="nomArbre" x="400" y="128">Renly</text></g>
             <g class="noeudArbre" data-tome="3" data-ch="1" data-maison="baratheon" data-slug="stannis-baratheon" style="--coulA:#f4cc3a"><circle class="fondArbre" cx="560" cy="90" r="24"/><circle class="anneauArbre" cx="560" cy="90" r="24"/><text class="nomArbre" x="560" y="128">Stannis</text></g>
+            <line class="mariage" x1="584" y1="90" x2="676" y2="90" data-tome="3" data-ch="1"/>
+            <path class="parente" d="M630 90 V196" data-tome="3" data-ch="1"/>
+            <g class="noeudArbre" data-tome="3" data-ch="1" data-maison="florent" data-slug="selyse-florent" style="--coulA:#e38a4a"><circle class="fondArbre" cx="700" cy="90" r="24"/><circle class="anneauArbre" cx="700" cy="90" r="24"/><text class="nomArbre" x="700" y="128">Selyse</text></g>
+            <g class="noeudArbre" data-tome="3" data-ch="1" data-maison="baratheon" data-slug="shireen-baratheon" style="--coulA:#f4cc3a"><circle class="fondArbre" cx="630" cy="220" r="24"/><circle class="anneauArbre" cx="630" cy="220" r="24"/><text class="nomArbre" x="630" y="258">Shireen</text></g>
             <g class="noeudArbre" data-ch="5" data-maison="baratheon" data-slug="joffrey-baratheon" style="--coulA:#f4cc3a"><circle class="fondArbre" cx="165" cy="220" r="24"/><circle class="anneauArbre" cx="165" cy="220" r="24"/><text class="nomArbre" x="165" y="258">Joffrey</text></g>
-            <g class="noeudArbre" data-ch="5" data-maison="baratheon" data-slug="orys-baratheon" style="--coulA:#f4cc3a"><circle class="fondArbre" cx="320" cy="320" r="22"/><circle class="anneauArbre legendaire" cx="320" cy="320" r="22"/><text class="nomArbre" x="320" y="356">Orys Baratheon</text><text class="mini" x="320" y="358" text-anchor="middle">premier lord Baratheon, ~300 ans avant</text></g>
+            <g class="noeudArbre" data-ch="5" data-maison="baratheon" data-slug="orys-baratheon" style="--coulA:#f4cc3a"><circle class="fondArbre" cx="320" cy="320" r="22"/><circle class="anneauArbre legendaire" cx="320" cy="320" r="22"/><text class="nomArbre" x="320" y="356">Orys Baratheon</text><text class="mini" x="320" y="371" text-anchor="middle">premier lord Baratheon, ~300 ans avant</text></g>
           </svg>
           <svg class="arbreSvg" data-groupe="lannister" viewBox="0 0 580 350" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre de la maison Lannister">
             <text class="sect" x="12" y="24" data-ch="5">MAISON LANNISTER</text>
@@ -1545,6 +1549,8 @@ const PERSONNAGES = [
 
   {nom:"Mestre Cressen", slug:"mestre-cressen", maison:"autre", ch:1, desc:"Vieux mestre de Peyredragon, au service de Stannis depuis toujours. Se méfie de la prêtresse rouge plus qu'il ne l'avoue.", tome:3},
   {nom:"Stannis Baratheon", slug:"stannis-baratheon", maison:"baratheon", ch:1, desc:"Frère cadet de Robert, seigneur de Peyredragon. Droit comme une épée, et à peu près aussi chaleureux.", tome:3},
+  {nom:"Selyse Florent", slug:"selyse-florent", maison:"florent", ch:1, desc:"Épouse de Stannis, reine à Peyredragon. Dévouée corps et âme au Seigneur de Lumière depuis l'arrivée de Mélisandre.", tome:3},
+  {nom:"Shireen Baratheon", slug:"shireen-baratheon", maison:"baratheon", ch:1, desc:"Fille unique de Stannis et Selyse, douce et timide, le visage en partie marqué par une maladie survécue enfant. Toujours suivie de son fou au visage tatoué en damier.", tome:3},
   {nom:"Mélisandre", slug:"melisandre", maison:"autre", ch:1, desc:"Prêtresse rouge venue d'Asshai, dévouée à R'hllor. Voit des prophéties dans les flammes — et pousse Stannis à y croire aussi.", tome:3},
   {nom:"Davos Seaworth", slug:"davos-seaworth", maison:"seaworth", ch:11, desc:"Ancien contrebandier anobli par Stannis, qui lui a aussi tranché quatre doigts pour la forme. D'une loyauté à toute épreuve.", tome:3},
   {nom:"Salladhor Saan", slug:"salladhor-saan", maison:"autre", ch:11, desc:"Pirate lysien haut en couleur, allié intéressé de Stannis. Plus sensible à l'or qu'aux prophéties.", tome:3},
@@ -1593,7 +1599,7 @@ const NAISSANCES = {
   "lysa-arryn":[266,true], "mirri-maz-duur":[257,true], "ilyn-payne":[259,true], "mestre-cressen":[219,true],
   "stannis-baratheon":[264], "davos-seaworth":[260,true], "balon-greyjoy":[255,true], "asha-greyjoy":[275,true],
   "amory-lorch":[246,true], "dontos-hollard":[261,true], "brynden-tully":[243,true], "donella-hornwood":[257,true],
-  "jojen-reed":[286], "meera-reed":[283], "brienne-de-torth":[280], "gilly":[282,true], "victarion-greyjoy":[257,true],
+  "jojen-reed":[286], "meera-reed":[283], "brienne-de-torth":[280], "shireen-baratheon":[289], "gilly":[282,true], "victarion-greyjoy":[257,true],
   "lancel-lannister":[282], "shae":[280,true], "rodrik-cassel":[248,true], "edmure-tully":[270,true],
   "tywin-lannister":[242], "robin-arryn":[292]
 };
@@ -1618,7 +1624,7 @@ function agePersonnage(slug){
   return `${n[1] ? '~' : ''}${annee - n[0]} ans`;
 }
 
-const MAISONS_FICHIERS = ["stark","targaryen","lannister","baratheon","arryn","tully","greyjoy","tyrell","frey","bolton","martell","garde","mormont","karstark","umber","manderly","bracken","blackwood","glover","cerwyn","hornwood","reed","royce","mallister","piper","darry","mooton","clegane","marbrand","tarly","redwyne","hightower","selmy","dayne","torth","penrose","payne","cassel","baelish","hollard","lorch","seaworth","sauvageons"];
+const MAISONS_FICHIERS = ["stark","targaryen","lannister","baratheon","arryn","tully","greyjoy","tyrell","frey","bolton","martell","garde","mormont","karstark","umber","manderly","bracken","blackwood","glover","cerwyn","hornwood","reed","royce","mallister","piper","darry","mooton","clegane","marbrand","tarly","redwyne","hightower","selmy","dayne","torth","penrose","payne","cassel","baelish","hollard","lorch","seaworth","sauvageons","florent"];
 
 /* Blasons de maison : si "martell.png" ne charge pas, on tente d'autres casses/extensions
    (martell.PNG, martell.jpg...) avant de retomber sur une icône générique — évite les faux
@@ -3132,6 +3138,8 @@ const MAISONS_INFO = [
    desc:"Maison la plus riche en terres agricoles du royaume, montée en puissance en tant qu'intendants avant de recevoir le titre de seigneurs du Bief."},
   {id:"tarly", nom:"Maison Tarly", devise:"Premiers au combat", siege:"Hornhill", region:"Le Bief", coul:"#8a9a5a", field:"#1c2010", t:.56, vassalDe:"tyrell",
    desc:"Vassaux des Tyrell réputés pour produire certains des meilleurs soldats du royaume, et fiers détenteurs d'une épée ancestrale en acier valyrien."},
+  {id:"florent", nom:"Maison Florent", siege:"un château du Bief", region:"Le Bief", coul:"#e38a4a", field:"#2a1a10", t:.62, vassalDe:"tyrell",
+   desc:"Maison ancienne et fière du Bief, vassale des Tyrell, dont le blason porte une tête de renard. Une de ses filles a épousé Stannis Baratheon."},
   {id:"redwyne", nom:"Maison Redwyne", siege:"The Arbor", region:"Le Bief", coul:"#8a5ab0", field:"#1c1430", t:.57, vassalDe:"tyrell",
    desc:"Vassaux des Tyrell régnant sur une île viticole réputée, et possédant l'une des flottes de guerre les plus puissantes des Sept Couronnes."},
   {id:"hightower", nom:"Maison Hightower", devise:"Nous éclairons le chemin", siege:"Oldtown", region:"Le Bief", coul:"#e8e4d8", field:"#13261c", t:.58, vassalDe:"tyrell",
