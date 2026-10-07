@@ -570,7 +570,11 @@
   #wNotes textarea:focus-visible,#marquePage:focus-visible{outline:2px solid var(--bougie);outline-offset:1px}
 
   /* ===== Widget personnages / créatures : vignettes ===== */
-  #persoListe,#creaListe{max-height:340px;overflow-y:auto;padding-right:4px}
+  /* Les listes remplissent toute la hauteur de la vignette (calée sur la carte « Où sommes-nous ») */
+  #wPersos,#wCreatures{display:flex;flex-direction:column}
+  #wPersos .widget-corps,#wCreatures .widget-corps{flex:1;display:flex;flex-direction:column;min-height:0}
+  #persoListe,#creaListe{flex:1 1 0;height:0;min-height:150px;overflow-y:auto;padding-right:4px}
+  @media (max-width:639px){#persoListe,#creaListe{min-height:340px}}
   .typeTitre{
     font-family:'Unbounded',sans-serif;font-size:.72rem;font-weight:600;
     letter-spacing:.14em;text-transform:uppercase;color:var(--bougie);
@@ -1518,8 +1522,8 @@ const PERSONNAGES = [
   {nom:"Sandor Clegane", slug:"sandor-clegane", maison:"clegane", ch:5, desc:"« Le Limier », garde du corps de Joffrey. Une moitié de visage brûlée, aucune illusion."},
   {nom:"Tyrion Lannister", slug:"tyrion-lannister", maison:"lannister", ch:6, desc:"Le nain de la famille Lannister. Compense sa taille par un esprit redoutable — et une soif solide."},
   {nom:"Benjen Stark", slug:"benjen-stark", maison:"garde", ch:6, desc:"Frère cadet de Ned, Premier Patrouilleur de la Garde de Nuit."},
-  {nom:"Jorah Mormont", slug:"jorah-mormont", maison:"autre", ch:12, desc:"Chevalier exilé de Westeros, rallié aux Targaryen. Connaît les deux mondes."},
-  {nom:"Petyr « Littlefinger » Baelish", slug:"petyr-baelish", maison:"autre", ch:19, desc:"Grand Argentier du royaume. Ami d'enfance de Catelyn — il n'a rien oublié."},
+  {nom:"Jorah Mormont", slug:"jorah-mormont", maison:"mormont", ch:12, desc:"Chevalier exilé de Westeros, rallié aux Targaryen. Connaît les deux mondes."},
+  {nom:"Petyr « Littlefinger » Baelish", slug:"petyr-baelish", maison:"baelish", ch:19, desc:"Grand Argentier du royaume. Ami d'enfance de Catelyn — il n'a rien oublié."},
   {nom:"Jeor Mormont", slug:"jeor-mormont", maison:"garde", ch:20, desc:"« Le Vieil Ours », lord Commandant de la Garde de Nuit."},
   {nom:"Alliser Thorne", slug:"alliser-thorne", maison:"garde", ch:20, desc:"Maître d'armes de Châteaunoir. A fait de l'humiliation une méthode pédagogique."},
   {nom:"Varys", slug:"varys", maison:"autre", ch:21, desc:"« L'Araignée », maître des chuchoteurs. Ses petits oiseaux entendent tout."},
@@ -1536,19 +1540,19 @@ const PERSONNAGES = [
   {nom:"Yoren", slug:"yoren", maison:"garde", ch:30, desc:"Recruteur de la Garde de Nuit, rugueux et taciturne. Ramène au Mur tout ce que le royaume ne veut plus.", tome:2},
   {nom:"Mirri Maz Duur", slug:"mirri-maz-duur", maison:"autre", ch:29, desc:"Guérisseuse et prêtresse sauvée d'un pillage par Daenerys. Son savoir a un prix que personne n'avait anticipé.", tome:2},
   {nom:"Shagga fils de Dolf", slug:"shagga", maison:"autre", ch:7, desc:"Chef d'un clan des montagnes de la Lune, hache toujours prête. Menace de trancher certaines parties de l'anatomie avec une belle constance.", tome:2},
-  {nom:"Ilyn Payne", slug:"ilyn-payne", maison:"stark", ch:30, desc:"Bourreau royal, muet depuis qu'on lui a arraché la langue. Son épée ne pose jamais de questions.", tome:2},
-  {nom:"Osha", slug:"osha", maison:"stark", ch:2, desc:"Sauvageonne capturée près de Winterfell, devenue servante par nécessité. En sait plus sur le Nord sauvage que quiconque au château.", tome:2},
+  {nom:"Ilyn Payne", slug:"ilyn-payne", maison:"payne", ch:30, desc:"Bourreau royal, muet depuis qu'on lui a arraché la langue. Son épée ne pose jamais de questions.", tome:2},
+  {nom:"Osha", slug:"osha", maison:"autre", ch:2, desc:"Sauvageonne capturée près de Winterfell, devenue servante par nécessité. En sait plus sur le Nord sauvage que quiconque au château.", tome:2},
 
   {nom:"Mestre Cressen", slug:"mestre-cressen", maison:"autre", ch:1, desc:"Vieux mestre de Peyredragon, au service de Stannis depuis toujours. Se méfie de la prêtresse rouge plus qu'il ne l'avoue.", tome:3},
   {nom:"Stannis Baratheon", slug:"stannis-baratheon", maison:"baratheon", ch:1, desc:"Frère cadet de Robert, seigneur de Peyredragon. Droit comme une épée, et à peu près aussi chaleureux.", tome:3},
   {nom:"Mélisandre", slug:"melisandre", maison:"autre", ch:1, desc:"Prêtresse rouge venue d'Asshai, dévouée à R'hllor. Voit des prophéties dans les flammes — et pousse Stannis à y croire aussi.", tome:3},
-  {nom:"Davos Seaworth", slug:"davos-seaworth", maison:"baratheon", ch:11, desc:"Ancien contrebandier anobli par Stannis, qui lui a aussi tranché quatre doigts pour la forme. D'une loyauté à toute épreuve.", tome:3},
+  {nom:"Davos Seaworth", slug:"davos-seaworth", maison:"seaworth", ch:11, desc:"Ancien contrebandier anobli par Stannis, qui lui a aussi tranché quatre doigts pour la forme. D'une loyauté à toute épreuve.", tome:3},
   {nom:"Salladhor Saan", slug:"salladhor-saan", maison:"autre", ch:11, desc:"Pirate lysien haut en couleur, allié intéressé de Stannis. Plus sensible à l'or qu'aux prophéties.", tome:3},
   {nom:"Balon Greyjoy", slug:"balon-greyjoy", maison:"greyjoy", ch:12, desc:"Seigneur des îles de Fer, père de Theon. Préfère payer « le prix du fer » plutôt que recevoir le moindre cadeau.", tome:3},
   {nom:"Asha Greyjoy", slug:"asha-greyjoy", maison:"greyjoy", ch:12, desc:"Sœur de Theon, capitaine à part entière. Lui rappelle sans ménagement tout ce qu'il a oublié des îles de Fer.", tome:3},
   {nom:"Jaqen H'ghar", slug:"jaqen-hghar", maison:"autre", ch:6, desc:"Prisonnier à l'accent chantant, croisé dans une auberge du Trident. Parle de lui-même à la troisième personne — et ce n'est pas la chose la plus étrange chez lui.", tome:3},
-  {nom:"Ser Amory Lorch", slug:"amory-lorch", maison:"lannister", ch:15, desc:"Chevalier aux ordres de Tywin Lannister, chargé de ratisser les terres autour de l'Œil de Dieu. N'a pas pour habitude de faire des prisonniers.", tome:3},
-  {nom:"Dontos Hollard", slug:"dontos-hollard", maison:"autre", ch:3, desc:"Chevalier déchu, trop ivre pour jouter. Sansa lui sauve la vie — il compte bien le lui rendre, à sa manière.", tome:3},
+  {nom:"Ser Amory Lorch", slug:"amory-lorch", maison:"lorch", ch:15, desc:"Chevalier aux ordres de Tywin Lannister, chargé de ratisser les terres autour de l'Œil de Dieu. N'a pas pour habitude de faire des prisonniers.", tome:3},
+  {nom:"Dontos Hollard", slug:"dontos-hollard", maison:"hollard", ch:3, desc:"Chevalier déchu, trop ivre pour jouter. Sansa lui sauve la vie — il compte bien le lui rendre, à sa manière.", tome:3},
   {nom:"Ser Brynden « Poisson-Noir » Tully", slug:"brynden-tully", maison:"tully", ch:8, desc:"Oncle de Catelyn, vieux guerrier aussi rusé que loyal. Son surnom dit tout de son caractère.", tome:3},
   {nom:"Lady Donella Hornwood", slug:"donella-hornwood", maison:"hornwood", ch:17, desc:"Veuve nordienne dont le mari et le fils sont morts à la guerre. Ses terres attirent soudain beaucoup de prétendants.", tome:3},
   {nom:"Jojen Reed", slug:"jojen-reed", maison:"reed", ch:22, desc:"Jeune garçon des marais du Neck, sujet à des rêves verts qui se réalisent toujours. Vient renouveler le serment de sa maison.", tome:3},
@@ -1562,7 +1566,7 @@ const PERSONNAGES = [
   {nom:"Xaro Xhoan Daxos", slug:"xaro-xhoan-daxos", maison:"autre", ch:6, desc:"Riche marchand de Qarth, hôte généreux de Daenerys. Sa générosité cache des intentions moins nobles.", tome:4},
   {nom:"Lancel Lannister", slug:"lancel-lannister", maison:"lannister", ch:8, desc:"Cousin de Cersei et écuyer de feu Robert. Sert la reine sans avoir conscience de tout ce que Tyrion sait de lui.", tome:4},
   {nom:"Shae", slug:"shae", maison:"autre", ch:8, desc:"Fille de joie qui partage les nuits de Tyrion. Sait garder un secret, mais pas toujours ses ambitions.", tome:4},
-  {nom:"Ser Rodrik Cassel", slug:"rodrik-cassel", maison:"stark", ch:14, desc:"Maître d'armes de Winterfell, fidèle serviteur des Stark. Garde le château en l'absence de Robb.", tome:4},
+  {nom:"Ser Rodrik Cassel", slug:"rodrik-cassel", maison:"cassel", ch:14, desc:"Maître d'armes de Winterfell, fidèle serviteur des Stark. Garde le château en l'absence de Robb.", tome:4},
   {nom:"Qhorin Mimain", slug:"qhorin-mimain", maison:"garde", ch:13, desc:"Grand patrouilleur de la Garde de Nuit, amputé de plusieurs doigts. Ses rangers sont réputés les plus redoutables du Mur.", tome:4},
   {nom:"Edmure Tully", slug:"edmure-tully", maison:"tully", ch:18, desc:"Frère de Catelyn et Lysa, héritier de Vivesaigues. Tient le château en l'absence de son père, parfois avec trop d'assurance.", tome:4},
   {nom:"Ser Cortnay Penrose", slug:"cortnay-penrose", maison:"penrose", ch:21, desc:"Castelan d'Accalmie, fidèle à la mémoire de Robert. Refuse de rendre le château, quelles que soient les menaces.", tome:4},
@@ -1614,7 +1618,7 @@ function agePersonnage(slug){
   return `${n[1] ? '~' : ''}${annee - n[0]} ans`;
 }
 
-const MAISONS_FICHIERS = ["stark","targaryen","lannister","baratheon","arryn","tully","greyjoy","tyrell","frey","bolton","martell","garde","mormont","karstark","umber","manderly","bracken","blackwood","glover","cerwyn","hornwood","reed","royce","mallister","piper","darry","mooton","clegane","marbrand","tarly","redwyne","hightower","selmy","dayne","torth","penrose"];
+const MAISONS_FICHIERS = ["stark","targaryen","lannister","baratheon","arryn","tully","greyjoy","tyrell","frey","bolton","martell","garde","mormont","karstark","umber","manderly","bracken","blackwood","glover","cerwyn","hornwood","reed","royce","mallister","piper","darry","mooton","clegane","marbrand","tarly","redwyne","hightower","selmy","dayne","torth","penrose","payne","cassel","baelish","hollard","lorch","seaworth"];
 
 /* Blasons de maison : si "martell.png" ne charge pas, on tente d'autres casses/extensions
    (martell.PNG, martell.jpg...) avant de retomber sur une icône générique — évite les faux
@@ -1675,7 +1679,7 @@ function blasonReplifHTML(maison){
     : BLASON_AUTRE.replace('class="miniB"','class="portrait blasonRepli miniB"');
 }
 
-let filtrePerso = 'grandes';
+let filtrePerso = 'tous';
 let filtreCrea = '';
 function majPersonnages(maxCh){
   const liste = document.getElementById('persoListe');
@@ -1687,13 +1691,15 @@ function majPersonnages(maxCh){
   const estGrande = p=>GRANDES_MAISONS.has(p.maison);
   const grandesVues = [];
   visibles.forEach(p=>{ if(estGrande(p) && !grandesVues.includes(p.maison)) grandesVues.push(p.maison); });
-  const onglets = [['grandes','Grandes maisons']]
+  const onglets = [['tous','Tous'],['grandes','Grandes maisons']]
     .concat(grandesVues.map(id=>[id, (MAISONS_INFO.find(m=>m.id===id)||{nom:id}).nom.replace(/^Maison /,'')]));
-  if(visibles.some(p=>!estGrande(p))) onglets.push(['petites','Petites maisons']);
-  if(!onglets.some(o=>o[0]===filtrePerso)) filtrePerso = 'grandes';
+  const sansMaison = p=>!MAISONS_INFO.some(m=>m.id===p.maison);
+  if(visibles.some(p=>!estGrande(p) && !sansMaison(p))) onglets.push(['petites','Petites maisons']);
+  if(visibles.some(sansMaison)) onglets.push(['sans','Sans maison']);
+  if(!onglets.some(o=>o[0]===filtrePerso)) filtrePerso = 'tous';
   filtre.innerHTML = onglets.map(o=>`<button type="button" data-f="${o[0]}" class="${o[0]===filtrePerso?'actif':''}">${o[1]}</button>`).join('');
   filtre.querySelectorAll('button').forEach(bt=>{ bt.onclick = ()=>{ filtrePerso = bt.dataset.f; majPersonnages(maxCh); }; });
-  const passe = p=> filtrePerso==='grandes' ? estGrande(p) : filtrePerso==='petites' ? !estGrande(p) : p.maison===filtrePerso;
+  const passe = p=> filtrePerso==='tous' ? true : filtrePerso==='grandes' ? estGrande(p) : filtrePerso==='petites' ? (!estGrande(p) && !sansMaison(p)) : filtrePerso==='sans' ? sansMaison(p) : p.maison===filtrePerso;
   liste.innerHTML = visibles.filter(passe).map(p=>{
     const nouveau = (p.tome||1)===tomeActif && p.ch===(idx+1);
     const ring = ACCENT_PAR_MAISON[p.maison] || '';
@@ -3118,6 +3124,8 @@ const MAISONS_INFO = [
    desc:"Petite maison récemment anoblie, au service direct des Lannister. Ses deux fils les plus connus sont devenus des guerriers redoutés bien au-delà de leurs terres."},
   {id:"marbrand", nom:"Maison Marbrand", siege:"Ashemark", region:"L'Ouest", coul:"#c9703a", field:"#2a1810", t:.78, vassalDe:"lannister",
    desc:"Vassaux des Lannister réputés pour la bravoure de leurs chevaliers, souvent choisis pour mener l'avant-garde des armées de l'Ouest."},
+  {id:"payne", nom:"Maison Payne", siege:"un fief des Terres de l'Ouest", region:"L'Ouest", coul:"#b48ad0", field:"#241a30", t:.79, vassalDe:"lannister",
+   desc:"Petite maison de l'Ouest au blason à damier pourpre et blanc semé de pièces d'or, vassale des Lannister. L'un des siens est le bourreau royal, la Justice du Roi."},
   {id:"tyrell", nom:"Maison Tyrell", devise:"Croissant en Force", siege:"Hautjardin", region:"Le Bief", coul:"#e2c65c", field:"#25452c", t:.55,
    desc:"Maison la plus riche en terres agricoles du royaume, montée en puissance en tant qu'intendants avant de recevoir le titre de seigneurs du Bief."},
   {id:"tarly", nom:"Maison Tarly", devise:"Premiers au combat", siege:"Hornhill", region:"Le Bief", coul:"#8a9a5a", field:"#1c2010", t:.56, vassalDe:"tyrell",
@@ -3138,6 +3146,16 @@ const MAISONS_INFO = [
    desc:"Seule région à avoir résisté à la conquête Targaryen par les armes. Dorne suit des coutumes et des lois qui lui sont propres."},
   {id:"dayne", nom:"Maison Dayne", siege:"Starfall", region:"Dorne", coul:"#b0a8e2", field:"#201c38", t:.88, vassalDe:"martell",
    desc:"Maison dornienne gardienne d'une épée ancestrale en acier valyrien, réputée pour produire des chevaliers d'exception."},
+  {id:"cassel", nom:"Maison Cassel", siege:"au service de Winterfell", region:"Le Nord", coul:"#9fb0c4", field:"#182230", t:.23, vassalDe:"stark",
+   desc:"Petite maison du Nord dont les membres servent les Stark depuis des générations, comme chevaliers et maîtres d'armes de Winterfell."},
+  {id:"baelish", nom:"Maison Baelish", siege:"un petit domaine des Doigts", region:"Le Val", coul:"#9bc46a", field:"#1c2614", t:.28, vassalDe:"arryn",
+   desc:"Maison mineure et récente du Val, aux terres pauvres et battues par les vents. Son unique héritier a fait carrière bien loin de chez lui."},
+  {id:"hollard", nom:"Maison Hollard", siege:"plus aucun — maison déchue", region:"Les Terres de la Couronne", coul:"#e07a9a", field:"#2a1018", t:.50, vassalDe:"baratheon",
+   desc:"Ancienne maison des Terres de la Couronne, presque anéantie après une révolte contre le roi Aerys. Il n'en reste qu'un chevalier sans terres."},
+  {id:"lorch", nom:"Maison Lorch", siege:"un fief des Terres de l'Ouest", region:"L'Ouest", coul:"#d04a3a", field:"#2a0e0a", t:.795, vassalDe:"lannister",
+   desc:"Petite maison de l'Ouest au blason à manticore, vassale des Lannister. Ses chevaliers ont la réputation de ne pas faire de quartier."},
+  {id:"seaworth", nom:"Maison Seaworth", siege:"un modeste domaine des Terres de l'Orage", region:"Les Terres de l'Orage", coul:"#c8c4a8", field:"#1e1e1a", t:.69, vassalDe:"baratheon",
+   desc:"Maison toute récente, fondée par un ancien contrebandier anobli par Stannis Baratheon. Son blason porte un navire noir… et un oignon."},
   {id:"targaryen", nom:"Maison Targaryen", devise:"Feu et Sang", siege:"Peyredragon (jadis Port-Réal)", region:"Sang valyrien", coul:"#ff6a45", field:"#420e12", t:.97,
    desc:"Dynastie de sang valyrien, seule lignée à avoir jadis dompté des dragons. A régné trois siècles sur les Sept Couronnes avant d'en être chassée."}
 ];
@@ -3162,13 +3180,13 @@ function indexRegion(region){
 let filtreMaison = 'grandes';
 function afficherMaisons(){
   const grille = document.getElementById('grilleMaisons');
-  const onglets = [['grandes','Grandes maisons']].concat(
+  const onglets = [['grandes','Grandes maisons'],['toutes','Toutes']].concat(
     ORDRE_REGIONS.filter(r=>MAISONS_INFO.some(m=>m.region===r)).map(r=>[r,r]));
   if(!onglets.some(o=>o[0]===filtreMaison)) filtreMaison = 'grandes';
   const barre = document.getElementById('ongletsMaisons');
   barre.innerHTML = onglets.map(o=>`<button type="button" data-f="${o[0]}" class="${o[0]===filtreMaison?'actif':''}">${o[1]}</button>`).join('');
   barre.querySelectorAll('button').forEach(bt=>{ bt.onclick = ()=>{ filtreMaison = bt.dataset.f; afficherMaisons(); }; });
-  const triees = MAISONS_INFO.filter(m=> filtreMaison==='grandes' ? GRANDES_MAISONS.has(m.id) : m.region===filtreMaison)
+  const triees = MAISONS_INFO.filter(m=> filtreMaison==='toutes' ? true : filtreMaison==='grandes' ? GRANDES_MAISONS.has(m.id) : m.region===filtreMaison)
     .sort((a,b)=>{
       const ra = indexRegion(a.region), rb = indexRegion(b.region);
       if(ra !== rb) return ra - rb;
@@ -3179,7 +3197,13 @@ function afficherMaisons(){
     });
   const maisonCourante = (SCENES[idx] || {}).maison;
   const morceaux = [];
+  let derniereRegion = null;
   triees.forEach(m=>{
+    /* Onglet « Toutes » : un titre par région pour s'y retrouver */
+    if(filtreMaison === 'toutes' && m.region !== derniereRegion){
+      morceaux.push(`<div class="regionTitre">${m.region}</div>`);
+      derniereRegion = m.region;
+    }
     const img = MAISONS_FICHIERS.includes(m.id)
       ? `<img class="blasonM" src="blasons/${m.id}.png" data-id="${m.id}" alt="Blason ${m.nom}">`
       : BLASON_GENERIQUE;
