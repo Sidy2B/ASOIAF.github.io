@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game of Thrones — Guide de visionnage</title>
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#07090d">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --nuit:#07090d; --bord:rgba(170,210,255,.12); --neige:#eef1f5; --acier:#8d97a6; --discret:#5f6a7a;
+    --bougie:#e8a33d; --braise:#ff5a1f; --givre:#8fd3ff; --accent:#8fd3ff; --rayon:20px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{min-height:100dvh;font-family:'Instrument Sans',sans-serif;background:var(--nuit);color:var(--neige)}
+  #atmo{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:radial-gradient(70% 50% at 50% -10%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%);transition:background .8s}
+  .page{position:relative;z-index:1;max-width:820px;margin:0 auto;padding:0 16px 40px}
+  h1,h2,h3,.unb{font-family:'Unbounded',sans-serif}
+  button{font-family:inherit}
+  button:focus-visible,a:focus-visible{outline:2px solid var(--bougie);outline-offset:2px}
+
+  /* ===== En-tête ===== */
+  .entete{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:16px 0 12px}
+  .marque{display:flex;align-items:center;gap:8px}
+  .marque .point{width:9px;height:9px;border-radius:50%;background:linear-gradient(90deg,var(--givre),var(--braise))}
+  .marque b{font-family:'Unbounded',sans-serif;font-weight:500;font-size:1rem}
+  .marque span{color:var(--acier);font-size:.86rem}
+  .lienLivres{font-size:.8rem;color:var(--acier);text-decoration:none;padding:7px 12px;border:1px solid var(--bord);border-radius:999px;transition:all .2s}
+  .lienLivres:hover{color:var(--bougie);border-color:var(--bougie)}
+  .saisonsPills{display:flex;gap:4px;flex-wrap:wrap;padding:3px;border:1px solid var(--bord);border-radius:999px;background:rgba(255,255,255,.04);width:fit-content;margin-bottom:14px}
+  .saisonsPills button{border:none;background:none;color:var(--acier);font-family:'Unbounded',sans-serif;font-size:.74rem;font-weight:500;padding:6px 11px;border-radius:999px;cursor:pointer;transition:all .2s}
+  .saisonsPills button:hover{color:var(--neige)}
+  .saisonsPills button.actif{background:var(--neige);color:var(--nuit)}
+
+  /* ===== Épisode en cours ===== */
+  .episode{position:relative;overflow:hidden;border-radius:var(--rayon);border:1px solid var(--bord);background:#0b0e13;min-height:300px}
+  .episode .fondImg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s}
+  .episode .fondImg.ok{opacity:1}
+  .episode .voile{position:absolute;inset:0;background:linear-gradient(0deg,rgba(7,9,13,.97) 0%,rgba(7,9,13,.82) 55%,rgba(7,9,13,.45) 100%)}
+  .episode .contenu{position:relative;padding:22px 20px 20px;display:flex;flex-direction:column;gap:12px}
+  .surtitre{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:600}
+  .episode h1{font-weight:500;font-size:clamp(1.5rem,4.5vw,2.2rem);line-height:1.12;letter-spacing:-.01em}
+  .resume{font-size:1rem;line-height:1.62;color:#d0d7e0}
+  .persos{display:flex;flex-wrap:wrap;gap:6px}
+  .persos span{font-size:.76rem;padding:4px 10px;border-radius:999px;border:1px solid color-mix(in srgb, var(--c) 55%, transparent);color:var(--c);background:color-mix(in srgb, var(--c) 10%, transparent)}
+  .nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+  .nav button{padding:11px 18px;border-radius:999px;cursor:pointer;font-size:.9rem;font-weight:500;border:1px solid rgba(170,210,255,.2);background:rgba(255,255,255,.05);color:var(--neige);transition:all .2s}
+  .nav button:hover:not(:disabled){background:rgba(255,255,255,.1)}
+  .nav button:disabled{opacity:.4;cursor:default}
+  .nav .suivant{background:var(--accent);color:#07090d;border-color:var(--accent);font-weight:600}
+  .nav .vu.actif{border-color:#6fbf73;color:#9fe0a2;background:rgba(111,191,115,.12)}
+
+  /* ===== Progression ===== */
+  .progression{margin:18px 0 6px}
+  .progLigne{display:flex;justify-content:space-between;align-items:baseline;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--acier);margin-bottom:8px}
+  .progLigne b{color:var(--neige)}
+  .rail{display:flex;gap:6px;align-items:flex-end}
+  .railSaison{flex:var(--n);display:flex;gap:2px;align-items:flex-end;padding-top:4px;border-top:2px solid color-mix(in srgb, var(--cs) 60%, transparent)}
+  .railSaison button{flex:1;min-width:2px;height:12px;border:none;border-radius:2px;padding:0;cursor:pointer;background:rgba(255,255,255,.12);transition:height .2s}
+  .railSaison button.vu{background:color-mix(in srgb, var(--cs) 75%, transparent);height:16px}
+  .railSaison button.courant{background:var(--neige);height:24px}
+
+  /* ===== Widgets ===== */
+  .widget{margin-top:16px;border:1px solid var(--bord);border-radius:var(--rayon);background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.01))}
+  .widget-titre{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 18px 0;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--acier)}
+  .widget-corps{padding:12px 18px 18px}
+  .saisonEntete{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
+  .affiche{width:120px;aspect-ratio:2/3;border-radius:12px;overflow:hidden;flex:none;position:relative;
+    background:linear-gradient(160deg, color-mix(in srgb, var(--accent) 40%, #0b0e13), #0b0e13);border:1px solid var(--bord);display:grid;place-items:center}
+  .affiche b{font-family:'Unbounded',sans-serif;font-size:2rem;color:var(--neige);opacity:.85}
+  .affiche img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
+  .affiche img.ok{display:block}
+  .saisonInfos{flex:1;min-width:220px}
+  .saisonInfos h2{font-weight:500;font-size:1.25rem}
+  .meta{font-size:.82rem;color:var(--acier);margin:4px 0 10px;line-height:1.5}
+  .synopsis{font-size:.92rem;line-height:1.55;color:#c8d2e0}
+  .label{font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--bougie);font-weight:600;margin:14px 0 6px}
+  .moments{list-style:none;display:grid;gap:5px}
+  .moments li{font-size:.88rem;color:#c8d2e0;padding-left:16px;position:relative;line-height:1.45}
+  .moments li::before{content:"";position:absolute;left:2px;top:.55em;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chips span{font-size:.76rem;padding:4px 10px;border-radius:999px;border:1px solid var(--bord);color:var(--acier)}
+  .listeEp{display:grid;gap:6px}
+  .ligneEp{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;padding:10px 12px;border-radius:12px;cursor:pointer;
+    border:1px solid transparent;background:rgba(255,255,255,.03);color:var(--neige);transition:all .2s}
+  .ligneEp:hover{border-color:var(--bord);background:rgba(255,255,255,.06)}
+  .ligneEp.courant{border-color:var(--accent);background:color-mix(in srgb, var(--accent) 10%, transparent)}
+  .ligneEp .num{font-family:'Unbounded',sans-serif;font-size:.78rem;color:var(--acier);width:28px;flex:none;padding-top:2px}
+  .ligneEp .txt{flex:1;min-width:0}
+  .ligneEp .tit{font-weight:600;font-size:.92rem}
+  .ligneEp .ext{font-size:.8rem;color:var(--acier);line-height:1.45;margin-top:2px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+  .ligneEp .coche{flex:none;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--bord);display:grid;place-items:center;font-size:.72rem;color:transparent}
+  .ligneEp.vu .coche{border-color:#6fbf73;background:rgba(111,191,115,.18);color:#9fe0a2}
+
+  /* ===== Dans les livres ===== */
+  .livresIntro{font-size:.9rem;color:#c8d2e0;line-height:1.5;margin-bottom:12px}
+  .tomesListe{display:grid;gap:8px}
+  .tomeLigne{display:grid;grid-template-columns:160px 1fr;gap:12px;align-items:start;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid transparent}
+  .tomeLigne.principal{border-color:color-mix(in srgb, var(--accent) 45%, transparent);background:color-mix(in srgb, var(--accent) 8%, transparent)}
+  .tomeNom b{display:block;font-family:'Unbounded',sans-serif;font-weight:500;font-size:.78rem;color:var(--accent)}
+  .tomeNom span{display:block;font-size:.84rem;color:var(--neige);margin-top:2px;line-height:1.3}
+  .tomeLigne.aparaitre .tomeNom b{color:var(--acier)}
+  .chapsChips{display:flex;flex-wrap:wrap;gap:5px}
+  .chapsChips span{display:inline-flex;align-items:center;gap:6px;font-size:.76rem;padding:3px 10px 3px 3px;border-radius:999px;border:1px solid var(--bord);color:#c8d2e0}
+  .chapsChips span i{font-style:normal;font-family:'Unbounded',sans-serif;font-size:.64rem;min-width:22px;height:20px;padding:0 5px;border-radius:999px;display:inline-grid;place-items:center;background:rgba(255,255,255,.09);color:var(--neige)}
+  .tomeLigne.aparaitre .chapsChips span{padding-left:10px;font-style:italic}
+  .livresNote{font-size:.74rem;color:var(--discret);margin-top:12px;line-height:1.5}
+  @media (max-width:560px){.tomeLigne{grid-template-columns:1fr;gap:8px}}
+  .moments li{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:4px 12px}
+  .momRefs{display:flex;flex-wrap:wrap;gap:5px}
+  .refLivre{font-size:.7rem;padding:2px 9px;border-radius:999px;white-space:nowrap;cursor:default;
+    border:1px solid color-mix(in srgb, var(--accent) 45%, transparent);color:var(--accent);background:color-mix(in srgb, var(--accent) 8%, transparent)}
+  .refLivre.libre{border-style:dashed}
+  .refLivre.inedit{border-color:var(--bord);color:var(--acier);background:none;font-style:italic}
+  .ligneEp .miniLivre{font-weight:500;font-size:.7rem;color:var(--accent);margin-left:8px;white-space:nowrap}
+  .ligneEp .miniLivre.hors{color:var(--discret);font-style:italic}
+
+  /* ===== Les 8 saisons ===== */
+  .grilleSaisons{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  @media (max-width:620px){.grilleSaisons{grid-template-columns:repeat(2,1fr)}}
+  .carteSaison{text-align:left;cursor:pointer;padding:12px;border-radius:14px;border:1px solid var(--bord);border-top:3px solid var(--cs);
+    background:rgba(255,255,255,.03);color:var(--neige);transition:all .2s}
+  .carteSaison:hover{background:rgba(255,255,255,.07)}
+  .carteSaison.actif{background:color-mix(in srgb, var(--cs) 12%, transparent)}
+  .carteSaison .s{font-family:'Unbounded',sans-serif;font-size:1.05rem}
+  .carteSaison .a{font-size:.74rem;color:var(--acier);margin-top:2px}
+  .carteSaison .t{font-size:.8rem;color:#c8d2e0;margin-top:6px;line-height:1.35}
+  .carteSaison .barre{height:4px;border-radius:999px;background:rgba(255,255,255,.1);margin-top:8px;overflow:hidden}
+  .carteSaison .barre i{display:block;height:100%;background:var(--cs)}
+
+  .pied{margin-top:22px;padding-top:16px;border-top:1px solid var(--bord);font-size:.78rem;color:var(--discret);display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}
+  @media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="atmo"></div>
+<div class="page">
+  <header class="entete">
+    <div class="marque"><span class="point"></span><b>Game of Thrones</b><span>Guide de visionnage</span></div>
+    <a class="lienLivres" href="index.html" title="Le guide d'écoute des livres">← Les livres (guide d'écoute)</a>
+  </header>
+
+  <nav class="saisonsPills" id="saisonsPills" aria-label="Choisir une saison"></nav>
+
+  <section class="episode" id="episode" aria-live="polite">
+    <div class="voile"></div>
+    <div class="contenu">
+      <div class="surtitre" id="surtitre"></div>
+      <h1 id="titreEp"></h1>
+      <p class="resume" id="resumeEp"></p>
+      <div class="persos" id="persosEp"></div>
+      <div class="nav">
+        <button type="button" id="btnPrec">← Précédent</button>
+        <button type="button" id="btnVu" class="vu">○ Pas encore vu</button>
+        <button type="button" id="btnSuiv" class="suivant">Épisode suivant →</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="progression" aria-label="Progression">
+    <div class="progLigne"><span>Progression</span><span id="progTxt"></span></div>
+    <div class="rail" id="rail"></div>
+  </section>
+
+  <section class="widget" id="wLivres">
+    <div class="widget-titre"><span>Dans les livres</span><span id="livresEp"></span></div>
+    <div class="widget-corps">
+      <p class="livresIntro" id="livresIntro"></p>
+      <div class="tomesListe" id="livresTomes"></div>
+      <p class="livresNote">Numéros de chapitre de l'édition française en 15 tomes, comme dans le guide des livres (le prologue compte comme chapitre 1). Correspondances : Wiki of Westeros.</p>
+    </div>
+  </section>
+
+  <section class="widget" id="wSaison">
+    <div class="widget-titre"><span id="saisonTitreWidget">La saison</span><span id="saisonVus"></span></div>
+    <div class="widget-corps">
+      <div class="saisonEntete">
+        <div class="affiche" id="affiche"><b id="afficheNum"></b></div>
+        <div class="saisonInfos">
+          <h2 id="saisonTitre"></h2>
+          <div class="meta" id="saisonMeta"></div>
+          <p class="synopsis" id="saisonSynopsis"></p>
+        </div>
+      </div>
+      <div class="label">Moments clés</div>
+      <ul class="moments" id="saisonMoments"></ul>
+      <div class="label">Lieux principaux</div>
+      <div class="chips" id="saisonLieux"></div>
+      <div class="label">Épisodes</div>
+      <div class="listeEp" id="listeEp"></div>
+    </div>
+  </section>
+
+  <section class="widget">
+    <div class="widget-titre">Les 8 saisons <span>2011 – 2019 · 73 épisodes</span></div>
+    <div class="widget-corps"><div class="grilleSaisons" id="grilleSaisons"></div></div>
+  </section>
+
+  <footer class="pied">
+    <span>Game of Thrones · HBO, 2011–2019 — d'après George R. R. Martin</span>
+    <span>Raccourcis : ← → épisode · V vu / pas vu · 1 à 8 saison</span>
+  </footer>
+</div>
+
+<script>
+/* =====================================================
+   DONNÉES — 8 saisons, 73 épisodes (titres originaux)
+===================================================== */
+const SAISONS = [
+  {n:1, annee:"2011", dates:"17 avril – 19 juin 2011", livre:"tomes 1 et 2 — Le Trône de fer, Le Donjon rouge (A Game of Thrones)", c:"#8fd3ff",
+   accroche:"Le jeu commence",
+   synopsis:"Le roi Robert Baratheon fait de Ned Stark sa Main et l'entraîne à Port-Réal, où la mort mystérieuse de son prédécesseur cache un secret mortel. Pendant ce temps, Jon Snow rejoint la Garde de Nuit au Mur, et Daenerys Targaryen, vendue à un seigneur dothraki, apprend à devenir reine.",
+   moments:[["Le roi Robert arrive à Winterfell","T1:5"],["La chute de Bran","T1:9"],["La mort de Robert et la trahison de Littlefinger","T2:12,14"],["L'exécution de Ned Stark","T2:30"],["Robb proclamé Roi du Nord","T2:36"],["Naissance des trois dragons","T2:37"]],
+   lieux:["Winterfell","Port-Réal","Le Mur","Les Eyrié","Vaes Dothrak"],
+   eps:[
+    ["Winter Is Coming","Au-delà du Mur, des patrouilleurs de la Garde de Nuit croisent les Marcheurs blancs ; le seul survivant, déserteur, est exécuté par Ned Stark. Le roi Robert vient demander à Ned d'être sa Main, Daenerys est mariée à Khal Drogo, et Bran, qui surprend Jaime et Cersei, est poussé d'une tour."],
+    ["The Kingsroad","Ned part pour Port-Réal avec Sansa et Arya, tandis que Jon rejoint la Garde de Nuit en compagnie de Tyrion. Un assassin tente de tuer Bran, toujours inconscient, et sur la route, la querelle entre Arya et Joffrey coûte la vie à la louve de Sansa."],
+    ["Lord Snow","Ned découvre un royaume endetté, et Catelyn, arrivée en secret, apprend de Littlefinger que le poignard de l'assassin appartiendrait à Tyrion. Au Mur, Jon découvre la dure réalité de la Garde, Arya prend ses premières leçons avec Syrio, et Daenerys attend un enfant."],
+    ["Cripples, Bastards, and Broken Things","Ned enquête sur la mort de l'ancienne Main du Roi et découvre Gendry, un bâtard de Robert. Jon prend Sam sous sa protection, Tyrion offre à Bran une selle adaptée, et Catelyn fait arrêter Tyrion dans une auberge."],
+    ["The Wolf and the Lion","Catelyn conduit Tyrion aux Eyrié, chez sa sœur Lysa. À Port-Réal, Robert et Ned se brouillent au sujet de Daenerys, Arya surprend un complot dans les souterrains, et Jaime attaque Ned en pleine rue."],
+    ["A Golden Crown","Tyrion réclame un jugement par combat et Bronn se bat pour lui. Bran est attaqué par des sauvageons près de Winterfell, Ned, Main par intérim, condamne la Montagne, et Khal Drogo « couronne » Viserys d'or fondu."],
+    ["You Win or You Die","Robert meurt des suites d'une chasse ; Ned, qui sait que Joffrey n'est pas son fils, est trahi par Littlefinger au moment de défier Cersei. Jon prononce ses vœux, et Daenerys échappe à un empoisonnement qui pousse Drogo à promettre la conquête des Sept Couronnes."],
+    ["The Pointy End","Les Lannister massacrent la maisonnée de Ned : Arya s'enfuit, Sansa reste prisonnière. Robb appelle ses bannerets, Tyrion s'allie aux clans des montagnes, Jon affronte un mort revenu à la vie, et Drogo est blessé en duel."],
+    ["Baelor","Robb obtient le passage des Jumeaux en promettant un mariage Frey, puis capture Jaime. Drogo s'effondre et Daenerys s'en remet à la magie de Mirri Maz Duur, tandis qu'à Port-Réal, Ned est décapité sur ordre de Joffrey."],
+    ["Fire and Blood","Le Nord proclame Robb roi, Arya fuit la capitale parmi les recrues de la Garde de Nuit, et Tyrion est envoyé à Port-Réal comme Main par intérim. Daenerys entre dans le bûcher de Drogo et en ressort avec trois dragons."]
+   ]},
+  {n:2, annee:"2012", dates:"1er avril – 3 juin 2012", livre:"tomes 3 à 5 — La Bataille des rois, L'Ombre maléfique, L'Invincible Forteresse (A Clash of Kings)", c:"#6fbf73",
+   accroche:"La guerre des cinq rois",
+   synopsis:"Cinq rois se disputent désormais le royaume : Joffrey, Robb, Stannis, Renly et Balon Greyjoy. Tyrion gouverne Port-Réal face à une Cersei hostile, Theon trahit les Stark, et Daenerys cherche des alliés dans la riche cité de Qarth.",
+   moments:[["Stannis et la prêtresse rouge Mélisandre","T3:1,11"],["Renly tué par une ombre","T4:12"],["Theon s'empare de Winterfell","T4:14,16"],["Arya prisonnière à Harrenhal","T4:5"],["La bataille de la Néra et le feu grégeois","T5:13-18"],["Les dragons volés à Qarth","≠T5:4"]],
+   lieux:["Port-Réal","Peyredragon","Harrenhal","Pyke","Qarth","Au-delà du Mur"],
+   eps:[
+    ["The North Remembers","Joffrey règne avec cruauté et Tyrion arrive à Port-Réal comme Main du Roi. Stannis revendique le trône à Peyredragon aux côtés de Mélisandre, et les bâtards de Robert sont massacrés dans la capitale."],
+    ["The Night Lands","Arya révèle sa véritable identité à Gendry, recherché par le Guet. Theon retrouve les îles de Fer et un père qui le méprise, Tyrion exile le commandant du Guet au Mur, et Jon découvre le terrible secret de Craster."],
+    ["What Is Dead May Never Die","Theon choisit les siens et est baptisé selon la foi du Dieu Noyé. Catelyn rejoint le camp de Renly, Tyrion piège le conseil pour démasquer l'espion de Cersei, et Yoren meurt en protégeant ses recrues."],
+    ["Garden of Bones","Joffrey fait battre Sansa en public avant que Tyrion n'intervienne. Arya et Gendry sont prisonniers à Harrenhal, Daenerys entre à Qarth, et Mélisandre donne naissance à une ombre sous les yeux de Davos."],
+    ["The Ghost of Harrenhal","Une ombre assassine Renly dans sa tente ; Catelyn et Brienne s'enfuient. Arya obtient de Jaqen trois morts, Tyrion découvre le feu grégeois de Cersei, et Jon part en reconnaissance avec Qhorin Mimain."],
+    ["The Old Gods and the New","Theon s'empare de Winterfell et exécute ser Rodrik. Osha aide Bran et Rickon à fuir, la foule attaque le cortège royal à Port-Réal, et les dragons de Daenerys sont volés."],
+    ["A Man Without Honor","Theon traque les fils Stark et exhibe deux corps carbonisés. Jaime tente de s'évader du camp de Robb, Jon s'égare avec sa prisonnière Ygritte, et Daenerys découvre la trahison de Xaro et Pyat Pree."],
+    ["The Prince of Winterfell","Catelyn libère Jaime et le confie à Brienne. Arya obtient de Jaqen leur évasion d'Harrenhal, Robb se rapproche de Talisa, et la flotte de Stannis approche de Port-Réal."],
+    ["Blackwater","La flotte de Stannis attaque Port-Réal et Tyrion en détruit une grande partie grâce au feu grégeois. Blessé en menant la défense, il voit la bataille sauvée par l'arrivée de Tywin et des Tyrell."],
+    ["Valar Morghulis","Tywin devient Main du Roi, Joffrey délaisse Sansa pour Margaery, et Robb épouse Talisa. Winterfell brûle, Daenerys récupère ses dragons dans la Maison des Nonmourants, et au-delà du Mur, une armée de morts se met en marche."]
+   ]},
+  {n:3, annee:"2013", dates:"31 mars – 9 juin 2013", livre:"tomes 6 à 8 — Intrigues à Port-Réal, L'Épée de feu, Les Noces pourpres (A Storm of Swords, 1re partie)", c:"#d04a4a",
+   accroche:"Les alliances se brisent",
+   synopsis:"Les Lannister tiennent Port-Réal grâce à l'alliance Tyrell, tandis que Robb perd du terrain en remportant des batailles. Jaime voyage aux côtés de Brienne, Jon s'infiltre chez les sauvageons, et Daenerys se bâtit une armée dans la baie des Serfs.",
+   moments:[["Les Immaculés d'Astapor","T7:3,7"],["Jaime perd sa main","T7:1"],["Le mariage de Tyrion et Sansa","T7:8"],["Sam tue un Marcheur blanc","T6:19"],["Les Noces pourpres","T8:11,12"],["Daenerys « Mhysa » à Yunkaï","T8:2"]],
+   lieux:["Vivesaigues","Les Jumeaux","Harrenhal","Astapor et Yunkaï","Au-delà du Mur","Port-Réal"],
+   eps:[
+    ["Valar Dohaeris","Jon est conduit devant Mance Rayder, le Roi d'au-delà du Mur. Tyrion, défiguré, se voit refuser Castral Roc par son père, et Daenerys arrive à Astapor pour acheter une armée d'Immaculés."],
+    ["Dark Wings, Dark Words","Bran rencontre Jojen et Meera Reed, Arya et Gendry tombent sur la Fraternité sans bannières, et Jaime et Brienne sont capturés en chemin. Theon est torturé par un inconnu."],
+    ["Walk of Punishment","Daenerys conclut un marché pour les Immaculés en échange d'un dragon. Robb assiste aux funérailles de Hoster Tully, et Jaime perd sa main droite aux mains de ses geôliers."],
+    ["And Now His Watch Is Ended","Daenerys prend le commandement des Immaculés et lâche Drogon sur les maîtres d'Astapor. Au manoir de Craster, la Garde de Nuit se mutine et le Lord Commandant Mormont est tué, tandis que Varys raconte à Tyrion comment il est devenu eunuque."],
+    ["Kissed by Fire","Le Limier remporte son duel contre Beric Dondarrion, que Thoros ramène à la vie. Jaime confie à Brienne la vérité sur la mort du Roi Fou, Jon et Ygritte deviennent amants, et Robb exécute lord Karstark, perdant une partie de son armée."],
+    ["The Climb","Jon, Ygritte et les sauvageons escaladent le Mur. Tywin impose les mariages de Sansa avec Tyrion et de Cersei avec Loras, et Littlefinger livre Ros à Joffrey."],
+    ["The Bear and the Maiden Fair","Daenerys arrive devant Yunkaï, et Jon et Ygritte progressent au sud du Mur. Jaime, libéré, revient sur ses pas pour sauver Brienne, jetée dans une fosse face à un ours."],
+    ["Second Sons","Daenerys rallie les Puînés grâce à Daario. Tyrion épouse Sansa, Mélisandre se sert du sang de Gendry, et Sam tue un Marcheur blanc avec un poignard de verre de dragon."],
+    ["The Rains of Castamere","Aux Jumeaux, le mariage d'Edmure tourne au massacre : Robb, Talisa et Catelyn sont assassinés lors des Noces pourpres. Daenerys prend Yunkaï, et Jon trahit les sauvageons pour fuir Ygritte."],
+    ["Mhysa","Arya découvre ce qu'il reste de Robb, et le Limier l'emmène. Ramsay se révèle être le bourreau de Theon, Davos fait fuir Gendry, Sam rentre au Mur avec Vère, et les esclaves libérés acclament Daenerys « Mhysa »."]
+   ]},
+  {n:4, annee:"2014", dates:"6 avril – 15 juin 2014", livre:"tomes 8 et 9 — Les Noces pourpres, La Loi du régicide (fin d'A Storm of Swords) + éléments des tomes 10 à 15", c:"#b07ad6",
+   accroche:"Le prix des trônes",
+   synopsis:"Les Lannister semblent avoir gagné la guerre, mais un mariage royal tourne au drame et Tyrion est accusé de régicide. Au Nord, les sauvageons attaquent le Mur, et Daenerys apprend à gouverner à Meereen.",
+   moments:[["Les Noces violettes : Joffrey empoisonné","T8:20"],["Le procès de Tyrion","T9:5"],["La Vipère contre la Montagne","T9:9"],["La bataille de Châteaunoir","T8:15|T9:3"],["Tyrion tue son père","T9:16"],["Arya embarque pour Braavos","T9:13"]],
+   lieux:["Port-Réal","Les Eyrié","Châteaunoir","Meereen","Le manoir de Craster"],
+   eps:[
+    ["Two Swords","Tywin fait forger deux épées à partir de la lame de Ned Stark. Oberyn Martell arrive à Port-Réal assoiffé de vengeance, et Arya, avec le Limier, récupère Aiguille dans une auberge."],
+    ["The Lion and the Rose","Lors du banquet de son mariage avec Margaery, Joffrey meurt empoisonné. Cersei accuse aussitôt Tyrion, et Bran a une vision qui le pousse vers le nord."],
+    ["Breaker of Chains","Littlefinger exfiltre Sansa de la capitale. Tywin prépare Tommen à régner, les sauvageons attaquent les villages du Nord, et Daenerys arrive devant Meereen."],
+    ["Oathkeeper","Daenerys prend Meereen et fait crucifier les maîtres. Jaime confie à Brienne une épée forgée dans l'acier de Ned et la mission de retrouver Sansa, tandis que Bran est capturé au manoir de Craster."],
+    ["First of His Name","Tommen est couronné. Sansa arrive aux Eyrié où Lysa épouse Littlefinger, et Jon attaque le manoir de Craster pendant que Bran poursuit sa route vers le nord."],
+    ["The Laws of Gods and Men","Stannis et Davos obtiennent l'appui de la Banque de Fer de Braavos. Le procès de Tyrion tourne au désastre quand Shae témoigne contre lui, et il réclame un jugement par combat."],
+    ["Mockingbird","Tyrion cherche un champion ; Oberyn se propose pour affronter la Montagne. Aux Eyrié, Littlefinger pousse Lysa dans le vide après qu'elle a menacé Sansa."],
+    ["The Mountain and the Viper","Le duel judiciaire tourne mal : la Montagne tue Oberyn et Tyrion est condamné à mort. Les sauvageons approchent du Mur, et Ramsay, légitimé, devient un Bolton."],
+    ["The Watchers on the Wall","L'armée de Mance attaque Châteaunoir avec ses géants. La Garde de Nuit tient le Mur, mais Ygritte meurt dans les bras de Jon."],
+    ["The Children","Stannis arrive au Nord et met les sauvageons en déroute. Bran atteint la Corneille à trois yeux, Tyrion s'échappe et tue Shae puis son père, et Arya, après avoir abandonné le Limier blessé, embarque pour Braavos."]
+   ]},
+  {n:5, annee:"2015", dates:"12 avril – 14 juin 2015", livre:"tomes 10 à 15 — du Chaos à Une danse avec les dragons (A Feast for Crows, A Dance with Dragons), très librement adaptés", c:"#9fb0c4",
+   accroche:"Les loups dispersés",
+   synopsis:"Tywin mort, Cersei s'appuie sur une foi fanatique qui se retourne contre elle. Arya s'initie chez les Sans-Visage, Sansa est mariée à Ramsay, Jon devient Lord Commandant, et Tyrion rejoint enfin Daenerys.",
+   moments:[["Arya à la Maison du Noir et du Blanc","T10:7"],["Jon Lord Commandant","T9:18"],["La montée des Moineaux","T11:13"],["Le massacre de Durlieu",""],["Le sacrifice de Shireen",""],["La marche d'expiation de Cersei","T15:16"],["Jon poignardé par ses frères","T15:20"]],
+   lieux:["Braavos","Meereen","Dorne","Winterfell","Châteaunoir","Durlieu"],
+   eps:[
+    ["The Wars to Come","Cersei enterre son père, Tyrion arrive à Pentos avec Varys, et Daenerys affronte les Fils de la Harpie à Meereen. Jon ne parvient pas à faire plier Mance, condamné au bûcher, et abrège ses souffrances d'une flèche."],
+    ["The House of Black and White","Arya entre à la Maison du Noir et du Blanc à Braavos. Jon est élu Lord Commandant, Jaime part pour Dorne secourir Myrcella, et Brienne retrouve Sansa, qui refuse son aide."],
+    ["High Sparrow","Margaery épouse Tommen et Cersei se rapproche du Grand Moineau. Littlefinger promet Sansa à Ramsay Bolton, Jon fait exécuter Janos Slynt, et Jorah enlève Tyrion."],
+    ["Sons of the Harpy","La Foi militante renaît avec l'aval de Cersei. Jaime et Bronn débarquent à Dorne, et les Fils de la Harpie tendent une embuscade mortelle à ser Barristan."],
+    ["Kill the Boy","Daenerys décide d'épouser Hizdahr et de rouvrir les arènes. Jon convainc la Garde d'accueillir les sauvageons, et Jorah, en traversant l'ancienne Valyria avec Tyrion, est touché par la grisécaille."],
+    ["Unbowed, Unbent, Unbroken","Sansa épouse Ramsay, qui la brutalise la nuit des noces sous les yeux de Theon. Loras et Margaery sont arrêtés, et Tyrion et Jorah sont vendus comme esclaves."],
+    ["The Gift","Cersei est à son tour emprisonnée par le Grand Moineau. Mestre Aemon meurt, Sansa tente en vain d'obtenir de l'aide, et Tyrion rencontre enfin Daenerys."],
+    ["Hardhome","À Durlieu, Jon assiste au massacre des sauvageons par l'armée des morts et voit le Roi de la Nuit relever les cadavres. Tyrion devient conseiller de Daenerys, et Arya reçoit sa première mission."],
+    ["The Dance of Dragons","Stannis sacrifie sa fille Shireen sur le bûcher. Dans l'arène de Meereen, les Fils de la Harpie attaquent, et Daenerys s'enfuit sur le dos de Drogon."],
+    ["Mother's Mercy","L'armée de Stannis est écrasée par les Bolton, Sansa et Theon s'échappent, et Myrcella meurt empoisonnée. Arya tue Meryn Trant et perd la vue, Cersei fait sa marche d'expiation, et Jon est poignardé par ses propres frères."]
+   ]},
+  {n:6, annee:"2016", dates:"24 avril – 26 juin 2016", livre:"Au-delà des livres publiés", c:"#e8a33d",
+   accroche:"Le retour des loups",
+   synopsis:"La série dépasse désormais les livres. Jon revient d'entre les morts et reprend Winterfell avec Sansa, Bran découvre le passé, Daenerys rallie les Dothrakis, et Cersei frappe un grand coup à Port-Réal.",
+   moments:[["Le retour de Jon",""],["Hodor « retient la porte »",""],["Daenerys reine des Dothrakis",""],["La bataille des Bâtards",""],["L'explosion du Grand Septuaire",""],["Jon proclamé Roi du Nord",""]],
+   lieux:["Châteaunoir","Winterfell","Braavos","Meereen","Vaes Dothrak","Port-Réal"],
+   eps:[
+    ["The Red Woman","Jon gît mort à Châteaunoir, veillé par Davos. Brienne sauve Sansa et Theon, Ellaria s'empare de Dorne, Daenerys est captive d'un khalasar, et Mélisandre révèle sa véritable apparence."],
+    ["Home","Bran, auprès de la Corneille à trois yeux, voit le passé de Winterfell. Ramsay tue son père, Euron assassine Balon, et Mélisandre ramène Jon à la vie."],
+    ["Oathbreaker","Jon fait pendre ceux qui l'ont tué et quitte la Garde de Nuit. Bran assiste en vision à la Tour de la Joie, Arya retrouve la vue, et Ramsay obtient Rickon."],
+    ["Book of the Stranger","Sansa retrouve Jon à Châteaunoir. Tyrion négocie avec les maîtres, et Daenerys brûle les khals à Vaes Dothrak pour prendre la tête des Dothrakis."],
+    ["The Door","Sansa affronte Littlefinger et Euron devient roi des îles de Fer. Bran découvre l'origine des Marcheurs blancs, puis l'attaque du Roi de la Nuit coûte la vie à la Corneille et à Hodor, qui « retient la porte »."],
+    ["Blood of My Blood","Benjen sauve Bran et Meera. Sam ramène Vère dans sa famille et repart avec l'épée de son père, et Daenerys galvanise les Dothrakis du haut de Drogon."],
+    ["The Broken Man","Le Limier, bien vivant, a trouvé refuge dans une communauté pacifique. Jon et Sansa cherchent des alliés, Jaime assiège Vivesaigues, et Arya est poignardée par la Gamine."],
+    ["No One","Arya élimine la Gamine et reprend son nom. Jaime obtient la reddition de Vivesaigues, Tyrion fait face à l'attaque des maîtres, et le Limier venge sa communauté."],
+    ["Battle of the Bastards","Daenerys brûle la flotte des maîtres. Devant Winterfell, Jon affronte Ramsay ; Rickon est tué, et l'arrivée des chevaliers du Val fait basculer la bataille avant que Ramsay ne soit dévoré par ses chiens."],
+    ["The Winds of Winter","Cersei fait exploser le Grand Septuaire et est couronnée après la mort de Tommen. Arya tue Walder Frey, Bran découvre les vraies origines de Jon, Jon est proclamé Roi du Nord, et Daenerys fait voile vers Westeros."]
+   ]},
+  {n:7, annee:"2017", dates:"16 juillet – 27 août 2017", livre:"Au-delà des livres publiés", c:"#ff7a3d",
+   accroche:"Le feu et la glace se rencontrent",
+   synopsis:"Daenerys débarque enfin à Westeros et affronte Cersei, tandis que Jon cherche des alliés contre l'armée des morts. Les deux finissent par se rencontrer, et une expédition au-delà du Mur change le cours de la guerre.",
+   moments:[["Arya se venge des Frey",""],["Daenerys à Peyredragon",""],["Jon rencontre Daenerys",""],["Drogon contre l'armée Lannister",""],["L'expédition au-delà du Mur",""],["La chute du Mur",""]],
+   lieux:["Peyredragon","Winterfell","Port-Réal","Castral Roc","Au-delà du Mur","Fort-Levant"],
+   eps:[
+    ["Dragonstone","Arya empoisonne toute la maison Frey. Jon s'impose comme Roi du Nord, Sam découvre du verre de dragon sous Peyredragon, et Daenerys débarque enfin dans le château de ses ancêtres."],
+    ["Stormborn","Daenerys tient conseil de guerre et invite Jon à Peyredragon. Sam soigne Jorah de la grisécaille, Arya retrouve Nymeria, et Euron attaque la flotte de Yara."],
+    ["The Queen's Justice","Jon rencontre Daenerys. Ver Gris prend Castral Roc, mais Jaime s'empare d'Hautjardin, où Olenna avoue avoir empoisonné Joffrey, et Cersei se venge d'Ellaria."],
+    ["The Spoils of War","Arya rentre à Winterfell et retrouve Sansa et Bran. Daenerys, sur Drogon, s'abat avec les Dothrakis sur l'armée Lannister, et Jaime charge le dragon avant d'être sauvé par Bronn."],
+    ["Eastwatch","Daenerys fait brûler les Tarly qui refusent de s'agenouiller. Sam quitte la Citadelle, et Jon part au-delà du Mur avec Gendry, le Limier et d'autres pour capturer un mort."],
+    ["Beyond the Wall","L'expédition capture un mort mais se retrouve encerclée sur un lac gelé. Daenerys vient la sauver avec ses dragons, Viserion est tué, et le Roi de la Nuit le ramène à la vie."],
+    ["The Dragon and the Wolf","À Port-Réal, Jon et Daenerys montrent un mort à Cersei, qui feint d'accepter une trêve. Littlefinger est exécuté à Winterfell, Bran et Sam révèlent la véritable ascendance de Jon, et le Roi de la Nuit abat le Mur avec Viserion."]
+   ]},
+  {n:8, annee:"2019", dates:"14 avril – 19 mai 2019", livre:"Au-delà des livres publiés", c:"#eef1f5",
+   accroche:"La fin du jeu",
+   synopsis:"Les vivants s'unissent à Winterfell pour affronter la Longue Nuit, puis la guerre reprend pour le Trône de Fer. La dernière saison tranche le sort de Daenerys, de Jon et des Sept Couronnes.",
+   moments:[["Jon apprend qui il est",""],["Brienne faite chevalier",""],["La Longue Nuit",""],["Arya et le Roi de la Nuit",""],["La chute de Port-Réal",""],["Le dernier conseil",""]],
+   lieux:["Winterfell","Port-Réal","Peyredragon"],
+   eps:[
+    ["Winterfell","Daenerys et Jon arrivent à Winterfell, où l'accueil est froid. Sam révèle à Jon qu'il est Aegon Targaryen, et à Port-Réal, Cersei attend la Compagnie dorée."],
+    ["A Knight of the Seven Kingdoms","Jaime arrive à Winterfell pour combattre les morts. La veille de la bataille, il fait de Brienne une chevalière, et Jon révèle ses origines à Daenerys."],
+    ["The Long Night","La bataille de Winterfell contre l'armée des morts. Quand le Roi de la Nuit atteint Bran, Arya le tue, et toute son armée s'effondre avec lui."],
+    ["The Last of the Starks","Les vivants pleurent leurs morts, puis Daenerys repart vers le sud. Rhaegal est abattu par la flotte d'Euron, et Cersei fait exécuter Missandei."],
+    ["The Bells","Varys est exécuté pour trahison. Alors que Port-Réal se rend, Daenerys incendie la ville du haut de Drogon, et Cersei et Jaime meurent sous les décombres du Donjon Rouge."],
+    ["The Iron Throne","Jon tue Daenerys, et Drogon fait fondre le Trône de Fer. Bran est choisi comme roi, Sansa devient reine du Nord, Arya part vers l'ouest, et Jon retourne au-delà du Mur."]
+   ]}
+];
+
+/* Personnages repérés dans les résumés (couleur de leur maison) */
+const COUL = {stark:"#c6d6e6", lannister:"#ecbf58", targaryen:"#ff7a5c", baratheon:"#f4cc3a", tully:"#ef6a6a", greyjoy:"#d6b55c",
+  tyrell:"#8fc36a", martell:"#f0883e", bolton:"#c98fa0", frey:"#a8b4a0", garde:"#a9c4dc", sauvageons:"#b9c7d3", autre:"#a7b0bd"};
+const PERSOS = [
+  ["Ned",["Ned"],"stark"],["Catelyn",["Catelyn"],"stark"],["Robb",["Robb"],"stark"],["Sansa",["Sansa"],"stark"],["Arya",["Arya"],"stark"],
+  ["Bran",["Bran"],"stark"],["Rickon",["Rickon"],"stark"],["Jon Snow",["Jon"],"stark"],["Benjen",["Benjen"],"stark"],["Ser Rodrik",["Rodrik"],"stark"],
+  ["Hodor",["Hodor"],"stark"],["Osha",["Osha"],"stark"],["Jojen",["Jojen"],"stark"],["Meera",["Meera"],"stark"],
+  ["Tyrion",["Tyrion"],"lannister"],["Cersei",["Cersei"],"lannister"],["Jaime",["Jaime"],"lannister"],["Tywin",["Tywin"],"lannister"],
+  ["Joffrey",["Joffrey"],"lannister"],["Tommen",["Tommen"],"lannister"],["Myrcella",["Myrcella"],"lannister"],["Le Limier",["Limier"],"lannister"],
+  ["La Montagne",["Montagne"],"lannister"],["Bronn",["Bronn"],"lannister"],["Shae",["Shae"],"lannister"],
+  ["Daenerys",["Daenerys"],"targaryen"],["Viserys",["Viserys"],"targaryen"],["Drogo",["Drogo"],"targaryen"],["Jorah",["Jorah"],"targaryen"],
+  ["Missandei",["Missandei"],"targaryen"],["Ver Gris",["Ver Gris"],"targaryen"],["Daario",["Daario"],"targaryen"],["Barristan",["Barristan"],"targaryen"],
+  ["Varys",["Varys"],"autre"],["Drogon",["Drogon"],"targaryen"],["Viserion",["Viserion"],"targaryen"],["Rhaegal",["Rhaegal"],"targaryen"],
+  ["Robert",["Robert"],"baratheon"],["Stannis",["Stannis"],"baratheon"],["Renly",["Renly"],"baratheon"],["Davos",["Davos"],"baratheon"],
+  ["Mélisandre",["Mélisandre"],"baratheon"],["Shireen",["Shireen"],"baratheon"],["Gendry",["Gendry"],"baratheon"],["Brienne",["Brienne"],"autre"],
+  ["Lysa",["Lysa"],"tully"],["Edmure",["Edmure"],"tully"],["Hoster Tully",["Hoster"],"tully"],
+  ["Theon",["Theon"],"greyjoy"],["Yara",["Yara"],"greyjoy"],["Balon",["Balon"],"greyjoy"],["Euron",["Euron"],"greyjoy"],
+  ["Margaery",["Margaery"],"tyrell"],["Loras",["Loras"],"tyrell"],["Olenna",["Olenna"],"tyrell"],["Sam",["Sam"],"garde"],
+  ["Oberyn",["Oberyn"],"martell"],["Ellaria",["Ellaria"],"martell"],
+  ["Ramsay",["Ramsay"],"bolton"],["Walder Frey",["Walder Frey"],"frey"],
+  ["Mormont",["Mormont"],"garde"],["Qhorin",["Qhorin"],"garde"],["Yoren",["Yoren"],"garde"],["Mestre Aemon",["Aemon"],"garde"],
+  ["Mance Rayder",["Mance"],"sauvageons"],["Ygritte",["Ygritte"],"sauvageons"],["Craster",["Craster"],"sauvageons"],["Vère",["Vère"],"sauvageons"],
+  ["Littlefinger",["Littlefinger"],"autre"],["Jaqen",["Jaqen"],"autre"],["Syrio",["Syrio"],"autre"],["Talisa",["Talisa"],"autre"],
+  ["Beric",["Beric"],"autre"],["Thoros",["Thoros"],"autre"],["Xaro",["Xaro"],"autre"],["Pyat Pree",["Pyat Pree"],"autre"],
+  ["Mirri Maz Duur",["Mirri"],"autre"],["Hizdahr",["Hizdahr"],"autre"],["Grand Moineau",["Grand Moineau"],"autre"],["Roi de la Nuit",["Roi de la Nuit"],"autre"]
+];
+
+/* =====================================================
+   CORRESPONDANCE AVEC LES LIVRES — édition française en 15 tomes (celle d'Audible)
+   Numéro de chapitre DANS LE TOME (prologue = chapitre 1), comme sur le guide des livres.
+   Source des correspondances : Wiki of Westeros (rubrique « In the books » de chaque épisode).
+===================================================== */
+const TOMES_VF = {1:"Le Trône de fer", 2:"Le Donjon rouge", 3:"La Bataille des rois", 4:"L'Ombre maléfique", 5:"L'Invincible Forteresse", 6:"Intrigues à Port-Réal", 7:"L'Épée de feu", 8:"Les Noces pourpres", 9:"La Loi du régicide", 10:"Le Chaos", 11:"Les Sables de Dorne", 12:"Un festin pour les corbeaux", 13:"Le Bûcher d'un roi", 14:"Les Dragons de Meereen", 15:"Une danse avec les dragons"};
+/* Point de vue de chaque chapitre, tome par tome */
+const CHAP_VF = {
+  1:["Prologue", "Bran", "Catelyn", "Daenerys", "Eddard", "Jon", "Catelyn", "Arya", "Bran", "Tyrion", "Jon", "Daenerys", "Eddard", "Tyrion", "Catelyn", "Sansa", "Eddard", "Bran", "Catelyn", "Jon", "Eddard", "Tyrion", "Arya", "Daenerys", "Bran", "Eddard", "Jon", "Eddard", "Catelyn", "Sansa", "Eddard", "Tyrion", "Arya", "Eddard", "Catelyn", "Eddard"],
+  2:["Daenerys", "Bran", "Tyrion", "Eddard", "Catelyn", "Jon", "Tyrion", "Eddard", "Sansa", "Eddard", "Daenerys", "Eddard", "Jon", "Eddard", "Arya", "Sansa", "Jon", "Bran", "Daenerys", "Catelyn", "Tyrion", "Sansa", "Eddard", "Catelyn", "Jon", "Daenerys", "Tyrion", "Catelyn", "Daenerys", "Arya", "Bran", "Sansa", "Daenerys", "Tyrion", "Jon", "Catelyn", "Daenerys"],
+  3:["Prologue", "Arya", "Sansa", "Tyrion", "Bran", "Arya", "Jon", "Catelyn", "Tyrion", "Arya", "Davos", "Theon", "Daenerys", "Jon", "Arya", "Tyrion", "Bran", "Tyrion", "Sansa", "Arya", "Tyrion", "Bran"],
+  4:["Catelyn", "Jon", "Theon", "Tyrion", "Arya", "Daenerys", "Bran", "Tyrion", "Arya", "Catelyn", "Sansa", "Catelyn", "Jon", "Bran", "Tyrion", "Theon", "Arya", "Catelyn", "Daenerys", "Tyrion", "Davos", "Jon", "Tyrion"],
+  5:["Catelyn", "Bran", "Arya", "Daenerys", "Tyrion", "Theon", "Jon", "Sansa", "Jon", "Tyrion", "Catelyn", "Theon", "Sansa", "Davos", "Tyrion", "Sansa", "Tyrion", "Sansa", "Daenerys", "Arya", "Sansa", "Theon", "Tyrion", "Jon", "Bran"],
+  6:["Prologue", "Jaime", "Catelyn", "Arya", "Tyrion", "Davos", "Sansa", "Jon", "Daenerys", "Bran", "Davos", "Jaime", "Tyrion", "Arya", "Catelyn", "Jon", "Sansa", "Arya", "Samwell", "Tyrion", "Catelyn"],
+  7:["Jaime", "Arya", "Daenerys", "Bran", "Davos", "Jon", "Daenerys", "Sansa", "Arya", "Jon", "Jaime", "Tyrion", "Samwell", "Arya", "Catelyn", "Davos", "Jaime", "Tyrion", "Arya", "Bran"],
+  8:["Jon", "Daenerys", "Arya", "Jaime", "Catelyn", "Samwell", "Arya", "Jon", "Catelyn", "Arya", "Catelyn", "Arya", "Tyrion", "Davos", "Jon", "Bran", "Daenerys", "Tyrion", "Sansa", "Tyrion", "Sansa"],
+  9:["Jaime", "Davos", "Jon", "Arya", "Tyrion", "Jaime", "Sansa", "Jon", "Tyrion", "Daenerys", "Jaime", "Jon", "Arya", "Samwell", "Jon", "Tyrion", "Samwell", "Jon", "Sansa", "Épilogue"],
+  10:["Prologue", "Le Prophète", "Le Capitaine des Gardes", "Cersei", "Brienne", "Samwell", "Arya", "Cersei", "Jaime", "Brienne", "Sansa", "La Fille de la Seiche", "Cersei", "Le Chevalier souillé", "Brienne", "Samwell"],
+  11:["Jaime", "Cersei", "Le Capitaine de Fer", "Le Noyé", "Brienne", "Le Faiseur de Reines", "Arya", "Alayne", "Cersei", "Brienne", "Samwell", "Jaime", "Cersei", "Le Ravisseur", "Jaime"],
+  12:["Brienne", "Cersei", "Jaime", "Cat des canaux", "Samwell", "Cersei", "Brienne", "Jaime", "Cersei", "La princesse en la Tour", "Alayne", "Brienne", "Cersei", "Jaime", "Samwell"],
+  13:["Prologue", "Tyrion", "Daenerys", "Jon", "Bran", "Tyrion", "Le domestique du marchand", "Jon", "Tyrion", "Davos", "Jon", "Daenerys", "Schlingue", "Bran", "Tyrion", "Davos", "Daenerys", "Jon", "Tyrion", "Davos", "Schlingue", "Jon", "Tyrion", "Daenerys", "Le seigneur perdu"],
+  14:["Les Erre-au-Vent", "L'épouse rebelle", "Tyrion", "Jon", "Davos", "Daenerys", "Mélisandre", "Schlingue", "Tyrion", "Bran", "Jon", "Daenerys", "Le prince de Winterfell", "L'observateur", "Jon", "Tyrion", "Le tourne-casaque", "La prise du roi", "Daenerys", "Jon", "La petite aveugle", "Un fantôme à Winterfell", "Tyrion", "Jaime", "Jon"],
+  15:["Daenerys", "Theon", "Daenerys", "Jon", "Cersei", "Le garde de la reine", "Le prétendant de fer", "Tyrion", "Jon", "Le chevalier écarté", "Le prétendant éconduit", "Le griffon ressuscité", "Le sacrifice", "Victarion", "La laideronne", "Cersei", "Tyrion", "Le briseur de roi", "Le dompteur de dragons", "Jon", "La Main de la reine", "Daenerys", "Épilogue"]
+};
+/* Épisode "saison-épisode" → { tome: [chapitres] } */
+const LIVRES_EP = {
+  "1-1":{1:[1,2,3,4,5,6,7,8,9,12]},
+  "1-2":{1:[10,11,13,14,15,16,17,18,20,24]},
+  "1-3":{1:[19,20,21,22,23,24,25],5:[11],6:[2]},
+  "1-4":{1:[25,26,27,28,29,30],2:[1],6:[16]},
+  "1-5":{1:[31,32,33,34,35,36],2:[3]},
+  "1-6":{2:[2,3,4,5,8,9,11]},
+  "1-7":{1:[27],2:[10,12,13,14,19,21]},
+  "1-8":{2:[7,15,16,17,18,20,21,22,23,26],9:[7],10:[6]},
+  "1-9":{2:[7,23,24,25,27,28,29,30],4:[23]},
+  "1-10":{2:[30,31,32,33,34,35,36,37],3:[2,7],5:[11]},
+  "2-1":{2:[20],3:[1,3,4,5,8,11,13],4:[1,2,12]},
+  "2-2":{3:[6,9,10,11,12,13,20,21],4:[2,3,4]},
+  "2-3":{3:[4,12,15,18,20,21],4:[1,2,3,4,7,23],8:[18]},
+  "2-4":{3:[13],4:[5,6,8,10,11,18,21],5:[1,6]},
+  "2-5":{3:[21],4:[6,9,12,13,14,15,16,18,21,22]},
+  "2-6":{4:[13,15,16,17,18,19,20],5:[2,3,6,7,8,11,12,22]},
+  "2-7":{2:[28],3:[18],4:[5,9,18,19],5:[1,6,7,8,11,12,24],6:[21],14:[8]},
+  "2-8":{3:[1],4:[13,17,20],5:[3,5,10,12,24],6:[2,3,15],7:[16],15:[17]},
+  "2-9":{5:[13,14,15,16,17,18]},
+  "2-10":{3:[19],5:[3,4,19,21,22,23,24,25],6:[1,2,8,15],13:[21],14:[22]},
+  "3-1":{5:[19],6:[1,3,5,6,8,9,11,19],7:[3],8:[17],11:[13]},
+  "3-2":{3:[22],4:[7,14],6:[4,7,10,14,19],7:[1,9,15],13:[13]},
+  "3-3":{6:[14,16,20],7:[1,3,5,7,12,13,15],13:[13]},
+  "3-4":{1:[15],4:[23],6:[7],7:[7,11,13,14],13:[13]},
+  "3-5":{6:[7,20,21],7:[2,5,6,11,14,15,17,19],8:[2,14]},
+  "3-6":{6:[17],7:[8,10,15,16,17],8:[3,6],13:[13]},
+  "3-7":{5:[14],7:[16],8:[1,2,3,4,5],13:[13,17],14:[13]},
+  "3-8":{6:[11,19,20],7:[8,16],8:[2,6,7,14,17]},
+  "3-9":{5:[7,25],6:[15,16],7:[20],8:[1,2,9,10,11,12]},
+  "3-10":{5:[20,22],8:[1,2,8,12,13,14,16],9:[1,2,13,14],13:[13,21],14:[2]},
+  "4-1":{4:[9],5:[21],7:[12,18],8:[17,18],9:[1,6,8,11,13]},
+  "4-2":{5:[25],6:[11],8:[18,19,20,21],9:[11],11:[2,12],13:[5,13,21],14:[8]},
+  "4-3":{8:[8,14,15,17,21],9:[1,2,4,5,11],12:[12]},
+  "4-4":{8:[17,21],9:[11,16],10:[10,15],11:[12],13:[5]},
+  "4-5":{9:[7,10,18,19],10:[15],11:[5],13:[5,17]},
+  "4-6":{3:[4],9:[5,9],13:[3,10,20,21]},
+  "4-7":{7:[18],9:[4,5,13,19],11:[5],12:[1,7],13:[3],14:[7,12]},
+  "4-8":{8:[15],9:[9,10,11],10:[11],11:[8],12:[4],13:[21],14:[8]},
+  "4-9":{8:[15],9:[3,12]},
+  "4-10":{6:[20],9:[1,12,13,15,16],10:[8,15],12:[1,7,12],13:[2,3,12,14]},
+  "5-1":{9:[10,14,15],10:[8,9],12:[6,11],13:[2,3,6,11,12,24],14:[12]},
+  "5-2":{9:[1,10,15,17,18],10:[3,7,8,14,16],11:[1,2,6,7,9,11,12],13:[2,4,6]},
+  "5-3":{10:[5,7,8,13,15,16],11:[2,5,7,9,13],12:[11],13:[4,8,18,21,23],14:[3,8,13,21]},
+  "5-4":{2:[23],8:[2],10:[3,6,13,14],11:[2,9,13],12:[2,10],13:[4,8,9,12],14:[3,9,16,17],15:[23]},
+  "5-5":{9:[17],10:[6],12:[5],13:[8,12,19,22,23,24,25],14:[8,9,12,13,15,16,20],15:[4,20]},
+  "5-6":{9:[7],10:[3],11:[6,7],12:[9,11,13],13:[23],14:[13,14,16,23],15:[15]},
+  "5-7":{10:[16],12:[5,10,11,13],13:[24],14:[6,13,14,15,17,18,19,22,23,25],15:[8,20]},
+  "5-8":{11:[7],12:[4,13],13:[8],14:[7,11],15:[2,5,9,15,17,20]},
+  "5-9":{9:[11],12:[10],13:[4],14:[11,14,25],15:[2,3,8,9,13,15,21]},
+  "5-10":{10:[6],11:[6],12:[4],13:[8],14:[14,21,24],15:[2,5,6,8,16,17,20,22]},
+  "6-1":{12:[9],14:[14,21,22],15:[2]},
+  "6-2":{6:[21],8:[5],10:[2],11:[4],13:[6,17],14:[2,10,20,21,22],15:[2,19,20]},
+  "6-3":{2:[4],11:[9],12:[15],13:[13],14:[21],15:[23]},
+  "6-4":{5:[2],12:[11],14:[12],15:[1,13,20]},
+  "6-5":{10:[11],11:[4,14],12:[5],14:[2,3,9,11],15:[13]},
+  "6-6":{8:[20],11:[12],13:[14],15:[5,22]},
+  "6-7":{9:[4],11:[10],12:[3,8],13:[20],14:[11,18],15:[7,20]},
+  "6-8":{9:[20],12:[4,8,12,14],13:[24],14:[3,24],15:[21]},
+  "6-9":{15:[21]},
+  "6-10":{1:[6],2:[4],8:[16],9:[20],10:[13],12:[9,10,15],13:[20],14:[5,13],15:[23]},
+  "7-1":{9:[17],10:[1,6],11:[2,3],12:[15],13:[8,18],14:[11,20],15:[4,23]},
+  "7-2":{5:[21],10:[8],11:[14],12:[5],13:[23],14:[2,11],15:[20,22,23]},
+  "7-3":{3:[13],9:[16],11:[9,12],13:[17,23],14:[20],15:[17]},
+  "7-4":{},
+  "7-5":{11:[12,13],15:[20]},
+  "7-6":{},
+  "7-7":{12:[14],13:[10],15:[5,23]},
+  "8-1":{15:[12]},
+  "8-2":{6:[16],12:[12]},
+  "8-3":{},
+  "8-4":{},
+  "8-5":{1:[30],15:[3]},
+  "8-6":{9:[11]}
+};
+/* Extraits déjà dévoilés de The Winds of Winter (6e livre, pas encore paru) */
+const TWOW_EP = {"3-10":["Theon I", "The Forsaken"], "4-1":["Mercy"], "4-6":["Theon I"], "5-3":["Alayne I"], "5-4":["Alayne I"], "5-9":["Mercy"], "5-10":["Mercy", "Arianne II"], "6-2":["Theon I"], "6-4":["Theon I"], "6-5":["The Forsaken, Aeron I", "Mercy"], "6-9":["Theon I", "Victarion", "Barristan II", "Tyrion II"], "7-2":["The Forsaken"], "7-3":["The Forsaken"], "7-4":["Arianne II"], "7-7":["Theon I"], "8-1":["The Forsaken"]};
+
+/* =====================================================
+   ÉTAT (épisode courant + épisodes vus), mémorisé dans ce navigateur
+===================================================== */
+const EPISODES = [];
+SAISONS.forEach(s=>s.eps.forEach((e,i)=>EPISODES.push({s:s.n, e:i+1, global:EPISODES.length+1, titre:e[0], resume:e[1]})));
+const CLE = 'got-serie';
+let etat = {courant:0, vus:[]};
+try{ const b = JSON.parse(localStorage.getItem(CLE)); if(b) etat = Object.assign(etat, b); }catch(e){}
+let vus = new Set(etat.vus);
+function sauver(){ etat.vus = [...vus]; try{ localStorage.setItem(CLE, JSON.stringify(etat)); }catch(e){} }
+
+function echapper(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+function persosDe(texte){
+  const trouves = [];
+  PERSOS.forEach(([nom, alias, maison])=>{
+    let pos = Infinity;
+    alias.forEach(a=>{ const m = new RegExp(`(^|[^\\p{L}])${echapper(a)}(?![\\p{L}])`, 'u').exec(texte); if(m && m.index < pos) pos = m.index; });
+    if(pos < Infinity) trouves.push({nom, maison, pos});
+  });
+  return trouves.sort((a,b)=>a.pos-b.pos);
+}
+
+const deux = n=>String(n).padStart(2,'0');
+
+/* =====================================================
+   AFFICHAGE
+===================================================== */
+/* --- Affiche de la saison : serie/saison-1.jpg … serie/saison-8.jpg ---
+   (jpg, jpeg, png ou webp ; sans image, le numéro de la saison reste affiché) */
+const EXT_AFFICHE = ['jpg', 'jpeg', 'png', 'webp'];
+function chargerAffiche(n){
+  const cadre = document.getElementById('affiche');
+  if(cadre.dataset.saison === String(n)) return;
+  cadre.dataset.saison = n;
+  const ancienne = cadre.querySelector('img');
+  if(ancienne) ancienne.remove();
+  const img = document.createElement('img');
+  img.alt = `Affiche de la saison ${n}`;
+  let i = 0;
+  img.onload = ()=>img.classList.add('ok');
+  img.onerror = ()=>{ if(++i < EXT_AFFICHE.length && cadre.dataset.saison === String(n)) img.src = `serie/saison-${n}.${EXT_AFFICHE[i]}`; };
+  img.src = `serie/saison-${n}.${EXT_AFFICHE[0]}`;
+  cadre.appendChild(img);
+}
+
+/* --- Correspondance avec les livres --- */
+/* "T2:12,14" · "T5:13-18" · "T8:15|T9:3" · "≠T5:4" (scène modifiée) · "" (inédit) */
+function lireRef(code){
+  if(!code) return null;
+  const libre = code.startsWith('≠');
+  const parts = code.replace('≠','').split('|').map(p=>{
+    const [, t, liste] = /^T(\d+):(.+)$/.exec(p);
+    const chs = [];
+    liste.split(',').forEach(x=>{ const [a, b] = x.split('-').map(Number); if(b) for(let i=a;i<=b;i++) chs.push(i); else chs.push(a); });
+    return {t:Number(t), chs, plage:/-/.test(liste)};
+  });
+  return {libre, parts};
+}
+function texteChapitres(p){
+  const c = p.chs;
+  if(p.plage) return `ch. ${c[0]} à ${c[c.length-1]}`;
+  return c.length === 1 ? `ch. ${c[0]}` : `ch. ${c.slice(0,-1).join(', ')} et ${c[c.length-1]}`;
+}
+function etiquetteRef(p){
+  const povs = [...new Set(p.chs.map(i=>CHAP_VF[p.t][i-1]))];
+  return `T${p.t} · ${texteChapitres(p)}` + (povs.length === 1 ? ` · ${povs[0]}` : '');
+}
+function bulleRef(p, libre){
+  const details = p.chs.map(i=>`${i} (${CHAP_VF[p.t][i-1]})`).join(', ');
+  return (libre ? 'Scène modifiée par la série. Passage correspondant : ' : '') +
+    `Tome ${p.t} — ${TOMES_VF[p.t]} · chapitre${p.chs.length>1?'s':''} ${details}`;
+}
+/* Résumé court pour la liste des épisodes : le tome qui fournit le plus de chapitres */
+function resumeLivres(s, e){
+  if(s >= 6) return {txt:'Au-delà des livres', hors:true};
+  const refs = LIVRES_EP[`${s}-${e}`] || {};
+  let meilleur = null;
+  Object.keys(refs).map(Number).sort((a,b)=>a-b).forEach(t=>{ if(!meilleur || refs[t].length > refs[meilleur].length) meilleur = t; });
+  if(!meilleur) return {txt:'Inédit', hors:true};
+  const c = refs[meilleur], mi = Math.min(...c), ma = Math.max(...c);
+  return {txt:`T${meilleur} · ch. ${mi}${ma>mi ? '–'+ma : ''}`, hors:false};
+}
+function renderLivres(ep){
+  const cle = `${ep.s}-${ep.e}`;
+  const refs = LIVRES_EP[cle] || {};
+  const twow = TWOW_EP[cle] || [];
+  const tomes = Object.keys(refs).map(Number).sort((a,b)=>a-b);
+  const total = tomes.reduce((n,t)=>n + refs[t].length, 0);
+  const max = Math.max(0, ...tomes.map(t=>refs[t].length));
+  document.getElementById('livresEp').textContent = `S${ep.s} · E${ep.e}`;
+  let intro;
+  if(ep.s <= 5) intro = (total === 1 ? `Un chapitre des livres correspond à cet épisode.`
+      : `${total} chapitres des livres correspondent à cet épisode, ` + (tomes.length === 1 ? `tous dans le tome ${tomes[0]}.` : `sur ${tomes.length} tomes. Le tome encadré est celui qui en fournit le plus.`));
+  else if(total) intro = `La série a dépassé les livres : aucun chapitre n'est adapté tel quel, mais l'épisode reprend des éléments ` + (total === 1 ? `d'un chapitre publié.` : `de ${total} chapitres publiés.`);
+  else if(twow.length) intro = `Épisode inédit : il s'inspire seulement d'extraits du prochain livre, pas encore paru.`;
+  else intro = `Épisode entièrement inédit : aucun chapitre publié ne lui correspond.`;
+  document.getElementById('livresIntro').textContent = intro;
+  document.getElementById('livresTomes').innerHTML =
+    tomes.map(t=>`<div class="tomeLigne ${ep.s <= 5 && refs[t].length === max ? 'principal' : ''}">
+      <div class="tomeNom"><b>Tome ${t}</b><span>${TOMES_VF[t]}</span></div>
+      <div class="chapsChips">${refs[t].map(c=>`<span title="Tome ${t} — ${TOMES_VF[t]} · chapitre ${c}"><i>${c}</i>${CHAP_VF[t][c-1]}</span>`).join('')}</div>
+    </div>`).join('') +
+    (twow.length ? `<div class="tomeLigne aparaitre">
+      <div class="tomeNom"><b>À paraître</b><span>The Winds of Winter (extraits déjà dévoilés)</span></div>
+      <div class="chapsChips">${twow.map(w=>`<span>« ${w} »</span>`).join('')}</div>
+    </div>` : '');
+}
+
+function render(){
+  const ep = EPISODES[etat.courant];
+  const saison = SAISONS[ep.s - 1];
+  document.documentElement.style.setProperty('--accent', saison.c);
+  document.title = `S${ep.s}E${ep.e} · ${ep.titre} — Game of Thrones`;
+
+  /* Épisode en cours */
+  document.getElementById('surtitre').textContent = `Saison ${ep.s} · Épisode ${ep.e} · n° ${ep.global} / ${EPISODES.length}`;
+  document.getElementById('titreEp').textContent = ep.titre;
+  document.getElementById('resumeEp').textContent = ep.resume;
+  document.getElementById('persosEp').innerHTML = persosDe(ep.resume)
+    .map(p=>`<span style="--c:${COUL[p.maison]||COUL.autre}">${p.nom}</span>`).join('');
+  const btnVu = document.getElementById('btnVu');
+  const estVu = vus.has(ep.global);
+  btnVu.textContent = estVu ? '✓ Vu' : '○ Pas encore vu';
+  btnVu.classList.toggle('actif', estVu);
+  document.getElementById('btnPrec').disabled = etat.courant === 0;
+  const btnSuiv = document.getElementById('btnSuiv');
+  btnSuiv.disabled = etat.courant === EPISODES.length - 1;
+  btnSuiv.textContent = etat.courant === EPISODES.length - 1 ? 'Fin de la série' : 'Épisode suivant →';
+
+
+  /* Dans les livres */
+  renderLivres(ep);
+
+  /* Sélecteur de saisons */
+  document.getElementById('saisonsPills').innerHTML = SAISONS.map(s=>
+    `<button type="button" data-s="${s.n}" class="${s.n===ep.s?'actif':''}" title="Saison ${s.n} · ${s.annee}">S${s.n}</button>`).join('');
+
+  /* Rail de progression */
+  document.getElementById('rail').innerHTML = SAISONS.map(s=>
+    `<div class="railSaison" style="--n:${s.eps.length};--cs:${s.c}" title="Saison ${s.n}">` +
+    EPISODES.filter(x=>x.s===s.n).map(x=>`<button type="button" data-g="${x.global}" class="${vus.has(x.global)?'vu':''} ${x.global===ep.global?'courant':''}" aria-label="Saison ${x.s} épisode ${x.e} : ${x.titre}" title="S${x.s}E${x.e} · ${x.titre}"></button>`).join('') +
+    `</div>`).join('');
+  document.getElementById('progTxt').innerHTML = `<b>${vus.size}</b> / ${EPISODES.length} vus`;
+
+  /* Fiche de la saison */
+  document.getElementById('saisonTitreWidget').textContent = `Saison ${saison.n}`;
+  const vusSaison = EPISODES.filter(x=>x.s===saison.n && vus.has(x.global)).length;
+  document.getElementById('saisonVus').textContent = `${vusSaison} / ${saison.eps.length} vus`;
+  document.getElementById('afficheNum').textContent = saison.n;
+  chargerAffiche(saison.n);
+  document.getElementById('saisonTitre').textContent = `Saison ${saison.n} · ${saison.accroche}`;
+  document.getElementById('saisonMeta').innerHTML = `${saison.dates} · ${saison.eps.length} épisodes<br>D'après : ${saison.livre}`;
+  document.getElementById('saisonSynopsis').textContent = saison.synopsis;
+  document.getElementById('saisonMoments').innerHTML = saison.moments.map(([texte, code])=>{
+    const r = lireRef(code);
+    const refs = r
+      ? r.parts.map(p=>`<span class="refLivre ${r.libre ? 'libre' : ''}" title="${bulleRef(p, r.libre)}">${r.libre ? '≈ ' : ''}${etiquetteRef(p)}</span>`).join('')
+      : `<span class="refLivre inedit" title="Ce moment n'existe pas dans les livres publiés">${saison.n >= 6 ? 'Au-delà des livres' : 'Inédit (série)'}</span>`;
+    return `<li><span>${texte}</span><span class="momRefs">${refs}</span></li>`;
+  }).join('');
+  document.getElementById('saisonLieux').innerHTML = saison.lieux.map(l=>`<span>${l}</span>`).join('');
+  document.getElementById('listeEp').innerHTML = EPISODES.filter(x=>x.s===saison.n).map(x=>
+    `<button type="button" class="ligneEp ${vus.has(x.global)?'vu':''} ${x.global===ep.global?'courant':''}" data-g="${x.global}">
+      <span class="num">${deux(x.e)}</span>
+      <span class="txt"><span class="tit">${x.titre}${(r=>`<span class="miniLivre ${r.hors?'hors':''}">${r.txt}</span>`)(resumeLivres(x.s, x.e))}</span><span class="ext">${x.resume}</span></span>
+      <span class="coche" aria-hidden="true">✓</span>
+    </button>`).join('');
+
+  /* Les 8 saisons */
+  document.getElementById('grilleSaisons').innerHTML = SAISONS.map(s=>{
+    const nb = EPISODES.filter(x=>x.s===s.n && vus.has(x.global)).length;
+    return `<button type="button" class="carteSaison ${s.n===ep.s?'actif':''}" data-s="${s.n}" style="--cs:${s.c}">
+      <div class="s">Saison ${s.n}</div><div class="a">${s.annee} · ${s.eps.length} épisodes</div>
+      <div class="t">${s.accroche}</div><div class="barre"><i style="width:${Math.round(nb/s.eps.length*100)}%"></i></div>
+    </button>`;
+  }).join('');
+  sauver();
+}
+
+function allerA(index){ etat.courant = Math.max(0, Math.min(EPISODES.length - 1, index)); render(); }
+/* Saison choisie : on va au premier épisode pas encore vu de cette saison */
+function allerSaison(n){
+  const eps = EPISODES.filter(x=>x.s===n);
+  const cible = eps.find(x=>!vus.has(x.global)) || eps[0];
+  allerA(cible.global - 1);
+}
+function basculerVu(){
+  const g = EPISODES[etat.courant].global;
+  vus.has(g) ? vus.delete(g) : vus.add(g);
+  render();
+}
+
+document.getElementById('btnPrec').onclick = ()=>allerA(etat.courant - 1);
+document.getElementById('btnSuiv').onclick = ()=>{ vus.add(EPISODES[etat.courant].global); allerA(etat.courant + 1); };
+document.getElementById('btnVu').onclick = basculerVu;
+document.addEventListener('click', e=>{
+  const g = e.target.closest('[data-g]');
+  if(g){ allerA(Number(g.dataset.g) - 1); if(g.classList.contains('ligneEp')) document.getElementById('episode').scrollIntoView({behavior:'smooth', block:'start'}); return; }
+  const s = e.target.closest('[data-s]');
+  if(s){ allerSaison(Number(s.dataset.s)); if(s.classList.contains('carteSaison')) document.getElementById('episode').scrollIntoView({behavior:'smooth', block:'start'}); }
+});
+document.addEventListener('keydown', e=>{
+  if(e.ctrlKey || e.metaKey || e.altKey) return;
+  if(e.key === 'ArrowRight') allerA(etat.courant + 1);
+  else if(e.key === 'ArrowLeft') allerA(etat.courant - 1);
+  else if(e.key === 'v' || e.key === 'V') basculerVu();
+  else if(/^[1-8]$/.test(e.key)) allerSaison(Number(e.key));
+});
+
+render();
+</script>
+</body>
+</html>

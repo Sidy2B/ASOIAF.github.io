@@ -68,6 +68,10 @@
   .srOnly{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
   .enteteDroite{display:flex;align-items:center;gap:10px;flex:none}
   .entete-icones{display:flex;gap:6px;flex:none}
+  .lienSerie{flex:none;padding:7px 12px;border-radius:999px;border:1px solid var(--bord);background:rgba(0,0,0,.2);
+    color:var(--acier);font-size:.76rem;font-weight:600;text-decoration:none;transition:all .25s}
+  .lienSerie:hover{border-color:var(--bougie);color:var(--bougie)}
+  .lienSerie:focus-visible{outline:2px solid var(--bougie);outline-offset:2px}
   .selecteurTome{display:flex;gap:2px;flex:none;background:rgba(255,255,255,.06);padding:3px;border-radius:999px;border:1px solid var(--bord)}
   .selecteurTome button{
     padding:7px 14px;height:auto;border-radius:999px;cursor:pointer;
@@ -776,6 +780,7 @@
           <span id="sousTitreTome" class="srOnly">Tome 1</span>
         </div>
         <div class="enteteDroite">
+          <a class="lienSerie" href="index_serie.html" title="Game of Thrones — guide de visionnage de la série">Série TV</a>
           <div class="selecteurTome">
             <button data-tome="1" aria-label="Tome 1">I</button>
             <button data-tome="2" aria-label="Tome 2">II</button>
