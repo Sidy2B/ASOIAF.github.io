@@ -77,6 +77,16 @@ LES 29 LIEUX DU SITE (tomes 1 à 4)
   Lieux du tome 4 déjà présents ci-dessus : pyke, portreal,
   harrenhal, winterfell, vivesaigues.
 
+  Lieu sans chapitre propre (sert pour la campagne de Robb) :
+  ouest.jpg               Les terres de l'Ouest
+
+FICHE LIEU
+-----------------------------------------------------------
+Les mêmes images servent aussi de bannière dans la fiche d'un lieu
+(clic sur le nom du lieu sous la carte, ou sur le point rouge). S'il
+y en a plusieurs pour un lieu, la fiche en prend une au hasard. Sans
+image, la fiche s'affiche simplement sans bannière.
+
 Conseil recherche : ajoute "asoiaf art" ou "game of thrones concept
 art" plutôt que des captures de la série, pour un rendu plus proche
 de l'ambiance des livres. "Westeros landscape art" fonctionne bien

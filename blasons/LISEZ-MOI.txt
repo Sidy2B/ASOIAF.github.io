@@ -13,6 +13,7 @@ générique à la place — rien ne casse, tu complètes à ton rythme.
 LES 12 GRANDES MAISONS (déjà présentes)
 -----------------------------------------------------------
   garde.png          La Garde de Nuit
+  sauvageons.png     Les Sauvageons (le peuple libre, au-delà du Mur)
   bolton.png         Maison Bolton
   stark.png          Maison Stark
   arryn.png          Maison Arryn
@@ -26,6 +27,33 @@ LES 12 GRANDES MAISONS (déjà présentes)
   targaryen.png      Maison Targaryen
 
 -----------------------------------------------------------
+LES BRANCHES BARATHEON (visibles à partir du tome 3)
+-----------------------------------------------------------
+  baratheon-port-real.png     Baratheon de Port-Réal (Robert, Joffrey) :
+                              partagé en deux, lion d'or sur rouge à
+                              gauche, cerf couronné noir sur or à droite
+  baratheon-peyredragon.png   Baratheon de Peyredragon (Stannis) : cœur
+                              rouge entouré de flammes sur fond jaune,
+                              le cerf couronné au centre
+  Le camp de Renly (Accalmie) garde baratheon.png.
+  Sans ces deux fichiers, le site affiche un petit dessin de ces
+  blasons à la place.
+
+-----------------------------------------------------------
+NOUVELLES MAISONS ET PEUPLES
+-----------------------------------------------------------
+  dothraki.png       Les Dothrakis (Khal Drogo, Irri, Jhiqui,
+                     Rakharo, Aggo, Jhogo)
+                     (accepté aussi : dothrakis.png)
+  dondarrion.png     Maison Dondarrion (lord Beric)
+  trant.png          Maison Trant (ser Meryn)
+  clans.png          Les clans des montagnes de la Lune (Shagga)
+                     (accepté aussi : clans-montagnes-lune.png,
+                     montagnes-de-la-lune.png)
+  payne.png          Maison Payne (ser Ilyn), déjà dans la liste
+                     de l'Ouest plus bas
+
+-----------------------------------------------------------
 PETITES MAISONS / MAISONS VASSALES
 -----------------------------------------------------------
   Le Nord
@@ -37,9 +65,12 @@ PETITES MAISONS / MAISONS VASSALES
     cerwyn.png         Maison Cerwyn (Castle Cerwyn)
     hornwood.png       Maison Hornwood (Hornwood)
     reed.png           Maison Reed (Greywater Watch)
+    cassel.png         Maison Cassel — ser Rodrik
 
   Le Val
     royce.png          Maison Royce (Runestone)
+    baelish.png        Maison Baelish — Littlefinger
+    clans.png          Les clans des montagnes de la Lune : Shagga
 
   Les Conflans
     bracken.png        Maison Bracken (Hayes-la-Pierre)
@@ -51,18 +82,35 @@ PETITES MAISONS / MAISONS VASSALES
 
   Le Bief
     tarly.png          Maison Tarly (Hornhill)
+    florent.png        Maison Florent — Selyse, épouse de Stannis
     redwyne.png        Maison Redwyne (The Arbor)
     hightower.png      Maison Hightower (Oldtown)
 
   Les Terres de l'Orage
     selmy.png          Maison Selmy (Harvest Hall)
+    dondarrion.png     Maison Dondarrion (Havrenoir) : lord Beric
+    trant.png          Maison Trant : ser Meryn
+    torth.png          Maison Torth (l'île de Torth) — Brienne
+    penrose.png        Maison Penrose (Parchemins) — ser Cortnay
+    seaworth.png       Maison Seaworth — Davos
 
   L'Ouest
     clegane.png        Maison Clegane
     marbrand.png       Maison Marbrand (Ashemark)
+    payne.png          Maison Payne — ser Ilyn Payne
+    lorch.png          Maison Lorch — ser Amory
+
+  Les Terres de la Couronne
+    hollard.png        Maison Hollard — ser Dontos
 
   Dorne
     dayne.png          Maison Dayne (Starfall)
+
+  Essos
+    dothraki.png       Les Dothrakis
+
+Maisons ajoutées pour les personnages qui n'en avaient pas encore :
+Cassel, Baelish, Hollard, Lorch, Seaworth (et Payne, Torth, Penrose).
 
 Note sur tes 7 images reçues : j'ai reconnu sans problème le Mormont
 (ours noir), le Karstark (soleil blanc sur noir), le Manderly (triton
