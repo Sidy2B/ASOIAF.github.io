@@ -2903,11 +2903,33 @@ majSousPiste();
 let fonduTimer = null;
 const themes = [];
 
-async function testerFichier(src){
-  /* En ligne (GitHub Pages, etc.) : simple requête réseau, fiable partout y compris iPhone */
+/* En ligne sur GitHub Pages : une seule requête à l'API GitHub donne la liste exacte du
+   dossier musique. Ça évite des centaines de petites requêtes de test, que GitHub finit
+   par refuser (d'où des musiques « introuvables » alors qu'elles sont bien en ligne). */
+async function listerMusiquesGitHub(){
+  const m = location.hostname.match(/^([^.]+)\.github\.io$/i);
+  if(!m) return null;
+  const proprio = m[1];
+  const morceaux = location.pathname.split('/').filter(Boolean);
+  const depot = morceaux.length && !/\.html?$/i.test(morceaux[0]) ? morceaux[0] : `${proprio}.github.io`;
   try{
-    const r = await fetch(src, {method:'HEAD'});
-    return r.ok;
+    const r = await fetch(`https://api.github.com/repos/${proprio}/${depot}/contents/musique`);
+    if(!r.ok) return null;
+    const data = await r.json();
+    return Array.isArray(data) ? data.filter(f=>f.type === 'file').map(f=>f.name) : null;
+  }catch(e){ return null; }
+}
+
+async function testerFichier(src){
+  /* En ligne (hors GitHub, ou si l'API GitHub ne répond pas) : simple requête réseau.
+     Si le serveur demande de ralentir (429), on attend un peu et on réessaie. */
+  try{
+    for(let essai = 0; essai < 4; essai++){
+      const r = await fetch(src, {method:'HEAD', cache:'no-store'});
+      if(r.status === 429 || r.status === 503){ await new Promise(ok=>setTimeout(ok, 1500 * (essai + 1))); continue; }
+      return r.ok;
+    }
+    return false;
   }catch(e){
     /* Usage local (fichier ouvert directement) : repli sur le préchargement audio, avec délai maxi */
     return new Promise(res=>{
@@ -2923,6 +2945,11 @@ async function testerFichier(src){
 }
 
 (async function detecterThemes(){
+  /* Liste exacte du dossier (en ligne sur GitHub Pages) ou, à défaut, test fichier par fichier */
+  const liste = await listerMusiquesGitHub();
+  const existe = liste
+    ? async nom=>liste.find(n=>n.toLowerCase() === nom.toLowerCase()) || null
+    : async nom=>(await testerFichier(`musique/${encodeURIComponent(nom)}`)) ? nom : null;
   for(const maison of MAISONS_MUSIQUE){
     const nomCompletDeja = /\btheme$/i.test(maison); // ex. "Main theme" : pas de " theme" à ajouter
     let prefixes = NOMS_FICHIER_MUSIQUE[maison] || [maison];
@@ -2931,8 +2958,9 @@ async function testerFichier(src){
       for(const prefixe of prefixes){
         for(const ext of EXT_AUDIO){
           const nomFichier = nomCompletDeja ? `${prefixe}${v}.${ext}` : `${prefixe} theme${v}.${ext}`;
-          if(await testerFichier(`musique/${encodeURIComponent(nomFichier)}`)){
-            themes.push({nom:`${prefixe}${v?` (${v.trim()})`:''}`, base:maison, src:`musique/${nomFichier}`});
+          const vrai = await existe(nomFichier);
+          if(vrai){
+            themes.push({nom:`${prefixe}${v?` (${v.trim()})`:''}`, base:maison, src:`musique/${vrai}`});
             prefixes = [prefixe]; // les variantes " 2", " 3" suivent le même nom
             trouve = true;
             break;
@@ -2940,7 +2968,7 @@ async function testerFichier(src){
         }
         if(trouve) break;
       }
-      if(v==="" && !trouve) break;
+      if(!trouve) break; // pas de « 2 » : inutile de chercher « 3 »
     }
   }
   /* Morceaux hors maison (ambiance, moments clés...) listés dans musique/autres.json,
@@ -2956,9 +2984,10 @@ async function testerFichier(src){
   }catch(e){}
   if(!Array.isArray(nomsAutres)) nomsAutres = AUTRES_PAR_DEFAUT;
   for(const nomFichier of nomsAutres){
-    if(await testerFichier(`musique/${encodeURIComponent(nomFichier)}`)){
+    const vrai = await existe(nomFichier);
+    if(vrai){
       const nomAffiche = nomFichier.replace(/\.[^.]+$/, '');
-      themes.push({nom: nomAffiche, base:null, src:`musique/${nomFichier}`});
+      themes.push({nom: nomAffiche, base:null, src:`musique/${vrai}`});
     }
   }
   if(themes.length === 0){

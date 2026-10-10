@@ -1,6 +1,8 @@
-DOSSIER MUSIQUE — THÈMES PAR MAISON
-=====================================
+DOSSIER MUSIQUE — THÈMES PAR MAISON + MORCEAUX LIBRES
+=========================================================
 
+1) THÈMES PAR MAISON (détection automatique)
+---------------------------------------------
 Dépose ici tes musiques en les nommant selon la maison :
 
   Stark theme.mp3
@@ -12,27 +14,99 @@ Dépose ici tes musiques en les nommant selon la maison :
   Arryn theme.mp3
   Martell theme.mp3
   Tyrell theme.mp3
+  Frey theme.mp3
+  Bolton theme.mp3
   Dothraki theme.mp3
   Garde de Nuit theme.mp3
+  Sauvageons theme.mp3
   Main theme.mp3
 
-Formats acceptés : .mp3, .ogg, .m4a
+Formats acceptés : .mp3, .ogg, .m4a (majuscules ou minuscules).
+Plusieurs morceaux pour une même maison : ajoute " 2" ou " 3" au
+nom, ex. "Stark theme 2.mp3" (il faut que "Stark theme.mp3" existe
+pour que les variantes soient prises en compte, et "2" avant "3").
 
-PLUSIEURS MORCEAUX PAR MAISON :
-Ajoute " 2" ou " 3" au nom, par exemple :
-  Stark theme 2.mp3
-  Stark theme 3.mp3
-(Il faut que "Stark theme.mp3" existe pour que
-les variantes soient détectées.)
+SUR LE SITE EN LIGNE (GitHub Pages)
+En ligne, le site demande à GitHub la liste du dossier musique en une
+seule fois, au lieu de tester chaque nom de fichier un par un (GitHub
+finissait par refuser ces dizaines de requêtes, d'où une liste coupée
+après Targaryen). Il suffit d'envoyer tes mp3 dans "musique" sur
+GitHub : ils apparaissent une fois le site redéployé (une ou deux
+minutes). En ligne, les majuscules du nom ne comptent plus.
+
+Les trois camps Baratheon (à partir du tome 3) peuvent avoir leur
+propre thème. Un seul de ces noms suffit par camp :
+
+  Stannis theme.mp3   (ou Peyredragon theme.mp3)
+  Joffrey theme.mp3   (ou Port-Réal theme.mp3)
+  Renly theme.mp3     (ou Accalmie theme.mp3)
+
+Le thème d'un camp passe en premier dans ses lieux (Peyredragon pour
+Stannis, Port-Réal pour Joffrey) et dès que ses membres sont cités
+dans le chapitre (Davos suit Stannis). Un camp sans thème joue
+« Baratheon theme ». Dans les tomes 1 et 2, c'est toujours le thème
+Baratheon.
+
+2) MORCEAUX HORS MAISON (ambiances, thèmes de moments clés...)
+-----------------------------------------------------------------
+Pour un morceau qui ne représente pas une maison précise
+(ex. "Light of the Seven", une musique d'ambiance générale...),
+utilise le fichier "autres.json" à côté de ce LISEZ-MOI.
+
+C'est une simple liste de noms de fichiers, entre guillemets,
+séparés par des virgules :
+
+  [
+    "Light of the Seven.mp3",
+    "Un autre morceau.mp3"
+  ]
+
+Dépose le morceau audio correspondant dans ce même dossier,
+avec EXACTEMENT le nom écrit dans la liste (casse comprise).
+Le site l'ajoutera automatiquement au menu déroulant, sans
+mode "auto" associé à une maison (tu le sélectionnes toi-même
+quand tu veux l'écouter).
+
+"autres.json" contient déjà une liste de morceaux emblématiques
+de la bande originale (Ramin Djawadi) prête à l'emploi — il te
+suffit de télécharger les mp3 correspondants et de les déposer
+ici avec le nom exact : tu n'as rien à modifier dans le JSON ni
+dans le code. Les morceaux déjà présents dans la liste mais que
+tu n'as pas encore téléchargés n'apparaissent simplement pas
+dans le menu tant que le fichier n'est pas là.
 
 UTILISATION SUR LE SITE :
-- Le bouton ♪ en haut à droite ouvre le panneau musique.
-- Menu déroulant pour choisir le thème (seuls les fichiers
-  réellement présents dans ce dossier apparaissent).
-- Réglage du volume (20% par défaut pour ne pas couvrir
-  ton livre audio).
-- La musique joue en boucle jusqu'à ce que tu en changes.
+- Le widget Musique liste tous les morceaux détectés (maisons
+  + hors maison) dans un seul menu déroulant.
+- Réglage du volume, position dans le morceau, lecture en boucle.
+- Le widget Musique s'ouvre avec le bouton ♫ en haut à droite.
 
-IMPORTANT : respecte exactement l'orthographe des noms
-ci-dessus (majuscules comprises), sinon le site ne
-trouvera pas les fichiers.
+3) MODE AUTO (interrupteur « Auto » du widget Musique)
+---------------------------------------------------------
+Quand « Auto » est activé, la musique suit le chapitre affiché et
+s'enchaîne toute seule, morceau après morceau :
+
+  1. d'abord le thème de la maison à qui appartient le lieu du
+     chapitre (Winterfell → Stark, Vivesaigues → Tully, Pyke →
+     Greyjoy, Port-Réal → Baratheon, Harrenhal → Lannister,
+     Pont-Amer → Tyrell, le Mur et le Poing → Garde de Nuit,
+     la forêt hantée et le donjon de Craster → Sauvageons,
+     mer Dothrak → Dothraki...) ;
+  2. puis les thèmes des maisons des personnages présents dans le
+     chapitre, dans l'ordre où ils apparaissent dans le résumé ;
+  3. puis un morceau « hors maison » au hasard (autres.json) ;
+  4. et on recommence au début, tant que tu restes sur ce chapitre.
+
+Le petit texte sous le titre du morceau affiche l'enchaînement
+prévu, ex. « Auto : Tyrell → Tully → Baratheon → Stark ».
+
+- Une maison dont tu n'as pas encore la musique est simplement
+  sautée.
+- Une petite maison sans thème prend celui de son suzerain
+  (Reed → Stark, Clegane → Lannister...).
+- Les lieux d'Essos sans maison (Pentos, Qarth, la Désolation
+  Rouge) commencent directement par les personnages.
+- Changer de chapitre relance l'enchaînement ; si le morceau en
+  cours est déjà celui du nouveau lieu, il n'est pas coupé.
+- Choisir un morceau à la main dans le menu le joue en boucle,
+  jusqu'au prochain changement de chapitre (si Auto est activé).
