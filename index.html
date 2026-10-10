@@ -521,6 +521,21 @@
   #btnAgrandir:focus-visible{outline:2px solid var(--bougie);outline-offset:2px}
   #btnAgrandir:disabled{opacity:.4;cursor:not-allowed}
   #btnAgrandir:disabled:hover{border-color:var(--bord);color:var(--acier)}
+  /* Choix de la carte : Westeros / Essos */
+  .choixCarte{display:inline-flex;gap:2px;padding:2px;border-radius:999px;border:1px solid var(--bord);background:rgba(7,10,16,.5);flex:none}
+  .choixCarte button{font-family:'Instrument Sans',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.02em;text-transform:none;
+    padding:4px 11px;border-radius:999px;border:none;background:transparent;color:var(--acier);cursor:pointer;transition:background .2s,color .2s}
+  .choixCarte button:hover{color:var(--neige)}
+  .choixCarte button.actif{background:var(--bougie);color:var(--nuit)}
+  .choixCarte button:focus-visible{outline:2px solid var(--bougie);outline-offset:1px}
+  .choixCarte.surCarte{position:absolute;top:8px;right:8px;z-index:3;background:rgba(7,9,13,.78);border-color:rgba(238,241,245,.18);box-shadow:0 2px 10px rgba(0,0,0,.45)}
+  .modale-barre{flex-wrap:wrap}
+  .modale-barre .boutons{flex-wrap:wrap;justify-content:flex-end}
+  .modale-barre button{white-space:nowrap}
+  .modale-barre .choixCarte{align-self:center}
+  .modale-barre .choixCarte button{height:34px;padding:0 14px;font-size:.88rem;border:none;background:transparent;color:var(--acier)}
+  .modale-barre .choixCarte button:hover{color:var(--neige);border:none}
+  .modale-barre .choixCarte button.actif,.modale-barre .choixCarte button.actif:hover{background:var(--bougie);color:var(--nuit)}
   .carteActions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
   .carteActions #btnAgrandir{margin-top:0}
   .btnPins{padding:9px 16px;border-radius:999px;cursor:pointer;font-family:'Instrument Sans',sans-serif;font-size:.84rem;font-weight:600;
@@ -972,6 +987,7 @@
               <div class="pinsCarte" id="pins1"></div>
             </div>
             <div class="carte-vide" id="carteVide"><span id="carteVideTxt"></span></div>
+            <div class="choixCarte surCarte" role="group" aria-label="Choisir la carte"><button type="button" data-carte="westeros" aria-pressed="false">Westeros</button><button type="button" data-carte="essos" aria-pressed="false">Essos</button></div>
           </div>
           <div class="lieuNom" id="lieuNom"></div>
           <div class="relationsMaison" id="relationsMaison"></div>
@@ -1220,6 +1236,7 @@
   <div class="modale-barre">
     <span class="lieu" id="modaleLieu"></span>
     <div class="boutons">
+      <div class="choixCarte" role="group" aria-label="Choisir la carte"><button type="button" data-carte="westeros" aria-pressed="false">Westeros</button><button type="button" data-carte="essos" aria-pressed="false">Essos</button></div>
       <button id="btnZoom">Zoomer +</button>
       <button id="btnFermerCarte">Fermer ✕</button>
     </div>
@@ -1540,6 +1557,54 @@ async function resoudreCarte(carteKey){
   return null;
 }
 
+/* ===== Choix de la carte affichée : Westeros ou Essos =====
+   Par défaut, la carte du lieu du chapitre. Les boutons Westeros / Essos permettent
+   de regarder l'autre carte (trajets et « Qui est où » compris). */
+let carteChoisie = null;      // null = la carte suit le chapitre
+let dernierChapCarte = null;
+function carteAffichee(){ return carteChoisie || LIEUX[SCENES[idx].lieu].carte; }
+/* Point sur lequel centrer la vignette : le lieu du chapitre, ou sur l'autre carte
+   le milieu des personnages qui s'y trouvent (sinon le centre de la carte) */
+function cibleCarte(){
+  const l = LIEUX[SCENES[idx].lieu];
+  const carte = carteAffichee();
+  if(l.carte === carte) return l;
+  const pts = [...positionsActuelles().values()].map(v=>LIEUX[v.lieu]).filter(x=>x && x.carte === carte);
+  if(!pts.length) return {carte, x:50, y:50};
+  return {carte, x: pts.reduce((a, p)=>a + p.x, 0) / pts.length, y: pts.reduce((a, p)=>a + p.y, 0) / pts.length};
+}
+function majVueCarte(avecDessins){
+  const l = LIEUX[SCENES[idx].lieu];
+  const cible = cibleCarte();
+  const alt = cible.carte === "essos" ? "Carte d'Essos" : "Carte de Westeros";
+  carteImg.alt = alt; modaleImg.alt = alt;
+  const ici = l.carte === cible.carte;
+  for(const p of [pointCarte, modalePoint]){
+    p.style.left = l.x + "%";
+    p.style.top  = l.y + "%";
+    p.style.display = ici ? '' : 'none';
+  }
+  majPositionCarte(cible);
+  majCarteImage(cible);
+  document.querySelectorAll('.choixCarte button').forEach(b=>{
+    const actif = b.dataset.carte === cible.carte;
+    b.classList.toggle('actif', actif);
+    b.setAttribute('aria-pressed', actif ? 'true' : 'false');
+  });
+  if(avecDessins){
+    const maxCh = maxChRevele();
+    dessinerTrajets(document.getElementById('trajets1'), cible.carte, maxCh);
+    dessinerTrajets(document.getElementById('trajets2'), cible.carte, maxCh);
+    majPins();
+  }
+}
+document.querySelectorAll('.choixCarte').forEach(g=>g.addEventListener('click', ev=>{
+  const b = ev.target.closest('button[data-carte]');
+  if(!b) return;
+  carteChoisie = b.dataset.carte === LIEUX[SCENES[idx].lieu].carte ? null : b.dataset.carte;
+  majVueCarte(true);
+}));
+
 let carteJeton = 0;
 async function majCarteImage(l){
   const jeton = ++carteJeton;
@@ -1566,7 +1631,7 @@ async function majCarteImage(l){
 if(carteWrap && window.ResizeObserver){
   new ResizeObserver(entries=>{
     carteBoxW = entries[0].contentRect.width;
-    majPositionCarte(LIEUX[SCENES[idx].lieu]);
+    majPositionCarte(cibleCarte());
   }).observe(carteWrap);
 }
 const notesTa    = document.getElementById('notesChapitre');
@@ -1656,14 +1721,10 @@ function render(){
   const lienLieu = `<button type="button" class="lienLieu" data-lieu="${s.lieu}" title="Ouvrir la fiche du lieu">${l.nom}<span class="chevronLieu" aria-hidden="true"> ›</span></button>`;
   lieuNom.innerHTML = lienLieu;
   modaleLieu.innerHTML = lienLieu;
-  const alt = l.carte==="essos" ? "Carte d'Essos" : "Carte de Westeros";
-  carteImg.alt = alt; modaleImg.alt = alt;
-  for(const p of [pointCarte, modalePoint]){
-    p.style.left = l.x + "%";
-    p.style.top  = l.y + "%";
-  }
-  majPositionCarte(l);
-  majCarteImage(l);
+  /* La carte suit le chapitre : un choix Westeros / Essos fait à la main dure jusqu'au changement de chapitre */
+  const cleChap = tomeActif + ':' + idx;
+  if(cleChap !== dernierChapCarte){ carteChoisie = null; dernierChapCarte = cleChap; }
+  majVueCarte(false);
 
   /* Notes */
   notesTa.value = etat.notes[idx] || '';
@@ -2429,9 +2490,8 @@ function dessinerPins(conteneur, carte){
   });
 }
 function majPins(){
-  const l = LIEUX[SCENES[idx].lieu];
-  dessinerPins(document.getElementById('pins1'), l.carte);
-  dessinerPins(document.getElementById('pins2'), l.carte);
+  dessinerPins(document.getElementById('pins1'), carteAffichee());
+  dessinerPins(document.getElementById('pins2'), carteAffichee());
   const bt = document.getElementById('btnPins');
   if(bt) bt.setAttribute('aria-pressed', pinsVisibles ? 'true' : 'false');
 }
@@ -2588,9 +2648,8 @@ function majProgressif(){
   if(typeof majOngletsArbre === 'function') majOngletsArbre(maxCh);
   const svgActif = document.querySelector('.arbreSvg.actif');
   if(svgActif && typeof dessinerPortraitsArbre === 'function') dessinerPortraitsArbre(svgActif);
-  const l = LIEUX[SCENES[idx].lieu];
-  dessinerTrajets(document.getElementById('trajets1'), l.carte, maxCh);
-  dessinerTrajets(document.getElementById('trajets2'), l.carte, maxCh);
+  dessinerTrajets(document.getElementById('trajets1'), carteAffichee(), maxCh);
+  dessinerTrajets(document.getElementById('trajets2'), carteAffichee(), maxCh);
   majPins();
   majRois();
   if(typeof afficherMaisons === 'function') afficherMaisons();
